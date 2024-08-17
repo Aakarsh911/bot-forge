@@ -17,6 +17,10 @@ const BotSchema = new Schema({
         type: String,
         required: [true, 'Prompt is required!'],
     },
+    visiblePrompt: {
+        type: String,
+        required: [true, 'Visible Prompt is required!'],
+    },
     predefinedPrompts: {
         type: Map,
         of: String,
