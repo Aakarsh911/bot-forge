@@ -48,6 +48,9 @@ const BotSchema = new Schema({
         type: String,
         required: [true, 'Close Button Color is required!'],
     },
+    endMessageRating: {
+        type: [Number],
+    },
 });
 
 const User = models.User || model("User", UserSchema);
