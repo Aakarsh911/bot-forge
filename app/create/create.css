@@ -1,10 +1,13 @@
+body {
+    background: #131313;
+}
+
 .create-box {
-    border: 5px solid #f28c28;
     flex: 1;
     margin-left: 2.3em;
-    background: white;
+    background: #1d1f20;
     border-radius: 1em;
-    height: 97vh;
+    height: 98vh;
     position: fixed;
     right: 0.3em;
     left: 1em;
@@ -13,6 +16,7 @@
     left: 0.95em;
     right: 0.1em;
     overflow-y: auto;
+    color: white;
 }
 
 .create-content {

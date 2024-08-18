@@ -1,0 +1,85 @@
+.sidebar {
+	width: 2em;
+	background-color: #1d1f20;
+	padding: 0.625em;
+	height: 100%;
+	position: fixed;
+	left: 0;
+	top: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+    z-index: 9999;
+}
+
+.sidebar ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 200%;
+}
+
+.sidebar ul.bottom {
+	margin-top: auto;
+    margin-bottom: 1em;
+}
+
+.sidebar ul.bottom li {
+    margin: 0.75em 0;
+}
+
+.sidebar ul li {
+	margin: 1.25em 0;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+.sidebar ul li a {
+	text-decoration: none;
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	width: 2.5em;
+	height: 2.5em;
+	border-radius: 0.625em;
+	transition: background-color 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+	background-color: #37393b;
+}
+
+.sidebar ul li a .fa-icon {
+	font-size: 1.5em;
+	color: #f1f1f1;
+}
+
+.sidebar ul li a:hover::after {
+	content: attr(title);
+	position: absolute;
+	left: 3.5em;
+	background-color: #1c1c1c;
+	color: white;
+	padding: 0.3125em 0.625em;
+	border-radius: 0.25em;
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.sidebar ul li a:hover::before {
+	content: '';
+	position: absolute;
+	right: 100%;
+	top: 50%;
+	transform: translate(-560%, 50%);
+	border: 0.3125em solid transparent;
+	border-left-color: #1c1c1c;
+    rotate: 180deg;
+}

@@ -4,10 +4,16 @@ import { useState, useRef, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
-import '../dashboard/dashboard.css';
 import './create.css';
 
 export default function CreateBot() {
+
+    useEffect(() => {
+        const sidebar = document.querySelector('.sidebar');
+        if (!sidebar) return;
+        sidebar.style.background = "#131313";
+    });
+
     const { data: session, status } = useSession();
     const router = useRouter();
     const [botData, setBotData] = useState({
