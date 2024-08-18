@@ -15,7 +15,7 @@ export default function Dashboard() {
 
 	useEffect(() => {
 		const body = document.querySelector('body');
-		body.style.background = "#131313";
+		body.style.background = "#1d1f20";
 
 		const generateGlowingLineWithBorders = () => {
 			const mainContent = document.querySelector('.main-content');

@@ -2,7 +2,7 @@
 
 body {
 	font-family: 'Inter', sans-serif;
-    background: #131313;
+    background: #1d1f20;
 }
 
 .dashboard {
@@ -123,6 +123,21 @@ body {
     animation: glowMove 3s linear forwards;
     z-index: -1; /* Behind other elements but above the grid */
 }
+
+.glowing-line::before {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    top: 14px;
+    left: 0px;
+    background: white;
+    border-radius: 50%;
+    z-index: -1; /* Behind the line */
+    pointer-events: none;
+    box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.6); /* Glowing effect */
+}
+
 
 /* Glowing Line Animation */
 @keyframes glowMove {
