@@ -1,4 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 body {
+    font-family: 'Inter', sans-serif;
     background: #131313;
 }
 
@@ -27,182 +30,55 @@ body {
     animation: fadeInElements 0.8s forwards;
 }
 
-@keyframes fadeInElements {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.create-form .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-    opacity: 0;
-    animation: fadeInElements 0.8s forwards;
-}
-
-.create-form .form-group:nth-child(1) {
-    animation-delay: 0.2s;
-}
-
-.create-form .form-group:nth-child(2) {
-    animation-delay: 0.4s;
-}
-
-.create-form .form-group:nth-child(3) {
-    animation-delay: 0.6s;
-}
-
-.create-form .form-group:nth-child(4) {
-    animation-delay: 0.8s;
-}
-
-.create-form .form-group:nth-child(5) {
-    animation-delay: 1s;
-}
-
-.create-form .form-group:nth-child(6) {
-    animation-delay: 1.2s;
-}
-
-.create-form .form-group:nth-child(7) {
-    animation-delay: 1.4s;
-}
-
-.create-form .form-group:nth-child(8) {
-    animation-delay: 1.6s;
-}
-
-.create-form .form-group:nth-child(9) {
-    animation-delay: 1.8s;
-}
-
-input[type="text"] {
-    height: 2em;
-    width: 50em;
-}
-
-label {
-    margin-top: 2em;
-}
-
-.submit-btn {
-    padding: 0.8em 1.5em;
-    margin-top: 2em;
-    margin-bottom: 2em;
-    background-color: #f28c28;
-    color: white;
-    font-size: 1.2em;
-    border: none;
-    border-radius: 0.5em;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-    align-self: center;
-    opacity: 0;
-    animation: fadeInElements 0.8s forwards;
-    animation-delay: 2s;
-}
-
-.submit-btn:hover {
-    background-color: #f57307;
-}
-
-.preview-box {
-    width: 45%;
-    padding: 1em;
-    border-radius: 1em;
-    background-color: #f4f4f4;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    align-items: center;
-    text-align: center;
-    opacity: 0;
-    animation: fadeInElements 0.8s forwards;
-    animation-delay: 2.2s;
-}
-
-.color-box {
-    width: 4em;
-    height: 2em;
-    border-radius: 0.5em;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: box-shadow 0.3s ease;
-}
-
-.color-box:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-.file-drop .drop-area {
-    border: 2px dashed #ccc;
-    border-radius: 0.5em;
-    padding: 2em;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.file-drop .drop-area:hover {
-    background-color: #f9f9f9;
-}
-
-.file-drop .drop-area p {
-    font-size: 1em;
-    color: #888;
-}
-
-.preview-logo {
-    width: 100px;
-    height: 100px;
-    object-fit: contain;
-    margin: auto;
-}
-
-.custom-dropdown {
-    position: relative;
-    background: white;
-    padding: 0.8em;
-    border-radius: 0.5em;
-    border: 1px solid #ccc;
-    font-size: 1em;
-    cursor: pointer;
-    transition: border-color 0.3s ease-in-out;
-}
-
-.custom-dropdown:hover {
-    border-color: #f28c28;
-}
-
-.dropdown-list {
+.ocean { 
+    height: 5%;
+    width:100%;
+    position:absolute;
+    bottom:0;
+    left:0;
+    background: #015871;
+    animation: fadeInElements 1s linear;
+  }
+  
+  .wave {
+    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg) repeat-x; 
     position: absolute;
-    width: 100%;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 0.5em;
-    top: 100%;
-    left: 0;
-    z-index: 100;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
+    top: -198px;
+    width: 6400px;
+    height: 198px;
+    animation: wave 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) infinite;
+    transform: translate3d(0, 0, 0);
+  }
+  
+  .wave:nth-of-type(2) {
+    top: -175px;
+    animation: wave 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) -.125s infinite, swell 7s ease -1.25s infinite;
+    opacity: 1;
+  }
+  
+  @keyframes wave {
+    0% {
+      margin-left: 0;
+    }
+    100% {
+      margin-left: -1600px;
+    }
+  }
+  
+  @keyframes swell {
+    0%, 100% {
+      transform: translate3d(0,-25px,0);
+    }
+    50% {
+      transform: translate3d(0,5px,0);
+    }
+  }
 
-.dropdown-list li {
-    padding: 0.8em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.dropdown-list li:hover {
-    background-color: #f28c28;
-    color: white;
+  @keyframes fadeInElements {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
