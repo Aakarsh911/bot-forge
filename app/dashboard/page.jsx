@@ -1,14 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faRobot, faChartLine, faFileAlt, faSignOutAlt, faPlus, faMicrochip, faCogs, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import Sidebar from '@/components/Sidebar';
 import './dashboard.css';
 
 export default function Dashboard() {
 	const { data: session, status } = useSession();
 	const router = useRouter();
+	const [expanded, setExpanded] = useState(false);
 
 	if (status === 'loading') {
 		return <p>Loading...</p>;
@@ -19,47 +22,34 @@ export default function Dashboard() {
 		return null;
 	}
 
+	const handleExpand = () => {
+		setExpanded(!expanded);
+    const chatbot = document.querySelector('.add-chatbot-button');
+    const mainContent = document.querySelector('.main-content');
+    const plusIcon = document.querySelector('.plus-icon');
+    const chatbotText = document.querySelector('.add-chatbot-button p');
+    plusIcon.style.display = "none";
+    chatbotText.style.display = "none";
+    chatbot.style.animation = "expand 0.5s forwards";
+    mainContent.style.animation = "remove-margin 0.5s forwards";
+    setTimeout(() => {
+      router.push('/create');
+    }, 1100);
+	};
+
 	return (
 		<div className="dashboard">
-			<div className="sidebar">
-				<ul>
-					<li>
-						<a href="#" title="My Bots" className='active'>
-							<FontAwesomeIcon icon={faRobot} className="fa-icon" />
-						</a>
-					</li>
-					<li>
-						<a href="#" title="Analytics">
-							<FontAwesomeIcon icon={faChartLine} className="fa-icon" />
-						</a>
-					</li>
-					<li>
-						<a href="#" title="Guide">
-							<FontAwesomeIcon icon={faFileAlt} className="fa-icon" />
-						</a>
-					</li>
-				</ul>
-				<ul className="bottom">
-					<li>
-						<a href="#" title="Settings">
-							<FontAwesomeIcon icon={faCog} className="fa-icon" />
-						</a>
-					</li>
-					<li>
-						<a href="#" title="Logout" onClick={() => signOut()}>
-							<FontAwesomeIcon icon={faSignOutAlt} className="fa-icon" />
-						</a>
-					</li>
-				</ul>
-			</div>
-
+      <Sidebar />
 			<div className="main-content">
 				<h1>Dashboard</h1>
 
 				<div className="chatbots-list">
-					<div className="add-chatbot-button">
+					<div
+						className="add-chatbot-button"
+						onClick={handleExpand}
+					>
 						<FontAwesomeIcon icon={faPlus} className="plus-icon" />
-            <p>Add Chatbot</p>
+						<p>Add Chatbot</p>
 					</div>
 				</div>
 			</div>

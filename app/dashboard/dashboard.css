@@ -2,7 +2,7 @@
 
 body {
 	font-family: 'Inter', sans-serif;
-    background: #121212; /* Dark shade of black for body background */
+    background: #121212;
 }
 
 .dashboard {
@@ -12,7 +12,7 @@ body {
 
 .sidebar {
 	width: 2em;
-	background-color: #1c1c1c; /* Dark black for sidebar */
+	background-color: #1c1c1c;
 	padding: 0.625em;
 	height: 100vh;
 	position: fixed;
@@ -65,19 +65,19 @@ body {
 }
 
 .sidebar ul li a:hover {
-	background-color: #333333; /* Darker shade on hover */
+	background-color: #333333;
 }
 
 .sidebar ul li a .fa-icon {
 	font-size: 1.5em;
-	color: #f1f1f1; /* Light gray color for icons */
+	color: #f1f1f1;
 }
 
 .sidebar ul li a:hover::after {
 	content: attr(title);
 	position: absolute;
 	left: 3.5em;
-	background-color: #1c1c1c; /* Dark black for tooltip background */
+	background-color: #1c1c1c;
 	color: white;
 	padding: 0.3125em 0.625em;
 	border-radius: 0.25em;
@@ -92,7 +92,7 @@ body {
 	top: 50%;
 	transform: translate(-560%, 50%);
 	border: 0.3125em solid transparent;
-	border-left-color: #1c1c1c; /* Dark black for arrow */
+	border-left-color: #1c1c1c;
     rotate: 180deg;
 }
 
@@ -118,7 +118,7 @@ body {
 }
 
 .active {
-    background-color: #333333; /* Darker black for active state */
+    background-color: #333333;
 }
 
 .chatbots-list {
@@ -130,7 +130,6 @@ body {
 
 .add-chatbot-button {
 	width: 15vw;
-    max-width: 18em;
     height: 10em;
 	border-radius: 15px;
 	display: flex;
@@ -138,9 +137,9 @@ body {
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
-	transition: background-color 0.3s ease;
+	transition: all 0.5s ease;
 	position: relative;
-	background-color: #f28c28; /* Complementary orange color for Add Bot button */
+	background-color: #f28c28;
     color: white;
     min-width: 10em;
 }
@@ -158,9 +157,40 @@ body {
 }
 
 .add-chatbot-button:hover {
-    background-color: #d97a20; /* Darker shade of orange on hover */
+    background-color: #d97a20;
 }
 
 .chatbot-item:hover {
 	opacity: 0.9;
+}
+
+@keyframes expand {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: translate(0.25em, -5.75em);
+        left: 0;
+        right: 0;
+        top: 0;
+        width: 99.5%;
+        height: 97vh;
+        margin: 0;
+        padding: 0;
+        border: 5px solid #f28c28;
+        background: white;
+    }
+}
+
+@keyframes fade-out {
+    100% {
+        background: white;
+    }
+}
+
+@keyframes remove-margin {
+    100% {
+        background: transparent;
+        margin: 0;
+    }
 }

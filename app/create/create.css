@@ -1,0 +1,28 @@
+.create-box {
+    border: 5px solid #f28c28;
+    flex: 1;
+	margin-left: 2.3em;
+    background: white;
+    border-radius: 1em;
+    height: 97vh;
+    position: fixed;
+    right: 0.3em;
+    left: 1em;
+    padding-left: 2em;
+    z-index: 1;
+    left: 0.95em;
+    right: 0.1em;
+}
+
+.create-box h1 {
+    animation: fade-in 1s forwards;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
