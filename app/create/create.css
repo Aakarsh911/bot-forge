@@ -20,6 +20,8 @@ body {
     right: 0.1em;
     overflow-y: auto;
     color: white;
+    width: 94.5%;
+    overflow: hidden;
 }
 
 .create-content {
