@@ -113,16 +113,15 @@ body {
 }
 
 .chat-message.bot {
-    animation: fade-and-slide-up 1s forwards ease-in-out;
+    animation: fade-and-slide-up 0.5s forwards ease-in-out;
     animation-delay: 1s;
     opacity: 0;
     background: white;
 
 }
 
-/* Target the first child and remove the animation delay */
 .chat-message.bot:first-child {
-    animation-delay: 0s;  /* Remove delay for the first child */
+    animation-delay: 0s;
 }
 
 
@@ -208,7 +207,7 @@ body {
 @keyframes fade-and-slide-up {
     0% {
         opacity: 0;
-        transform: translateY(100%);
+        transform: translateY(10%);
     }
     100% {
         opacity: 1;
@@ -232,24 +231,27 @@ body {
 .bot-icon {
     color: #0157f9;
     font-size: 1.5em;
-    margin-right: 1em;
-    left: 1em;
-    position: fixed;
     margin-top: -0.1em;
+    margin-right: 0.5em;
+}
+
+.bot-message-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
 }
 
 .user-message-wrapper{
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    width: inherit;
-
-
+    justify-content: flex-start;
+    width: 100%;
 }
 
 .user-image {
+    flex-shrink: 0;
     left: 1.5em;
-    position: fixed;
     margin-top: -0.1em;
     width: 2.5em;
     height: 2.5em;
@@ -263,4 +265,16 @@ body {
 .user-image img {
     height: 2.5em;
     width: 2.5em;
+}
+
+.user-message-text {
+    text-align: left;
+}
+
+.chat-message .dropdown-container {
+    display: none;
+}
+
+.chat-message:nth-child(5) .dropdown-container{
+    display: block;
 }

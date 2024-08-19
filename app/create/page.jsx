@@ -135,23 +135,15 @@ export default function CreateBot() {
     return (
         <div className="dashboard">
             <Sidebar/>
-            <div className="user-image">
-                <img
-                    src={session.user.image}
-                    alt="User Image"
-                    width={50}
-                    height={50}
-                />
-            </div>
             <div className="create-box">
                 <div className="chat-window">
                     {chatLog.map((entry, index) => (
                         <div key={index} className={`chat-message ${entry.bot ? 'bot' : 'user'}`}>
                             {entry.bot ? (
                                 <div className="bot-message-container">
-                                 <span className="bot-message-text">
-                                     <FontAwesomeIcon icon={faRobot} className="bot-icon"/> <span className="bot-message">{entry.message}</span>
-                                 </span>
+                                    <span className="bot-message-text">
+                                        <FontAwesomeIcon icon={faRobot} className="bot-icon"/> <span className="bot-message">{entry.message}</span>
+                                    </span>
                                 </div>
                             ) : (
                                 <div className="user-message-wrapper">
@@ -163,16 +155,10 @@ export default function CreateBot() {
                                             height={50}
                                         />
                                     </div>
-                                    {entry.message}
+                                    <span className='user-message-text'>{entry.message}</span>
                                 </div>
                             )}
-                        </div>
-                    ))}
-                    <div ref={chatEndRef}/>
-
-                    <div className="user-input">
-                        {currentStep === 3 ? (
-                            <div className="dropdown-container">
+                            {currentStep === 3 && entry.bot && <div className="dropdown-container">
                                 <div
                                     className="dropdown-trigger"
                                     onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -185,17 +171,20 @@ export default function CreateBot() {
                                         <div onClick={() => handleDropdownSelect('image')}>Image</div>
                                     </div>
                                 )}
-                            </div>
-                        ) : (
-                            <input
-                                type="text"
-                                value={userInput}
-                                onChange={(e) => setUserInput(e.target.value)}
-                                onKeyDown={handleTextSubmit}
-                                placeholder="Type your response..."
-                                className='user-input-field'
-                            />
-                        )}
+                            </div>}
+                        </div>
+                    ))}
+                    <div ref={chatEndRef}/>
+
+                    <div className="user-input">
+                        <input
+                            type="text"
+                            value={userInput}
+                            onChange={(e) => setUserInput(e.target.value)}
+                            onKeyDown={handleTextSubmit}
+                            placeholder="Type your response..."
+                            className='user-input-field'
+                        /> 
                     </div>
                 </div>
                 <div className="ocean">
