@@ -118,8 +118,8 @@ body {
     top: 0;
     width: 2px;
     height: 2%;
-    background: white;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    background: #0157f9;
+    box-shadow: 0 0 10px rgba(#0157f9, 0.8);
     animation: glowMove 3s linear forwards;
     z-index: -1; /* Behind other elements but above the grid */
 }
@@ -131,11 +131,11 @@ body {
     height: 2px;
     top: 14px;
     left: 0px;
-    background: white;
+    background: #0157f9;
     border-radius: 50%;
     z-index: -1; /* Behind the line */
     pointer-events: none;
-    box-shadow: 0 0 1000px 40px rgba(255, 255, 255, 1); /* Glowing effect */
+    box-shadow: 0 0 1000px 40px #0157f9; /* Glowing effect */
 }
 
 

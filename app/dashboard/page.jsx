@@ -96,7 +96,6 @@ export default function Dashboard() {
 		<div className="dashboard">
 			<Sidebar />
 			<div className="main-content">
-				{/* Fainter Grid Div */}
 				<div className="grid-background"></div>
 
 				<h1>Dashboard</h1>
