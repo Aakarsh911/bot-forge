@@ -120,7 +120,7 @@ body {
     height: 2%;
     background: #0157f9;
     box-shadow: 0 0 10px rgba(#0157f9, 0.8);
-    animation: glowMove 3s linear forwards;
+    animation: glowMove 2s linear forwards;
     z-index: -1; /* Behind other elements but above the grid */
 }
 
@@ -148,6 +148,7 @@ body {
     100% {
         top: 100%;
         opacity: 0;
+        height: 50%;
     }
 }
 

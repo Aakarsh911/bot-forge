@@ -57,7 +57,7 @@ export default function Dashboard() {
 		};
 
 		// Spawn the glowing line at intervals
-		const intervalId = setInterval(generateGlowingLineWithBorders, 1000); // Reduced frequency
+		const intervalId = setInterval(generateGlowingLineWithBorders, 500); // Reduced frequency
 
 		return () => {
 			clearInterval(intervalId);

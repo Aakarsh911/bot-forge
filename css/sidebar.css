@@ -82,3 +82,7 @@
 	border-left-color: #1c1c1c;
     rotate: 180deg;
 }
+
+.active {
+    background-color: #37393b;
+}
