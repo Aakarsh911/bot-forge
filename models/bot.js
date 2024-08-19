@@ -57,6 +57,6 @@ const BotSchema = new Schema({
     },
 });
 
-const User = models.User || model("User", UserSchema);
+const Bot = models.Bot || model("Bot", BotSchema);
 
-export default User;
+export default Bot;

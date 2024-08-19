@@ -9,24 +9,51 @@ import './create.css';
 export default function CreateBot() {
     const [chatLog, setChatLog] = useState([{ bot: true, message: "What would you like to name your bot?" }]);
     const [userInput, setUserInput] = useState("");
-    const [colorInput, setColorInput] = useState("");
     const [currentStep, setCurrentStep] = useState(1);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    // Default values for the bot schema
     const [botData, setBotData] = useState({
         name: "",
-        widgetColor: "",
-        widgetLogo: null,
+        widgetColor: "#0157f9", // Default widget color
+        widgetLogo: "default-logo.png", // Default logo
         visiblePrompt: "",
-        botResponseColor: "",
-        userResponseColor: "",
-        botTypingColor: "",
-        API_URLs: "",
-        botPosition: "",
+        predefinedPrompts: new Map(),
+        botResponseColor: "#ffffff", // Default bot response color
+        userResponseColor: "#ffffff", // Default user response color
+        botTypingColor: "#0157f9", // Default typing color
+        API_URLs: [["https://default-api-url.com"]], // Default API URL
+        botPosition: "bottom-right", // Default bot position
         modelType: "",
-        closeButtonColor: "",
+        closeButtonColor: "#ffffff", // Default close button color
+        endMessageRating: [], // Default empty array for message ratings
     });
+
     const { data: session, status } = useSession();
     const router = useRouter();
-    const chatEndRef = useRef(null); // Ref to scroll to the last message
+    const chatEndRef = useRef(null);
+
+    // dont display the input area if the step is 4
+    useEffect(() => {
+        if (currentStep === 4) {
+            const userInputField = document.querySelector('.user-input-field');
+            const chatMessages = document.querySelectorAll('.chat-message');
+            const ocean = document.querySelector('.ocean');
+            const animLoader = document.querySelector('.anim-loader');
+
+            ocean.style.position = 'relative';
+            animLoader.style.display = 'block';
+            ocean.style.animation = "slide-up 2s forwards";
+            animLoader.style.animation = "slide-up 2s forwards";
+
+            chatMessages.forEach(chatMessage => {
+                chatMessage.style.display = 'none';
+            });
+            userInputField.style.display = 'none';
+
+        }
+    }
+    , [currentStep]);
 
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -64,42 +91,16 @@ export default function CreateBot() {
         }
     };
 
-    const handleConfirmColor = () => {
+    const handleDropdownSelect = (modelType) => {
         setChatLog((prevLog) => [
             ...prevLog,
-            { bot: false, message: `Selected Color: ${colorInput}` }
+            { bot: false, message: `Selected Model Type: ${modelType}` }
         ]);
         setBotData({
             ...botData,
-            [getStepField(currentStep)]: colorInput
+            modelType: modelType
         });
-        handleNextStep();
-    };
-
-    const handleFileDrop = (e) => {
-        e.preventDefault();
-        const file = e.dataTransfer.files[0];
-        setChatLog((prevLog) => [
-            ...prevLog,
-            { bot: false, message: `Uploaded File: ${file.name}` }
-        ]);
-        setBotData({
-            ...botData,
-            [getStepField(currentStep)]: file
-        });
-        handleNextStep();
-    };
-
-    const handleFileClick = (e) => {
-        const file = e.target.files[0];
-        setChatLog((prevLog) => [
-            ...prevLog,
-            { bot: false, message: `Uploaded File: ${file.name}` }
-        ]);
-        setBotData({
-            ...botData,
-            [getStepField(currentStep)]: file
-        });
+        setDropdownOpen(false);
         handleNextStep();
     };
 
@@ -108,25 +109,9 @@ export default function CreateBot() {
             case 1:
                 return "What would you like to name your bot?";
             case 2:
-                return "What should be the widget color?";
+                return "What prompt should be visible?";
             case 3:
-                return "Upload a widget logo.";
-            case 4:
-                return "What should be the visible prompt?";
-            case 5:
-                return "What should be the bot's response color?";
-            case 6:
-                return "What should be the user's response color?";
-            case 7:
-                return "What should be the bot's typing indicator color?";
-            case 8:
-                return "Provide the API URLs the bot will use.";
-            case 9:
-                return "Where should the bot be positioned on the screen?";
-            case 10:
-                return "Which model type should the bot use?";
-            case 11:
-                return "What color should the close button be?";
+                return "Which model type should the bot use? (text/image)";
             default:
                 return "Thank you! You've completed setting up your bot.";
         }
@@ -135,16 +120,8 @@ export default function CreateBot() {
     const getStepField = (step) => {
         switch (step) {
             case 1: return "name";
-            case 2: return "widgetColor";
-            case 3: return "widgetLogo";
-            case 4: return "visiblePrompt";
-            case 5: return "botResponseColor";
-            case 6: return "userResponseColor";
-            case 7: return "botTypingColor";
-            case 8: return "API_URLs";
-            case 9: return "botPosition";
-            case 10: return "modelType";
-            case 11: return "closeButtonColor";
+            case 2: return "visiblePrompt";
+            case 3: return "modelType";
             default: return null;
         }
     };
@@ -162,31 +139,20 @@ export default function CreateBot() {
                     <div ref={chatEndRef} />
 
                     <div className="user-input">
-                        {currentStep === 2 || currentStep === 5 || currentStep === 6 || currentStep === 7 || currentStep === 11 ? (
-                            <>
-                                <input
-                                    type="color"
-                                    value={colorInput}
-                                    onChange={(e) => setColorInput(e.target.value)}
-                                />
-                                <button className="confirm-button" onClick={handleConfirmColor}>
-                                    Confirm Color
-                                </button>
-                            </>
-                        ) : currentStep === 3 ? (
-                            <div
-                                className="drop-area"
-                                onDragOver={(e) => e.preventDefault()}
-                                onDrop={handleFileDrop}
-                                onClick={() => document.getElementById('fileInput').click()}
-                            >
-                                <input
-                                    id="fileInput"
-                                    type="file"
-                                    onChange={handleFileClick}
-                                    style={{ display: 'none' }}
-                                />
-                                <p>Drag & Drop a file here or click to upload</p>
+                        {currentStep === 3 ? (
+                            <div className="dropdown-container">
+                                <div
+                                    className="dropdown-trigger"
+                                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                                >
+                                    Select Model Type
+                                </div>
+                                {dropdownOpen && (
+                                    <div className="dropdown-options">
+                                        <div onClick={() => handleDropdownSelect('text')}>Text</div>
+                                        <div onClick={() => handleDropdownSelect('image')}>Image</div>
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <input
@@ -195,6 +161,7 @@ export default function CreateBot() {
                                 onChange={(e) => setUserInput(e.target.value)}
                                 onKeyDown={handleTextSubmit}
                                 placeholder="Type your response..."
+                                className='user-input-field'
                             />
                         )}
                     </div>
@@ -202,6 +169,9 @@ export default function CreateBot() {
                 <div className="ocean">
                     <div className="wave"></div>
                     <div className="wave"></div>
+                </div>
+                <div className="anim-loader">
+
                 </div>
             </div>
         </div>

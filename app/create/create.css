@@ -105,12 +105,16 @@ body {
 }
 
 .chat-message.bot {
-    background: #39777d;
+    /* background: #39777d; */
+    background: rgb(232,137,215);
+    background: linear-gradient(90deg, rgba(232,137,215,0) 0%, rgba(212,133,215,1) 0%, rgba(82,106,215,1) 88%);
 }
 
 .chat-message.user {
     align-self: flex-end;
-    background: #02576f;
+    /* background: #02576f; */
+    background: rgb(41,245,255);
+    background: linear-gradient(90deg, rgba(41,245,255,0) 0%, rgba(60,188,247,1) 0%, rgba(201,82,215,1) 88%);
 }
 
 .user-input {
@@ -130,61 +134,57 @@ body {
     color: #ffffff;
 }
 
-.user-input input[type="color"],
-.user-input input[type="file"] {
+.dropdown-container {
     position: relative;
-    left: 0em;
-    margin-right: -1.5em;
-    padding: 0.5em;
-    border-radius: 8px;
-    border: none;
-    background: #2a2a2a;
-    color: #ffffff;
-    cursor: pointer;
-    margin-top: 1em;
+    display: inline-block;
 }
 
-.drop-area {
-    position: relative;
-    left: 0em;
-    margin-right: -1.5em;
-    padding: 2em;
-    border: 2px dashed #ffffff;
-    border-radius: 8px;
-    text-align: center;
-    color: #ffffff;
-    background: rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    margin-top: 1em;
-    transition: background 0.3s ease;
-}
-
-.drop-area:hover {
-    background: rgba(0, 0, 0, 0.4);
-}
-
-.user-input input[type="color"] {
-    width: 102%;
-    margin-right: -1.5em;
-    margin-top: 1em;
-    padding: 0.5em;
-    border-radius: 8px;
-    border: none;
-    background: #2a2a2a;
-    color: #ffffff;
-    cursor: pointer;
-}
-
-.confirm-button {
-    margin-top: 0.5em;
-    padding: 0.5em 1em;
-    background-color: #4CAF50;
+.dropdown-trigger {
+    padding: 10px 20px;
+    background-color: #0157f9;
     color: white;
-    border: none;
-    border-radius: 5px;
     cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-align: center;
 }
 
-.confirm-button:hover {
-    background-color: #45a049;
+.dropdown-options {
+    position: absolute;
+    top: -200%;
+    left: 0;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    z-index: 10;
+    color: black;
+}
+
+.dropdown-options div {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #fff;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-options div:hover {
+    background-color: #eaeaea;
+}
+
+.anim-loader {
+    height: 120vh;
+    width: 100%;
+    background: #02576f;
+    display: none;
+}
+
+@keyframes slide-up {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-100vh);
+    }
+    
 }
