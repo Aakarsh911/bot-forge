@@ -12,15 +12,11 @@ body {
     border-radius: 1em;
     height: 98vh;
     position: fixed;
-    right: 0.3em;
+    right: 0.5em;
     left: 1em;
-    padding-left: 2em;
     z-index: 1;
-    left: 0.95em;
-    right: 0.1em;
     overflow-y: auto;
     color: white;
-    width: 94.5%;
     overflow: hidden;
 }
 
@@ -40,6 +36,8 @@ body {
     left:0;
     background: #015871;
     animation: fadeInElements 1s linear;
+    z-index: -1;
+    opacity: 1;
   }
   
   .wave {
@@ -83,4 +81,122 @@ body {
     100% {
         opacity: 1;
     }
+}
+
+.chat-window {
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 1em;
+    overflow-y: auto;
+    position: relative;
+}
+
+.chat-message {
+    max-width: 70%;
+    margin-bottom: 1em;
+    padding: 1em;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    animation: fadeInElements 0.3s forwards;
+}
+
+.chat-message.bot {
+    background: rgba(1, 88, 113, 0.8);
+}
+
+.chat-message.user {
+    align-self: flex-end;
+    background: rgba(30, 150, 120, 0.8);
+}
+
+.user-input {
+    position: fixed;
+    bottom: 1em;
+    left: 4em;
+    right: 3em;
+    z-index: 1;
+}
+
+.user-input input {
+    width: 100%;
+    padding: 1em;
+    border-radius: 8px;
+    border: none;
+    background: #2a2a2a;
+    color: #ffffff;
+}
+
+.user-input input[type="color"],
+.user-input input[type="file"] {
+    width: 100%;
+    padding: 0.5em;
+    border-radius: 8px;
+    border: none;
+    background: #2a2a2a;
+    color: #ffffff;
+    cursor: pointer;
+    margin-top: 1em;
+}
+
+.drop-area {
+    width: 100%;
+    padding: 2em;
+    border: 2px dashed #ffffff;
+    border-radius: 8px;
+    text-align: center;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    margin-top: 1em;
+    transition: background 0.3s ease;
+}
+
+.drop-area:hover {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.user-input input[type="color"] {
+    width: 100%;
+    margin-top: 1em;
+    padding: 0.5em;
+    border-radius: 8px;
+    border: none;
+    background: #2a2a2a;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.confirm-button {
+    margin-top: 0.5em;
+    padding: 0.5em 1em;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.confirm-button:hover {
+    background-color: #45a049;
+}
+
+.drop-area {
+    width: 100%;
+    padding: 2em;
+    border: 2px dashed #ffffff;
+    border-radius: 8px;
+    text-align: center;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    margin-top: 1em;
+    transition: background 0.3s ease;
+}
+
+.drop-area:hover {
+    background: rgba(0, 0, 0, 0.4);
 }
