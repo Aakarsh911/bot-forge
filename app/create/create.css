@@ -105,19 +105,19 @@ body {
 }
 
 .chat-message.bot {
-    background: rgba(1, 88, 113, 0.8);
+    background: #39777d;
 }
 
 .chat-message.user {
     align-self: flex-end;
-    background: rgba(30, 150, 120, 0.8);
+    background: #02576f;
 }
 
 .user-input {
     position: fixed;
     bottom: 1em;
     left: 4em;
-    right: 3em;
+    right: 2.75em;
     z-index: 1;
 }
 
@@ -132,7 +132,9 @@ body {
 
 .user-input input[type="color"],
 .user-input input[type="file"] {
-    width: 100%;
+    position: relative;
+    left: 0em;
+    margin-right: -1.5em;
     padding: 0.5em;
     border-radius: 8px;
     border: none;
@@ -143,7 +145,9 @@ body {
 }
 
 .drop-area {
-    width: 100%;
+    position: relative;
+    left: 0em;
+    margin-right: -1.5em;
     padding: 2em;
     border: 2px dashed #ffffff;
     border-radius: 8px;
@@ -160,7 +164,8 @@ body {
 }
 
 .user-input input[type="color"] {
-    width: 100%;
+    width: 102%;
+    margin-right: -1.5em;
     margin-top: 1em;
     padding: 0.5em;
     border-radius: 8px;
@@ -182,21 +187,4 @@ body {
 
 .confirm-button:hover {
     background-color: #45a049;
-}
-
-.drop-area {
-    width: 100%;
-    padding: 2em;
-    border: 2px dashed #ffffff;
-    border-radius: 8px;
-    text-align: center;
-    color: #ffffff;
-    background: rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    margin-top: 1em;
-    transition: background 0.3s ease;
-}
-
-.drop-area:hover {
-    background: rgba(0, 0, 0, 0.4);
 }
