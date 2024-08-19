@@ -1,13 +1,15 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import {useState, useEffect, useRef} from 'react';
+import {useSession} from 'next-auth/react';
+import {useRouter} from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRobot } from '@fortawesome/free-solid-svg-icons';
 import './create.css';
 
 export default function CreateBot() {
-    const [chatLog, setChatLog] = useState([{ bot: true, message: "What would you like to name your bot?" }]);
+    const [chatLog, setChatLog] = useState([{bot: true, message: "What would you like to name your bot?"}]);
     const [userInput, setUserInput] = useState("");
     const [currentStep, setCurrentStep] = useState(1);
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -29,34 +31,34 @@ export default function CreateBot() {
         endMessageRating: [], // Default empty array for message ratings
     });
 
-    const { data: session, status } = useSession();
+    const {data: session, status} = useSession();
     const router = useRouter();
     const chatEndRef = useRef(null);
 
     // dont display the input area if the step is 4
     useEffect(() => {
-        if (currentStep === 4) {
-            const userInputField = document.querySelector('.user-input-field');
-            const chatMessages = document.querySelectorAll('.chat-message');
-            const ocean = document.querySelector('.ocean');
-            const animLoader = document.querySelector('.anim-loader');
+            if (currentStep === 4) {
+                const userInputField = document.querySelector('.user-input-field');
+                const chatMessages = document.querySelectorAll('.chat-message');
+                const ocean = document.querySelector('.ocean');
+                const animLoader = document.querySelector('.anim-loader');
 
-            ocean.style.position = 'relative';
-            animLoader.style.display = 'block';
-            ocean.style.animation = "slide-up 2s forwards";
-            animLoader.style.animation = "slide-up 2s forwards";
+                ocean.style.position = 'relative';
+                animLoader.style.display = 'block';
+                ocean.style.animation = "slide-up 2s forwards";
+                animLoader.style.animation = "slide-up 2s forwards";
 
-            chatMessages.forEach(chatMessage => {
-                chatMessage.style.display = 'none';
-            });
-            userInputField.style.display = 'none';
+                chatMessages.forEach(chatMessage => {
+                    chatMessage.style.display = 'none';
+                });
+                userInputField.style.display = 'none';
 
+            }
         }
-    }
-    , [currentStep]);
+        , [currentStep]);
 
     useEffect(() => {
-        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        chatEndRef.current?.scrollIntoView({behavior: "smooth"});
     }, [chatLog]);
 
     if (status === 'loading') {
@@ -71,7 +73,7 @@ export default function CreateBot() {
     const handleNextStep = () => {
         setChatLog((prevLog) => [
             ...prevLog,
-            { bot: true, message: getNextQuestion(currentStep + 1) }
+            {bot: true, message: getNextQuestion(currentStep + 1)}
         ]);
         setCurrentStep(currentStep + 1);
     };
@@ -80,7 +82,7 @@ export default function CreateBot() {
         if (e.key === 'Enter' && userInput.trim()) {
             setChatLog((prevLog) => [
                 ...prevLog,
-                { bot: false, message: userInput }
+                {bot: false, message: userInput}
             ]);
             setBotData({
                 ...botData,
@@ -94,7 +96,7 @@ export default function CreateBot() {
     const handleDropdownSelect = (modelType) => {
         setChatLog((prevLog) => [
             ...prevLog,
-            { bot: false, message: `Selected Model Type: ${modelType}` }
+            {bot: false, message: `Selected Model Type: ${modelType}`}
         ]);
         setBotData({
             ...botData,
@@ -111,7 +113,7 @@ export default function CreateBot() {
             case 2:
                 return "What prompt should be visible?";
             case 3:
-                return "Which model type should the bot use? (text/image)";
+                return "Which model type should the bot use?";
             default:
                 return "Thank you! You've completed setting up your bot.";
         }
@@ -119,24 +121,54 @@ export default function CreateBot() {
 
     const getStepField = (step) => {
         switch (step) {
-            case 1: return "name";
-            case 2: return "visiblePrompt";
-            case 3: return "modelType";
-            default: return null;
+            case 1:
+                return "name";
+            case 2:
+                return "visiblePrompt";
+            case 3:
+                return "modelType";
+            default:
+                return null;
         }
     };
 
     return (
         <div className="dashboard">
-            <Sidebar />
+            <Sidebar/>
+            <div className="user-image">
+                <img
+                    src={session.user.image}
+                    alt="User Image"
+                    width={50}
+                    height={50}
+                />
+            </div>
             <div className="create-box">
                 <div className="chat-window">
                     {chatLog.map((entry, index) => (
                         <div key={index} className={`chat-message ${entry.bot ? 'bot' : 'user'}`}>
-                            {entry.message}
+                            {entry.bot ? (
+                                <div className="bot-message-container">
+                                 <span className="bot-message-text">
+                                     <FontAwesomeIcon icon={faRobot} className="bot-icon"/> <span className="bot-message">{entry.message}</span>
+                                 </span>
+                                </div>
+                            ) : (
+                                <div className="user-message-wrapper">
+                                    <div className="user-image">
+                                        <img
+                                            src={session.user.image}
+                                            alt="User Image"
+                                            width={50}
+                                            height={50}
+                                        />
+                                    </div>
+                                    {entry.message}
+                                </div>
+                            )}
                         </div>
                     ))}
-                    <div ref={chatEndRef} />
+                    <div ref={chatEndRef}/>
 
                     <div className="user-input">
                         {currentStep === 3 ? (
