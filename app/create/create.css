@@ -99,12 +99,12 @@ body {
     display: flex;
     justify-content: center;
     align-self: center;
-    width: 30em;
+    width: 50em;
     margin-bottom: 1em;
     padding: 1em;
     border-radius: 10px;
     background: rgba(0, 0, 0, 0.3);
-    color: #ffffff;
+    color: #2b3e50;
     height: auto;   /* Set height to auto so it adjusts dynamically */
     word-wrap: break-word;  /* Enable word wrapping */
     flex-wrap: wrap;  /* Ensure text wraps inside the flex container */
@@ -116,7 +116,7 @@ body {
     animation: fade-and-slide-up 0.5s forwards ease-in-out;
     animation-delay: 1s;
     opacity: 0;
-    background: white;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
 
 }
 
@@ -187,13 +187,6 @@ body {
     background-color: #eaeaea;
 }
 
-.anim-loader {
-    height: 120vh;
-    width: 100%;
-    background: #02576f;
-    display: none;
-}
-
 @keyframes slide-up {
     0% {
         transform: translateY(0);
@@ -219,7 +212,7 @@ body {
 .bot-message-text {
     display: flex;
     align-items: center;
-    background: linear-gradient(135deg, #0157f9, #4285f4); /* Gradient applied to the text */
+    background: white; /* Gradient applied to the text */
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent; /* Text color is transparent to show the gradient */
@@ -229,7 +222,7 @@ body {
 }
 
 .bot-icon {
-    color: #0157f9;
+    color:  white;
     font-size: 1.5em;
     margin-top: -0.1em;
     margin-right: 0.5em;
@@ -252,7 +245,6 @@ body {
 .user-image {
     flex-shrink: 0;
     left: 1.5em;
-    margin-top: -0.1em;
     width: 2.5em;
     height: 2.5em;
     border-radius: 50%;
@@ -277,4 +269,90 @@ body {
 
 .chat-message:nth-child(5) .dropdown-container{
     display: block;
+}
+
+.anim-loader {
+    height: 100vh;
+    width: 100%;
+    background: #02576f;
+    display: none;
+    position: relative;
+}
+
+.checkmark-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.checkmark-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkmark {
+    width: 80px;
+    height: 80px;
+    stroke-width: 2;
+    stroke: #fff;
+    stroke-miterlimit: 10;
+    fill: none;
+    animation: draw-check 0.8s ease forwards, fill-circle 0.4s ease-in-out 0.8s forwards;
+}
+
+.checkmark-circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke: #fff;
+    fill: none;
+    animation: draw-circle 1.2s ease forwards;
+}
+
+.checkmark-check {
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    stroke-width: 4;
+    animation: draw-check 0.5s ease 0.6s forwards;
+}
+
+.bot-created-text {
+    text-align: center;
+    color: white;
+    font-size: 1.5em;
+    margin-top: 1em;
+    opacity: 1;
+    transition: opacity 1s ease;
+}
+
+@keyframes draw-circle {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes draw-check {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes fill-circle {
+    100% {
+        fill: #28a745;
+    }
+}
+
+@keyframes fade-out {
+    to {
+        opacity: 0;
+    }
 }

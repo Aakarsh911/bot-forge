@@ -9,104 +9,140 @@ import Sidebar from '@/components/Sidebar';
 import './dashboard.css';
 
 export default function Dashboard() {
-	const { data: session, status } = useSession();
-	const router = useRouter();
-	const [expanded, setExpanded] = useState(false);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [expanded, setExpanded] = useState(false);
+  const [bots, setBots] = useState([]); // State to store fetched bots
 
-	useEffect(() => {
-		const body = document.querySelector('body');
-		body.style.background = "#1d1f20";
+  useEffect(() => {
+    const fetchBots = async () => {
+      if (status === 'authenticated') {
+        try {
+          const response = await fetch('/api/bots/fetch', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
 
-		const generateGlowingLineWithBorders = () => {
-			const mainContent = document.querySelector('.main-content');
-			const gridSize = 40; // Match the grid size used in the background
-			const line = document.createElement('div');
-			line.classList.add('glowing-line');
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
 
-			// Random column placement snapped to grid
-			const randomColumn = Math.floor(Math.random() * (mainContent.offsetWidth / gridSize)) * gridSize;
-			line.style.left = `${randomColumn}px`;
+          const data = await response.json();
+          setBots(data.bots);
+        } catch (error) {
+          console.error('Error fetching bots:', error);
+        }
+      }
+    };
 
-			// Append the glowing line
-			mainContent.appendChild(line);
+    fetchBots();
+  }, [status]);
 
-			// Apply glow to surrounding grid cells
-			const applyGridGlow = () => {
-				const columnPosition = Math.floor(randomColumn / gridSize);
-				const cellsToGlow = document.querySelectorAll(`.grid-cell.col-${columnPosition - 1}, .grid-cell.col-${columnPosition}, .grid-cell.col-${columnPosition + 1}`);
-				
-				cellsToGlow.forEach(cell => {
-					cell.classList.add('glow-border');
-				});
+  useEffect(() => {
+    const body = document.querySelector('body');
+    body.style.background = "#1d1f20";
 
-				// Remove glow after a short delay
-				setTimeout(() => {
-					cellsToGlow.forEach(cell => {
-						cell.classList.remove('glow-border');
-					});
-				}, 500); // Glow duration
-			};
+    const generateGlowingLineWithBorders = () => {
+      const mainContent = document.querySelector('.main-content');
+      const gridSize = 40; // Match the grid size used in the background
+      const line = document.createElement('div');
+      line.classList.add('glowing-line');
 
-			// Trigger the glow effect
-			setTimeout(applyGridGlow, 300); // Trigger glow as the line moves
+      // Random column placement snapped to grid
+      const randomColumn = Math.floor(Math.random() * (mainContent.offsetWidth / gridSize)) * gridSize;
+      line.style.left = `${randomColumn}px`;
 
-			// Remove the line after animation
-			setTimeout(() => {
-				mainContent.removeChild(line);
-			}, 3000); // Line duration
-		};
+      // Append the glowing line
+      mainContent.appendChild(line);
 
-		// Spawn the glowing line at intervals
-		const intervalId = setInterval(generateGlowingLineWithBorders, 500); // Reduced frequency
+      // Apply glow to surrounding grid cells
+      const applyGridGlow = () => {
+        const columnPosition = Math.floor(randomColumn / gridSize);
+        const cellsToGlow = document.querySelectorAll(`.grid-cell.col-${columnPosition - 1}, .grid-cell.col-${columnPosition}, .grid-cell.col-${columnPosition + 1}`);
 
-		return () => {
-			clearInterval(intervalId);
-		};
-	}, []);
+        cellsToGlow.forEach(cell => {
+          cell.classList.add('glow-border');
+        });
 
-	if (status === 'loading') {
-		return <p>Loading...</p>;
-	}
+        // Remove glow after a short delay
+        setTimeout(() => {
+          cellsToGlow.forEach(cell => {
+            cell.classList.remove('glow-border');
+          });
+        }, 500); // Glow duration
+      };
 
-	if (status === 'unauthenticated') {
-		router.push('/');
-		return null;
-	}
+      // Trigger the glow effect
+      setTimeout(applyGridGlow, 300); // Trigger glow as the line moves
 
-	const handleExpand = () => {
-		setExpanded(!expanded);
-		const chatbot = document.querySelector('.add-chatbot-button');
-		const mainContent = document.querySelector('.main-content');
-		const plusIcon = document.querySelector('.plus-icon');
-		const chatbotText = document.querySelector('.add-chatbot-button p');
-		const sidebar = document.querySelector('.sidebar');
-		const body = document.querySelector('body');
-		body.style.background = "#131313";
-		sidebar.style.background = "#131313";
-		plusIcon.style.display = "none";
-		chatbotText.style.display = "none";
-		chatbot.style.animation = "expand 0.5s forwards";
-		mainContent.style.animation = "remove-margin 0.5s forwards";
-		setTimeout(() => {
-			router.push('/create');
-		}, 1100);
-	};
+      // Remove the line after animation
+      setTimeout(() => {
+        mainContent.removeChild(line);
+      }, 3000); // Line duration
+    };
 
-	return (
-		<div className="dashboard">
-			<Sidebar />
-			<div className="main-content">
-				<div className="grid-background"></div>
+    // Spawn the glowing line at intervals
+    const intervalId = setInterval(generateGlowingLineWithBorders, 750); // Reduced frequency
 
-				<h1>Dashboard</h1>
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
-				<div className="chatbots-list">
-					<div className="add-chatbot-button" onClick={handleExpand}>
-						<FontAwesomeIcon icon={faPlus} className="plus-icon" />
-						<p>Add Chatbot</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+  if (status === 'loading') {
+    return <p>Loading...</p>;
+  }
+
+  if (status === 'unauthenticated') {
+    router.push('/');
+    return null;
+  }
+
+  const handleExpand = () => {
+    setExpanded(!expanded);
+    const chatbot = document.querySelector('.add-chatbot-button');
+    const mainContent = document.querySelector('.main-content');
+    const plusIcon = document.querySelector('.plus-icon');
+    const chatbotText = document.querySelector('.add-chatbot-button p');
+    const sidebar = document.querySelector('.sidebar');
+    const body = document.querySelector('body');
+    body.style.background = "#131313";
+    sidebar.style.background = "#131313";
+    plusIcon.style.display = "none";
+    chatbotText.style.display = "none";
+    chatbot.style.animation = "expand 0.5s forwards";
+    mainContent.style.animation = "remove-margin 0.5s forwards";
+    setTimeout(() => {
+      router.push('/create');
+    }, 1100);
+  };
+
+  return (
+    <div className="dashboard">
+      <Sidebar />
+      <div className="main-content">
+        <div className="grid-background"></div>
+
+        <h1>Dashboard</h1>
+
+        <div className="chatbots-list">
+          <div className="add-chatbot-button" onClick={handleExpand}>
+            <FontAwesomeIcon icon={faPlus} className="plus-icon" />
+            <p>Add Chatbot</p>
+          </div>
+
+          {/* Render the list of bots */}
+          {bots && bots.length > 0 && bots.map((bot) => (
+            <div key={bot._id} className="chatbot-item" onClick={() => router.push(`/config/${bot._id}`)}>
+              <h2>{bot.name}</h2>
+              <p>Prompt: {bot.visiblePrompt}</p>
+              {/* Add any other details you want to show here */}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }

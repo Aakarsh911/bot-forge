@@ -1,6 +1,5 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-
 import User from '../../../../models/user';
 import { connectToDB } from '../../../../utils/database';
 
@@ -17,36 +16,54 @@ const handler = NextAuth({
     })
   ],
   callbacks: {
-    async session({ session }) {
-      // store the user id from MongoDB to session
+    // Called whenever a session is checked/created
+    async session({ session, token, user }) {
+      // Store the user id from MongoDB into the session object
+      await connectToDB(); // Make sure the database is connected
+
       const sessionUser = await User.findOne({ email: session.user.email });
-      session.user.id = sessionUser._id.toString();
+      if (sessionUser) {
+        session.user.id = sessionUser._id.toString();
+      }
 
       return session;
     },
-    async signIn({ account, profile, user, credentials }) {
-      try {
-        await connectToDB();
 
-        // check if user already exists
+    // Called when the user signs in
+    async signIn({ profile }) {
+      try {
+        await connectToDB(); // Connect to the database
+
+        // Check if user already exists
         const userExists = await User.findOne({ email: profile.email });
 
-        // if not, create a new document and save user in MongoDB
+        // If the user does not exist, create a new user
         if (!userExists) {
           await User.create({
             email: profile.email,
-            username: profile.name.replace(" ", "").toLowerCase(),
+            username: profile.name.replace(/\s/g, "").toLowerCase(),
             image: profile.picture,
           });
         }
 
-        return true
+        return true; // Sign in was successful
       } catch (error) {
-        console.log("Error checking if user exists: ", error.message);
-        return false
+        console.log("Error during sign-in:", error.message);
+        return false; // Sign in failed
       }
     },
-  }
-})
+  },
+  secret: process.env.NEXTAUTH_SECRET, // Ensure you have this in your environment variables
+});
 
-export { handler as GET, handler as POST }
+export const authOptions = {
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+  ],
+  secret: process.env.NEXTAUTH_SECRET,
+};
+
+export { handler as GET, handler as POST };

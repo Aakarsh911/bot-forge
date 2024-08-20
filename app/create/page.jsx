@@ -1,64 +1,85 @@
 'use client';
 
-import {useState, useEffect, useRef} from 'react';
-import {useSession} from 'next-auth/react';
-import {useRouter} from 'next/navigation';
+import { useState, useEffect, useRef } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRobot } from '@fortawesome/free-solid-svg-icons';
 import './create.css';
 
 export default function CreateBot() {
-    const [chatLog, setChatLog] = useState([{bot: true, message: "What would you like to name your bot?"}]);
+    const [chatLog, setChatLog] = useState([{ bot: true, message: "What would you like to name your bot?" }]);
     const [userInput, setUserInput] = useState("");
     const [currentStep, setCurrentStep] = useState(1);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [showCheckmark, setShowCheckmark] = useState(false); // For checkmark animation
+    const [showBotCreated, setShowBotCreated] = useState(false); // To show "Bot Created" text
+    const [loading, setLoading] = useState(false); // Loading state for bot creation
 
     // Default values for the bot schema
     const [botData, setBotData] = useState({
         name: "",
-        widgetColor: "#0157f9", // Default widget color
-        widgetLogo: "default-logo.png", // Default logo
+        widgetColor: "#0157f9",
+        widgetLogo: "default-logo.png",
         visiblePrompt: "",
-        predefinedPrompts: new Map(),
-        botResponseColor: "#ffffff", // Default bot response color
-        userResponseColor: "#ffffff", // Default user response color
-        botTypingColor: "#0157f9", // Default typing color
-        API_URLs: [["https://default-api-url.com"]], // Default API URL
-        botPosition: "bottom-right", // Default bot position
+        botResponseColor: "#ffffff",
+        userResponseColor: "#ffffff",
+        botTypingColor: "#0157f9",
+        API_URLs: [],
+        botPosition: "bottom-right",
         modelType: "",
-        closeButtonColor: "#ffffff", // Default close button color
-        endMessageRating: [], // Default empty array for message ratings
+        closeButtonColor: "#ffffff",
     });
 
-    const {data: session, status} = useSession();
+    const { data: session, status } = useSession();
+    console.log('Session:', session);
     const router = useRouter();
     const chatEndRef = useRef(null);
 
-    // dont display the input area if the step is 4
+    // Handle steps and animation triggers
     useEffect(() => {
-            if (currentStep === 4) {
-                const userInputField = document.querySelector('.user-input-field');
-                const chatMessages = document.querySelectorAll('.chat-message');
-                const ocean = document.querySelector('.ocean');
-                const animLoader = document.querySelector('.anim-loader');
-
-                ocean.style.position = 'relative';
-                animLoader.style.display = 'block';
-                ocean.style.animation = "slide-up 2s forwards";
-                animLoader.style.animation = "slide-up 2s forwards";
-
-                chatMessages.forEach(chatMessage => {
-                    chatMessage.style.display = 'none';
-                });
-                userInputField.style.display = 'none';
-
-            }
+        if (currentStep === 3) {
+            const userInputField = document.querySelector('.user-input-field');
+            userInputField.style.display = 'none';
         }
-        , [currentStep]);
+
+        if (currentStep === 4) {
+            const userInputField = document.querySelector('.user-input-field');
+            const chatMessages = document.querySelectorAll('.chat-message');
+            const ocean = document.querySelector('.ocean');
+            const animLoader = document.querySelector('.anim-loader');
+
+            ocean.style.position = 'relative';
+            animLoader.style.display = 'block';
+            ocean.style.animation = "slide-up 2s forwards";
+            animLoader.style.animation = "slide-up 2s forwards";
+
+            chatMessages.forEach(chatMessage => {
+                chatMessage.style.display = 'none';
+            });
+            userInputField.style.display = 'none';
+
+            // Show checkmark after the loader animation
+            setTimeout(() => {
+                setShowCheckmark(true);
+                setShowBotCreated(true);
+
+                // Call the API to save the bot to the database
+                createBot();
+
+            }, 2000); // Adjust based on animation timing
+
+            // Fade out checkmark and "Bot Created" text after 3 seconds
+            setTimeout(() => {
+                const checkmarkWrapper = document.querySelector('.checkmark-container');
+                checkmarkWrapper.style.animation = "fade-out 1s forwards";
+            }, 5000); // 3 seconds after it appears, start fading out
+        }
+    }, [currentStep]);
 
     useEffect(() => {
-        chatEndRef.current?.scrollIntoView({behavior: "smooth"});
+        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [chatLog]);
 
     if (status === 'loading') {
@@ -73,7 +94,7 @@ export default function CreateBot() {
     const handleNextStep = () => {
         setChatLog((prevLog) => [
             ...prevLog,
-            {bot: true, message: getNextQuestion(currentStep + 1)}
+            { bot: true, message: getNextQuestion(currentStep + 1) }
         ]);
         setCurrentStep(currentStep + 1);
     };
@@ -82,7 +103,7 @@ export default function CreateBot() {
         if (e.key === 'Enter' && userInput.trim()) {
             setChatLog((prevLog) => [
                 ...prevLog,
-                {bot: false, message: userInput}
+                { bot: false, message: userInput }
             ]);
             setBotData({
                 ...botData,
@@ -96,7 +117,7 @@ export default function CreateBot() {
     const handleDropdownSelect = (modelType) => {
         setChatLog((prevLog) => [
             ...prevLog,
-            {bot: false, message: `Selected Model Type: ${modelType}`}
+            { bot: false, message: `Selected Model Type: ${modelType}` }
         ]);
         setBotData({
             ...botData,
@@ -132,9 +153,37 @@ export default function CreateBot() {
         }
     };
 
+    const createBot = async () => {
+        setLoading(true);
+
+        try {
+            const response = await fetch(`${window.location.origin}/api/bots/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(botData),
+            });
+            
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log('Bot created successfully:', data.bot);
+            } else {
+                console.error('Error creating bot:', data.message);
+            }
+
+        } catch (error) {
+            console.error('Error creating bot:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="dashboard">
-            <Sidebar/>
+            <Sidebar />
             <div className="create-box">
                 <div className="chat-window">
                     {chatLog.map((entry, index) => (
@@ -142,7 +191,7 @@ export default function CreateBot() {
                             {entry.bot ? (
                                 <div className="bot-message-container">
                                     <span className="bot-message-text">
-                                        <FontAwesomeIcon icon={faRobot} className="bot-icon"/> <span className="bot-message">{entry.message}</span>
+                                        <FontAwesomeIcon icon={faRobot} className="bot-icon" /> <span className="bot-message">{entry.message}</span>
                                     </span>
                                 </div>
                             ) : (
@@ -158,23 +207,25 @@ export default function CreateBot() {
                                     <span className='user-message-text'>{entry.message}</span>
                                 </div>
                             )}
-                            {currentStep === 3 && entry.bot && <div className="dropdown-container">
-                                <div
-                                    className="dropdown-trigger"
-                                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                                >
-                                    Select Model Type
-                                </div>
-                                {dropdownOpen && (
-                                    <div className="dropdown-options">
-                                        <div onClick={() => handleDropdownSelect('text')}>Text</div>
-                                        <div onClick={() => handleDropdownSelect('image')}>Image</div>
+                            {currentStep === 3 && entry.bot && (
+                                <div className="dropdown-container">
+                                    <div
+                                        className="dropdown-trigger"
+                                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                                    >
+                                        Select Model Type
                                     </div>
-                                )}
-                            </div>}
+                                    {dropdownOpen && (
+                                        <div className="dropdown-options">
+                                            <div onClick={() => handleDropdownSelect('text')}>Text</div>
+                                            <div onClick={() => handleDropdownSelect('image')}>Image</div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     ))}
-                    <div ref={chatEndRef}/>
+                    <div ref={chatEndRef} />
 
                     <div className="user-input">
                         <input
@@ -184,7 +235,7 @@ export default function CreateBot() {
                             onKeyDown={handleTextSubmit}
                             placeholder="Type your response..."
                             className='user-input-field'
-                        /> 
+                        />
                     </div>
                 </div>
                 <div className="ocean">
@@ -192,7 +243,17 @@ export default function CreateBot() {
                     <div className="wave"></div>
                 </div>
                 <div className="anim-loader">
-
+                    {showCheckmark && (
+                        <div className="checkmark-container">
+                            <div className="checkmark-wrapper">
+                                <svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                                    <circle className="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                                    <path className="checkmark-check" fill="none" d="M14 27l7 7 15-15" />
+                                </svg>
+                            </div>
+                            {showBotCreated && <p className="bot-created-text">Bot Created!</p>}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

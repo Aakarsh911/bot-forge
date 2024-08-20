@@ -167,3 +167,57 @@ body {
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
+
+.chatbot-item {
+    background-color: #2c2f33; /* Dark background */
+    border-radius: 8px; /* Rounded corners */
+    padding: 16px; /* Padding around the content */
+    margin: 10px 0; /* Space between chatbot items */
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Align items vertically */
+    justify-content: space-between; /* Distribute space between elements */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.chatbot-item:hover {
+    background-color: #23272a; /* Slightly lighter background on hover */
+}
+
+.chatbot-item h2 {
+    color: #ffffff; /* White color for the title */
+    margin: 0; /* No margin */
+    font-size: 1.5em; /* Adjust the size as needed */
+}
+
+.chatbot-item p {
+    color: #b9bbbe; /* Lighter color for description */
+    margin: 0; /* No margin */
+    font-size: 1em; /* Adjust the size as needed */
+}
+
+.chatbot-item-icon {
+    font-size: 1.8em; /* Adjust icon size */
+    color: #7289da; /* Color for the icon */
+}
+
+.chatbot-item-details {
+    flex: 1; /* Take up remaining space */
+    margin-left: 15px; /* Space between the icon and the details */
+}
+
+.chatbot-item h2,
+.chatbot-item p {
+    text-align: left;
+}
+
+.chatbot-item-delete {
+    font-size: 1.2em;
+    color: #ff5c5c;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.chatbot-item-delete:hover {
+    color: #ff3232; /* Slightly brighter red on hover */
+}
