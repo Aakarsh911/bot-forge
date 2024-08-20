@@ -17,6 +17,13 @@ export default function CreateBot() {
     const [showBotCreated, setShowBotCreated] = useState(false); // To show "Bot Created" text
     const [loading, setLoading] = useState(false); // Loading state for bot creation
 
+    // Typing effect states
+    const [botMessage, setBotMessage] = useState("");
+    const [fullMessage, setFullMessage] = useState(chatLog[0].message); // Message to be typed
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const fadeInDuration = 500; // Time in milliseconds for the fade-in animation to complete
+
     // Default values for the bot schema
     const [botData, setBotData] = useState({
         name: "",
@@ -33,11 +40,20 @@ export default function CreateBot() {
     });
 
     const { data: session, status } = useSession();
-    console.log('Session:', session);
     const router = useRouter();
     const chatEndRef = useRef(null);
 
-    // Handle steps and animation triggers
+    useEffect(() => {
+        if (currentIndex < fullMessage.length) {
+            const timeout = setTimeout(() => {
+                setBotMessage((prev) => prev + fullMessage[currentIndex]);
+                setCurrentIndex(currentIndex + 1);
+            }, 50); // Typing speed, adjust as necessary
+
+            return () => clearTimeout(timeout);
+        }
+    }, [currentIndex, fullMessage]);
+
     useEffect(() => {
         if (currentStep === 3) {
             const userInputField = document.querySelector('.user-input-field');
@@ -78,6 +94,18 @@ export default function CreateBot() {
         }
     }, [currentStep]);
 
+    // Delay typing effect until fade-in animation is complete
+    useEffect(() => {
+        if (chatLog[chatLog.length - 1].bot) {
+            // Start typing effect after the fade-in animation duration
+            setTimeout(() => {
+                setFullMessage(chatLog[chatLog.length - 1].message);
+                setBotMessage(""); // Clear the current bot message
+                setCurrentIndex(0); // Reset the typing effect index
+            }, fadeInDuration);
+        }
+    }, [chatLog]);
+
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [chatLog]);
@@ -92,9 +120,10 @@ export default function CreateBot() {
     }
 
     const handleNextStep = () => {
+        const nextQuestion = getNextQuestion(currentStep + 1);
         setChatLog((prevLog) => [
             ...prevLog,
-            { bot: true, message: getNextQuestion(currentStep + 1) }
+            { bot: true, message: nextQuestion }
         ]);
         setCurrentStep(currentStep + 1);
     };
@@ -164,7 +193,6 @@ export default function CreateBot() {
                 },
                 body: JSON.stringify(botData),
             });
-            
 
             const data = await response.json();
 
@@ -191,7 +219,7 @@ export default function CreateBot() {
                             {entry.bot ? (
                                 <div className="bot-message-container">
                                     <span className="bot-message-text">
-                                        <FontAwesomeIcon icon={faRobot} className="bot-icon" /> <span className="bot-message">{entry.message}</span>
+                                        <FontAwesomeIcon icon={faRobot} className="bot-icon" /> <span className="bot-message">{index === chatLog.length - 1 ? botMessage : entry.message}</span>
                                     </span>
                                 </div>
                             ) : (
