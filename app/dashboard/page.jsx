@@ -135,7 +135,7 @@ export default function Dashboard() {
 
           {/* Render the list of bots */}
           {bots && bots.length > 0 && bots.map((bot) => (
-            <div key={bot._id} className="chatbot-item" onClick={() => router.push(`/config/${bot._id}`)}>
+            <div key={bot._id} className="chatbot-item" onClick={() => window.open(`/config/${bot._id}`, '_blank', 'noopener,noreferrer')}>
               <h2>{bot.name}</h2>
             </div>
           ))}
