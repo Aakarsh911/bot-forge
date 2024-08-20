@@ -137,8 +137,6 @@ export default function Dashboard() {
           {bots && bots.length > 0 && bots.map((bot) => (
             <div key={bot._id} className="chatbot-item" onClick={() => router.push(`/config/${bot._id}`)}>
               <h2>{bot.name}</h2>
-              <p>Prompt: {bot.visiblePrompt}</p>
-              {/* Add any other details you want to show here */}
             </div>
           ))}
         </div>
