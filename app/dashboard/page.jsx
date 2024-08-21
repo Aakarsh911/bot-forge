@@ -116,6 +116,7 @@ export default function Dashboard() {
     sidebar.style.background = "#131313";
     plusIcon.style.display = "none";
     chatbotText.style.display = "none";
+    chatbot.style.maxWidth = "none";
     chatbot.style.animation = "expand 0.5s forwards";
     mainContent.style.animation = "remove-margin 0.5s forwards";
     setTimeout(() => {
