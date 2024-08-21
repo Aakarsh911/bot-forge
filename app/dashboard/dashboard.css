@@ -175,6 +175,7 @@ body {
     color: black;
     overflow: hidden;
     transition: all 0.3s ease;
+    animation: fadeIn 1s ease-in-out forwards;
 }
 
 .chatbot-item h2 {
@@ -230,4 +231,13 @@ body {
 
 .bot-settings-button {
     margin-left: 0.5em;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }

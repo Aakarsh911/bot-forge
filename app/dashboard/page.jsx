@@ -108,12 +108,18 @@ export default function Dashboard() {
     const chatbotText = document.querySelector('.add-chatbot-button p');
     const sidebar = document.querySelector('.sidebar');
     const body = document.querySelector('body');
+    const chatBotItems = document.querySelectorAll('.chatbot-item');
+    chatBotItems.forEach(item => {
+      item.style.opacity = '0';
+    });
     body.style.background = "#131313";
     sidebar.style.background = "#131313";
     plusIcon.style.display = "none";
     chatbotText.style.display = "none";
-    chatbot.style.animation = "expand 0.5s forwards";
-    mainContent.style.animation = "remove-margin 0.5s forwards";
+    setTimeout(() => {
+      chatbot.style.animation = "expand 0.5s forwards";
+      mainContent.style.animation = "remove-margin 0.5s forwards";
+    }, 100);
     setTimeout(() => {
       router.push('/create');
     }, 1100);
