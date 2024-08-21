@@ -63,7 +63,7 @@ export default function ConfigBot() {
     return (
         <div className="dashboard">
             <Sidebar />
-            <div className="create-box">
+            <div className="config-box">
                 <div className="create-content">
                     <div className="bot-customization">
                         <div className="customization-header">
