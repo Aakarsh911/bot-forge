@@ -178,10 +178,7 @@ body {
     width: calc(15vw - 1em);
     color: black;
     overflow: hidden;
-}
-
-.chatbot-item:hover {
-    background-color: #e1e5eb; /* Slightly lighter background on hover */
+    transition: all 0.3s ease;
 }
 
 .chatbot-item h2 {
@@ -225,6 +222,7 @@ body {
 
 .bubble {
     width: 12%;  /* Adjust the size as needed */
+    min-width: 8em;
     height: 21%; /* Twice the width for a clean semi-circle */
     background-color: #00ffc6; /* Or whatever color you want */
     border-radius: 1em 100px 100px 1em;
