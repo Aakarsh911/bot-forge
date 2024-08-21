@@ -72,10 +72,6 @@ body {
     background-color: #0336f1;
 }
 
-.chatbot-item:hover {
-	opacity: 0.9;
-}
-
 @keyframes expand {
     0% {
         transform: scale(1);
@@ -223,11 +219,15 @@ body {
 .bubble {
     width: 12%;  /* Adjust the size as needed */
     min-width: 8em;
-    height: 21%; /* Twice the width for a clean semi-circle */
+    height: 10rem; /* Twice the width for a clean semi-circle */
     background-color: #00ffc6; /* Or whatever color you want */
     border-radius: 1em 100px 100px 1em;
     margin-left: -1em; 
     opacity: 0.1;
     margin-top: -1em;
     position: fixed;
+}
+
+.bot-settings-button {
+    margin-left: 0.5em;
 }

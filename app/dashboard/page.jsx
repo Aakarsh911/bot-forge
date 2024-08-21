@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faCog } from '@fortawesome/free-solid-svg-icons';
 import Sidebar from '@/components/Sidebar';
 import './dashboard.css';
 
@@ -136,7 +136,7 @@ export default function Dashboard() {
           {/* Render the list of bots */}
           {bots && bots.length > 0 && bots.map((bot) => (
             <div key={bot._id} className="chatbot-item" onClick={() => window.open(`/config/${bot._id}`, '_blank', 'noopener,noreferrer')}>
-              <h2>{bot.name}</h2>
+              <h2>{bot.name} <FontAwesomeIcon icon={faCog} className="bot-settings-button"/></h2>
               <div className="bubble"></div>
             </div>
           ))}
