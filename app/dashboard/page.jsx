@@ -57,26 +57,6 @@ export default function Dashboard() {
       // Append the glowing line
       mainContent.appendChild(line);
 
-      // Apply glow to surrounding grid cells
-      const applyGridGlow = () => {
-        const columnPosition = Math.floor(randomColumn / gridSize);
-        const cellsToGlow = document.querySelectorAll(`.grid-cell.col-${columnPosition - 1}, .grid-cell.col-${columnPosition}, .grid-cell.col-${columnPosition + 1}`);
-
-        cellsToGlow.forEach(cell => {
-          cell.classList.add('glow-border');
-        });
-
-        // Remove glow after a short delay
-        setTimeout(() => {
-          cellsToGlow.forEach(cell => {
-            cell.classList.remove('glow-border');
-          });
-        }, 500); // Glow duration
-      };
-
-      // Trigger the glow effect
-      setTimeout(applyGridGlow, 300); // Trigger glow as the line moves
-
       // Remove the line after animation
       setTimeout(() => {
         mainContent.removeChild(line);
