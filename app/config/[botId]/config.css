@@ -39,22 +39,69 @@ body {
     height: 100%;
 }
 
-.customization-section {
+.customization-header {
     display: flex;
-    flex-direction: column;
-    gap: 0.5em;
+    position: relative;
+    justify-content: space-between;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
 }
 
-label {
-    font-size: 1.2em;
-}
-
-input[type="color"] {
-    width: 3em;
-    height: 3em;
-    border: none;
-    border-radius: 50%;
+.tab {
     cursor: pointer;
+    padding: 0.5em 1em;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #333;
+    position: relative;
+}
+
+.tab::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background: #0157f9;
+    bottom: -0.5em;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: width 0.3s ease-in-out;
+}
+
+.tab.active-tab::after {
+    width: 100%;
+}
+
+.customization-body {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tab-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1em;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: white;
+}
+
+.appearance-section {
+    background-color: #4CAF50; /* Green */
+}
+
+.apis-section {
+    background-color: #f44336; /* Red */
+}
+
+.integration-section {
+    background-color: #2196F3; /* Blue */
 }
 
 .bot-preview {
@@ -64,6 +111,9 @@ input[type="color"] {
     width: 50%;
     position: relative;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .chat-preview {
@@ -81,28 +131,143 @@ input[type="color"] {
     border-radius: 1em;
     color: black;
     width: fit-content;
+    max-width: 70%;
 }
 
 .chat-bubble.bot {
     align-self: flex-start;
-    background-color: #ffffff;
+    text-align: left;
 }
 
 .chat-bubble.user {
     align-self: flex-end;
-    background-color: #000000;
+    text-align: right;
 }
 
-/* Floating Animation for Bubbles */
-@keyframes float {
-    0%, 100% {
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.typing-indicator .dots-container {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #0157f9; /* Customize this to match botTypingColor */
+    margin: 0 3px;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.dot:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.dot:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% {
         transform: translateY(0);
     }
-    50% {
-        transform: translateY(-10px);
+    40% {
+        transform: translateY(-8px);
     }
 }
 
-.chat-bubble {
-    animation: float 4s ease-in-out infinite;
+.customization-header {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
+}
+
+.tab {
+    cursor: pointer;
+    padding: 0.5em 1em;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #333;
+    position: relative;
+}
+
+.tab::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background: #0157f9;
+    bottom: -0.5em;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: width 0.3s ease-in-out;
+}
+
+.tab.active-tab::after {
+    width: 100%;
+}
+
+.customization-body {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tab-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    justify-content: center;
+    align-items: center;
+}
+
+.color-picker-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.color-options {
+    display: flex;
+    gap: 0.5em;
+}
+
+.color-option {
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    cursor: pointer;
+}
+
+.color-option:hover {
+    border-color: #0157f9;
+}
+
+.color-picker {
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    cursor: pointer;
+}
+
+.color-picker input {
+    display: none;
 }
