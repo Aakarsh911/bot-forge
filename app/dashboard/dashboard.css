@@ -169,7 +169,7 @@ body {
 }
 
 .chatbot-item {
-    background: linear-gradient(135deg, #f78fb3, #f054c4, #c36ee3, #a051e5);
+    background: linear-gradient(135deg, #00d2ff, #3a7bd5);
     align-items: flex-start;
     justify-content: space-between;
     padding-left: 1em;
@@ -226,10 +226,10 @@ body {
 .bubble {
     width: 12%;  /* Adjust the size as needed */
     height: 21%; /* Twice the width for a clean semi-circle */
-    background-color: #a051e5; /* Or whatever color you want */
-    border-radius: 1em 100px 100px 0;
+    background-color: #00ffc6; /* Or whatever color you want */
+    border-radius: 1em 100px 100px 1em;
     margin-left: -1em; 
-    opacity: 0.3;
+    opacity: 0.1;
     margin-top: -1em;
     position: fixed;
 }
