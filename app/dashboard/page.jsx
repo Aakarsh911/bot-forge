@@ -110,16 +110,14 @@ export default function Dashboard() {
     const body = document.querySelector('body');
     const chatBotItems = document.querySelectorAll('.chatbot-item');
     chatBotItems.forEach(item => {
-      item.style.opacity = '0';
+      item.style.display = "none";
     });
     body.style.background = "#131313";
     sidebar.style.background = "#131313";
     plusIcon.style.display = "none";
     chatbotText.style.display = "none";
-    setTimeout(() => {
-      chatbot.style.animation = "expand 0.5s forwards";
-      mainContent.style.animation = "remove-margin 0.5s forwards";
-    }, 100);
+    chatbot.style.animation = "expand 0.5s forwards";
+    mainContent.style.animation = "remove-margin 0.5s forwards";
     setTimeout(() => {
       router.push('/create');
     }, 1100);

@@ -18,6 +18,7 @@ body {
     overflow-y: auto;
     color: white;
     overflow: hidden;
+    animation: backgroundChange 2s ease-in-out forwards;
 }
 
 .create-content {
@@ -270,4 +271,10 @@ body {
 
 .color-picker input {
     display: none;
+}
+
+@keyframes backgroundChange {
+    to {
+        background: black;
+    }
 }
