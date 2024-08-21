@@ -75,22 +75,7 @@ export default function CreateBot() {
                 chatMessage.style.display = 'none';
             });
             userInputField.style.display = 'none';
-
-            // Show checkmark after the loader animation
-            setTimeout(() => {
-                setShowCheckmark(true);
-                setShowBotCreated(true);
-
-                // Call the API to save the bot to the database
-                createBot();
-
-            }, 2000); // Adjust based on animation timing
-
-            // Fade out checkmark and "Bot Created" text after 3 seconds
-            setTimeout(() => {
-                const checkmarkWrapper = document.querySelector('.checkmark-container');
-                checkmarkWrapper.style.animation = "fade-out 1s forwards";
-            }, 5000); // 3 seconds after it appears, start fading out
+            createBot();
         }
     }, [currentStep]);
 
@@ -197,6 +182,16 @@ export default function CreateBot() {
             const data = await response.json();
 
             if (response.ok) {
+                setShowCheckmark(true);
+                setShowBotCreated(true);
+                setTimeout(() => {
+                    const checkmarkWrapper = document.querySelector('.checkmark-container');
+                    checkmarkWrapper.style.animation = "fade-out 1s forwards";
+                }, 3000);
+                setTimeout(() => {
+                    router.push(`/config/${data.bot._id}`);
+                }, 3500);
+                // route to the bot's config page
                 console.log('Bot created successfully:', data.bot);
             } else {
                 console.error('Error creating bot:', data.message);

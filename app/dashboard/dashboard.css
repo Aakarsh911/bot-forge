@@ -169,7 +169,7 @@ body {
 }
 
 .chatbot-item {
-    background: #f5f7fa;
+    background: linear-gradient(135deg, #f78fb3, #f054c4, #c36ee3, #a051e5);
     align-items: flex-start;
     justify-content: space-between;
     padding-left: 1em;
@@ -177,6 +177,7 @@ body {
     height: 9em;
     width: calc(15vw - 1em);
     color: black;
+    overflow: hidden;
 }
 
 .chatbot-item:hover {
@@ -184,7 +185,7 @@ body {
 }
 
 .chatbot-item h2 {
-    color: #0157f9; /* Neon holographic text gradient */
+    color: white; /* Neon holographic text gradient */
     font-weight: bold;
     margin: 0;
 }
@@ -208,6 +209,7 @@ body {
 .chatbot-item h2,
 .chatbot-item p {
     text-align: left;
+    z-index: 2;
 }
 
 .chatbot-item-delete {
@@ -219,4 +221,15 @@ body {
 
 .chatbot-item-delete:hover {
     color: #ff3232; /* Slightly brighter red on hover */
+}
+
+.bubble {
+    width: 12%;  /* Adjust the size as needed */
+    height: 21%; /* Twice the width for a clean semi-circle */
+    background-color: #a051e5; /* Or whatever color you want */
+    border-radius: 1em 100px 100px 0;
+    margin-left: -1em; 
+    opacity: 0.3;
+    margin-top: -1em;
+    position: fixed;
 }

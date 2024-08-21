@@ -137,6 +137,7 @@ export default function Dashboard() {
           {bots && bots.length > 0 && bots.map((bot) => (
             <div key={bot._id} className="chatbot-item" onClick={() => window.open(`/config/${bot._id}`, '_blank', 'noopener,noreferrer')}>
               <h2>{bot.name}</h2>
+              <div className="bubble"></div>
             </div>
           ))}
         </div>
