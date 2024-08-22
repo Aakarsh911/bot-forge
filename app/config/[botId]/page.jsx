@@ -36,7 +36,6 @@ export default function ConfigBot() {
                 const response = await fetch(`/api/bots/${botId}`);
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data);
                     setBotAppearance({
                         widgetColor: data.widgetColor || '#0157f9',
                         botBubbleColor: data.botResponseColor || '#ffffff',
@@ -64,74 +63,9 @@ export default function ConfigBot() {
         <div className="dashboard">
             <Sidebar />
             <div className="config-box">
-                <div className="create-content">
-                    <div className="bot-customization">
-                        <div className="customization-header">
-                            <div 
-                                className={`tab ${activeTab === 'Appearance' ? 'active-tab' : ''}`} 
-                                onClick={() => handleTabClick('Appearance')}
-                            >
-                                Appearance
-                            </div>
-                            <div 
-                                className={`tab ${activeTab === 'APIs' ? 'active-tab' : ''}`} 
-                                onClick={() => handleTabClick('APIs')}
-                            >
-                                APIs
-                            </div>
-                            <div 
-                                className={`tab ${activeTab === 'Integration' ? 'active-tab' : ''}`} 
-                                onClick={() => handleTabClick('Integration')}
-                            >
-                                Integration
-                            </div>
-                        </div>
-                        <div className="customization-body">
-                            {activeTab === 'Appearance' && (
-                                <div className="tab-content appearance-section">
-                                    Appearance Section
-                                </div>
-                            )}
-                            {activeTab === 'APIs' && (
-                                <div className="tab-content apis-section">
-                                    APIs Section
-                                </div>
-                            )}
-                            {activeTab === 'Integration' && (
-                                <div className="tab-content integration-section">
-                                    Integration Section
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                    <div className="bot-preview">
-                        <div className="chat-preview">
-                            {showTyping && (
-                                <div className="chat-bubble bot typing-indicator" style={{ backgroundColor: botAppearance.botBubbleColor }}>
-                                    Bot is typing
-                                    <div className="dots-container">
-                                        <div className="dot"></div>
-                                        <div className="dot"></div>
-                                        <div className="dot"></div>
-                                    </div>
-                                </div>
-                            )}
-                            {showBotMessage && (
-                                <div className="chat-bubble bot" style={{ backgroundColor: botAppearance.botBubbleColor }}>
-                                    Bot: This is a sample bot response.
-                                </div>
-                            )}
-                            {showUserMessage && (
-                                <div className="chat-bubble user" style={{ backgroundColor: botAppearance.userBubbleColor }}>
-                                    User: This is a sample user response.
-                                </div>
-                            )}
-                        </div>
-                        <button className="close-button" style={{ backgroundColor: botAppearance.closeButtonColor }}>
-                            Close
-                        </button>
-                    </div>
-                </div>
+                <div className="grid-background"></div>
+                <div className="orb orb1"></div>
+                <div className="orb orb2"></div>
             </div>
         </div>
     );

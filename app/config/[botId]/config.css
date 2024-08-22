@@ -21,260 +21,109 @@ body {
     animation: backgroundChange 2s ease-in-out forwards;
 }
 
-.create-content {
-    display: flex;
-    gap: 2em;
-    justify-content: space-between;
-    padding: 2em;
-    height: 85%;
-}
-
-.bot-customization {
-    background: white;
-    padding: 1.5em;
-    border-radius: 1em;
-    width: 150%;
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    height: 100%;
-}
-
-.customization-header {
-    display: flex;
-    position: relative;
-    justify-content: space-between;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 0.5em;
-    margin-bottom: 1em;
-}
-
-.tab {
-    cursor: pointer;
-    padding: 0.5em 1em;
-    font-size: 1.2em;
-    font-weight: 600;
-    color: #333;
-    position: relative;
-}
-
-.tab::after {
-    content: '';
+.orb {
     position: absolute;
-    width: 0%;
-    height: 2px;
-    background: #0157f9;
-    bottom: -0.5em;
-    left: 50%;
-    transform: translateX(-50%);
-    transition: width 0.3s ease-in-out;
-}
-
-.tab.active-tab::after {
-    width: 100%;
-}
-
-.customization-body {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.tab-content {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 1em;
-    font-size: 1.5em;
-    font-weight: bold;
-    color: white;
-}
-
-.appearance-section {
-    background-color: #4CAF50; /* Green */
-}
-
-.apis-section {
-    background-color: #f44336; /* Red */
-}
-
-.integration-section {
-    background-color: #2196F3; /* Blue */
-}
-
-.bot-preview {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
     background: white;
-    padding: 1.5em;
-    border-radius: 1em;
-    width: 50%;
-    position: relative;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.7);
+    animation: moveAndExpand 1s ease forwards;
+    animation-delay: 2s;
+    opacity: 0;
 }
 
-.chat-preview {
-    height: 400px;
-    border-radius: 1em;
-    padding: 1em;
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    background-color: #1d1f20;
+.orb2 {
+    background: white;
+    box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.8);
+    animation: moveAndExpand2 1s ease forwards;
+    opacity: 0;
+    animation-delay: 2s;
 }
 
-.chat-bubble {
-    padding: 1em;
-    border-radius: 1em;
-    color: black;
-    width: fit-content;
-    max-width: 70%;
-}
-
-.chat-bubble.bot {
-    align-self: flex-start;
-    text-align: left;
-}
-
-.chat-bubble.user {
-    align-self: flex-end;
-    text-align: right;
-}
-
-.typing-indicator {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.typing-indicator .dots-container {
-    display: flex;
-    align-items: center;
-    margin-left: 8px;
-}
-
-.dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: #0157f9; /* Customize this to match botTypingColor */
-    margin: 0 3px;
-    animation: bounce 1.4s infinite ease-in-out both;
-}
-
-.dot:nth-child(1) {
-    animation-delay: -0.32s;
-}
-
-.dot:nth-child(2) {
-    animation-delay: -0.16s;
-}
-
-.dot:nth-child(3) {
-    animation-delay: 0;
-}
-
-@keyframes bounce {
-    0%, 80%, 100% {
-        transform: translateY(0);
+/* Direct Movement and Expansion */
+@keyframes moveAndExpand {
+    0% {
+        width: 50px;
+        height: 50px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
     }
-    40% {
-        transform: translateY(-8px);
+    50% {
+        width: 80px;
+        height: 80px;
+        top: 40%;
+        left: 40%;
+    }
+    100% {
+        width: 60vw;
+        height: 90vh;
+        border-radius: 1em;
+        top: 4.5%;
+        left: 2%;
+        opacity: 1;
+        box-shadow: none;
     }
 }
 
-.customization-header {
-    display: flex;
-    position: relative;
-    justify-content: space-between;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 0.5em;
-    margin-bottom: 1em;
+@keyframes moveAndExpand2 {
+    0% {
+        width: 50px;
+        height: 50px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+    50% {
+        width: 80px;
+        height: 80px;
+        top: 60%;
+        left: 60%;
+    }
+    100% {
+        width: 30vw;
+        height: 90vh;
+        border-radius: 1em;
+        top: 4.5%;
+        left: 67%;
+        opacity: 1;
+        box-shadow: none;
+    }
 }
 
-.tab {
-    cursor: pointer;
-    padding: 0.5em 1em;
-    font-size: 1.2em;
-    font-weight: 600;
-    color: #333;
-    position: relative;
-}
+/* @keyframes backgroundChange {
+    0% {
+        background: #02576f;
+    }
+    100% {
+        background: #1d1f20;
+    }
+    
+} */
 
-.tab::after {
-    content: '';
+.grid-background {
     position: absolute;
-    width: 0%;
-    height: 2px;
-    background: #0157f9;
-    bottom: -0.5em;
-    left: 50%;
-    transform: translateX(-50%);
-    transition: width 0.3s ease-in-out;
-}
-
-.tab.active-tab::after {
-    width: 100%;
-}
-
-.customization-body {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.tab-content {
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    justify-content: center;
-    align-items: center;
+    background-image: linear-gradient(white 1px, transparent 1px),
+                      linear-gradient(90deg, white 1px, transparent 1px);
+    background-size: 40px 40px; /* Grid size */
+    opacity: 0.1; /* Makes the grid lines very subtle */
+    z-index: -2; /* Ensures the grid stays behind all other content */
+    animation: fadeIn 2s ease-in-out forwards;
 }
 
-.color-picker-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-}
-
-.color-options {
-    display: flex;
-    gap: 0.5em;
-}
-
-.color-option {
-    width: 2em;
-    height: 2em;
-    border-radius: 50%;
-    border: 2px solid #ccc;
-    cursor: pointer;
-}
-
-.color-option:hover {
-    border-color: #0157f9;
-}
-
-.color-picker {
-    width: 2em;
-    height: 2em;
-    border-radius: 50%;
-    border: 2px solid #ccc;
-    cursor: pointer;
-}
-
-.color-picker input {
-    display: none;
-}
-
-@keyframes backgroundChange {
-    to {
-        background: black;
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
     }
+    100% {
+        opacity: 0.2;
+    }
+    
 }
