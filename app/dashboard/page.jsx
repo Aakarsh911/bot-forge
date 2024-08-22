@@ -128,10 +128,28 @@ export default function Dashboard() {
     router.push(`/config/${botId}`);
   };
 
-  const handleDelete = (botId) => {
-    console.log('Delete bot with ID:', botId);
-    // Add your delete logic here
-  };
+  const handleDelete = async (botId) => {
+    try {
+        const response = await fetch('/api/bots/delete', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ botId }),
+        });
+
+        if (response.ok) {
+            console.log('Bot deleted successfully');
+            // Remove the deleted bot from the local state to update the UI
+            setBots(bots.filter((bot) => bot._id !== botId));
+        } else {
+            console.error('Failed to delete bot');
+        }
+    } catch (error) {
+        console.error('Error deleting bot:', error);
+    }
+};
+
 
   return (
     <div className="dashboard">
