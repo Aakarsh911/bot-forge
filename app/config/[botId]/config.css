@@ -104,7 +104,7 @@ body {
     
 } */
 
-.grid-background {
+.grid-background-config {
     position: absolute;
     top: 0;
     left: 0;
@@ -115,10 +115,10 @@ body {
     background-size: 40px 40px; /* Grid size */
     opacity: 0.1; /* Makes the grid lines very subtle */
     z-index: -2; /* Ensures the grid stays behind all other content */
-    animation: fadeIn 2s ease-in-out forwards;
+    animation: fade-in 2s ease-in-out forwards;
 }
 
-@keyframes fadeIn {
+@keyframes fade-in {
     0% {
         opacity: 0;
     }

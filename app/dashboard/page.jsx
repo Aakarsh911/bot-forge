@@ -13,6 +13,7 @@ export default function Dashboard() {
   const router = useRouter();
   const [expanded, setExpanded] = useState(false);
   const [bots, setBots] = useState([]); // State to store fetched bots
+  const [activeDropdown, setActiveDropdown] = useState(null); // State for active dropdown
 
   useEffect(() => {
     const fetchBots = async () => {
@@ -71,6 +72,21 @@ export default function Dashboard() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const dropdown = document.querySelector('.dropdown-menu');
+      if (dropdown && !dropdown.contains(event.target)) {
+        setActiveDropdown(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   if (status === 'loading') {
     return <p>Loading...</p>;
   }
@@ -104,6 +120,19 @@ export default function Dashboard() {
     }, 1100);
   };
 
+  const toggleDropdown = (botId) => {
+    setActiveDropdown(activeDropdown === botId ? null : botId);
+  };
+
+  const handleEdit = (botId) => {
+    router.push(`/config/${botId}`);
+  };
+
+  const handleDelete = (botId) => {
+    console.log('Delete bot with ID:', botId);
+    // Add your delete logic here
+  };
+
   return (
     <div className="dashboard">
       <Sidebar />
@@ -120,9 +149,24 @@ export default function Dashboard() {
 
           {/* Render the list of bots */}
           {bots && bots.length > 0 && bots.map((bot) => (
-            <div key={bot._id} className="chatbot-item" onClick={() => window.open(`/config/${bot._id}`, '_blank', 'noopener,noreferrer')}>
-              <h2 className='bot-header-name'>{bot.name} <FontAwesomeIcon icon={faCog} className="bot-settings-button"/></h2>
+            <div key={bot._id} className="chatbot-item">
+              <h2 className='bot-header-name'>
+                {bot.name} 
+                <FontAwesomeIcon 
+                  icon={faCog} 
+                  className="bot-settings-button" 
+                  onClick={() => toggleDropdown(bot._id)}
+                />
+              </h2>
               <div className="bubble"></div>
+              
+              {/* Dropdown Menu */}
+              {activeDropdown === bot._id && (
+                <div className="dropdown-menu">
+                  <div className="edit" onClick={() => handleEdit(bot._id)}>Edit</div>
+                  <div onClick={() => handleDelete(bot._id)}><span className="delete-text">Delete</span></div>
+                </div>
+              )}
             </div>
           ))}
         </div>

@@ -63,7 +63,7 @@ export default function ConfigBot() {
         <div className="dashboard">
             <Sidebar />
             <div className="config-box">
-                <div className="grid-background"></div>
+                <div className="grid-background-config"></div>
                 <div className="orb orb1"></div>
                 <div className="orb orb2"></div>
             </div>

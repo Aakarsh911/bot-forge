@@ -250,3 +250,34 @@ body {
         opacity: 1;
     }
 }
+
+.dropdown-menu {
+    position: absolute;
+    top: 30%;
+    right: 0;
+    background-color: #333;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+  }
+  
+  .dropdown-menu div {
+    padding: 10px 20px;
+    cursor: pointer;
+    color: #fff;
+    transition: background-color 0.3s ease;
+  }
+  
+  .dropdown-menu div:hover {
+    background-color: #444;
+  }
+
+  .delete-text {
+    color: #FF4500;
+  }
+
+  .edit {
+    border-bottom: 0.1px solid white;
+  }
+  
