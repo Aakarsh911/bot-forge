@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRobot } from '@fortawesome/free-solid-svg-icons';
+import { faRobot, faUser } from '@fortawesome/free-solid-svg-icons';
 import './create.css';
 
 export default function CreateBot() {
@@ -15,6 +15,7 @@ export default function CreateBot() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [showCheckmark, setShowCheckmark] = useState(false); // For checkmark animation
     const [showBotCreated, setShowBotCreated] = useState(false); // To show "Bot Created" text
+    const [userImage, setUserImage] = useState(null);
     const [loading, setLoading] = useState(false); // Loading state for bot creation
 
     // Typing effect states
@@ -42,6 +43,15 @@ export default function CreateBot() {
     const { data: session, status } = useSession();
     const router = useRouter();
     const chatEndRef = useRef(null);
+
+    useEffect(() => {
+        if (session && session.user) {
+            console.log(session.user);
+            console.log(session.user.image);
+            setUserImage(session.user.image);
+            console.log("User Image: " + userImage);
+        }
+    }, [session]);
 
     useEffect(() => {
         if (currentIndex < fullMessage.length) {
@@ -219,14 +229,7 @@ export default function CreateBot() {
                                 </div>
                             ) : (
                                 <div className="user-message-wrapper">
-                                    <div className="user-image">
-                                        <img
-                                            src={session.user.image}
-                                            alt="User Image"
-                                            width={50}
-                                            height={50}
-                                        />
-                                    </div>
+                                    <FontAwesomeIcon icon={faUser} className="user-icon" />
                                     <span className='user-message-text'>{entry.message}</span>
                                 </div>
                             )}
