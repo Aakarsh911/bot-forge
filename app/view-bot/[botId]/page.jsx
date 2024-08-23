@@ -1,26 +1,22 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation'; // Using useSearchParams to get query params in app router
+import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTooth, faCamera } from "@fortawesome/free-solid-svg-icons";
 import './botConfig.css';
 
 export default function BotConfigPage() {
   const router = useRouter();
-  const params = useParams(); // Retrieve query params
-  console.log('Params:', params);
+  const params = useParams(); 
   const botId = params.botId;
 
   const [botConfig, setBotConfig] = useState(null); // Bot configuration from the database
-  const [input, setInput] = useState('');
-  const [messages, setMessages] = useState([{ role: 'assistant', content: 'Hello! How can I help you today?' }]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-
+  const [input, setInput] = useState(''); // User input for the chat
+  const [messages, setMessages] = useState([{ role: 'assistant', content: 'Hello! How can I help you today?' }]); // Chat messages
+  const [isLoading, setIsLoading] = useState(false); // Loading state for bot typing animation
+  
+  // Fetch bot configuration on page load
   useEffect(() => {
-    console.log('Bot ID:', botId);
     if (botId) {
       fetchBotConfig();
     }
@@ -35,71 +31,83 @@ export default function BotConfigPage() {
     }
   };
 
+  // Handle sending the message to the bot
   const sendMessage = async () => {
-    setInput("");
     if (!input.trim()) return;
 
     const newMessage = { role: 'user', content: input };
     setMessages([...messages, newMessage]);
-    setIsLoading(true);
+    setInput('');
+    setIsLoading(true); // Start typing animation
 
     try {
-      const response = await axios.post('http://localhost:3001/ask', { question: input });
-      let botResponse = response.data.answer;
+      const response = await axios.post(`/api/bots/ask/${botId}`, {
+        question: input,
+        prompt: botConfig?.prompt // Passing prompt from botConfig to the backend
+      });
 
-      const formattedResponse = botResponse.replace(
-        "https://brushfloss.com",
-        '<a href="https://brushfloss.com" target="_blank" rel="noopener noreferrer">https://brushfloss.com</a>'
-      );
+      const botResponse = response.data.answer;
 
-      setMessages([...messages, newMessage, { role: 'assistant', content: <span dangerouslySetInnerHTML={{ __html: formattedResponse }} /> }]);
+      // Process bot's response
+      setMessages((prevMessages) => [...prevMessages, { role: 'assistant', content: botResponse }]);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error sending message:', error);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Stop typing animation
     }
   };
 
+  // Dynamic chat window styles based on botConfig
   const chatStyles = {
-    backgroundColor: botConfig?.widgetColor || '#1c1c1c',
-    color: botConfig?.botResponseColor || '#ffffff',
+    '--chatBackgroundColor': botConfig?.chatBackgroundColor || '#f0f0f0',
+    '--widgetColor': botConfig?.widgetColor || '#1c1c1c',
+    '--botResponseColor': botConfig?.botResponseColor || '#005b96',
+    '--botTextColor': botConfig?.botTextColor || '#ffffff',
+    '--userResponseColor': botConfig?.userResponseColor || '#4CAF50',
+    '--userTextColor': botConfig?.userTextColor || '#ffffff',
+    '--botTypingColor': botConfig?.botTypingColor || '#eeeeee', // Add botTypingColor
+    '--botTypingTextColor': botConfig?.botTypingTextColor || '#000000' // Add botTypingTextColor
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      sendMessage();
+    }
   };
 
   return (
-    <div>
+    <div className="chat-container" style={chatStyles}>
       {botConfig && (
-        <div style={{ padding: '1rem' }}>
-          <h1>{botConfig.name} <FontAwesomeIcon icon={faTooth} /></h1>
-          <div className="chatbox" style={chatStyles}>
-            <div className="chat-messages">
-              {messages.map((msg, index) => (
-                <div key={index} className={`chat-message ${msg.role}`}>
-                  <p>{msg.content}</p>
+        <div className="chat-window">
+          <h1>{botConfig.name}</h1>
+          <div className="messages">
+            {messages.map((message, index) => (
+              <div key={index} className={`message ${message.role}`}>
+                {message.content}
+              </div>
+            ))}
+            {isLoading && (
+              <div className="message assistant typing">
+                <span className="typing-text">Bot is typing</span>
+                <div className="dot-container">
+                  <span className="dot"></span>
+                  <span className="dot"></span>
+                  <span className="dot"></span>
                 </div>
-              ))}
-              {isLoading && (
-                <div className="chat-message loading">
-                  <p>{botConfig.visiblePrompt || 'Typing...'}</p>
-                  <div className="dots">
-                    <div className="dot"></div>
-                    <div className="dot"></div>
-                    <div className="dot"></div>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="chat-input">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-              />
-              <button onClick={sendMessage} style={{ backgroundColor: botConfig.userResponseColor || '#007aff' }}>
-                Send
-              </button>
-              <FontAwesomeIcon icon={faCamera} className="camera-icon" onClick={() => setIsPopupOpen(true)} />
-            </div>
+              </div>
+            )}
+          </div>
+          <div className="input-container">
+            <input 
+              type="text" 
+              value={input} 
+              onChange={(e) => setInput(e.target.value)} 
+              onKeyDown={handleKeyDown}
+              placeholder="Type your message here..." 
+            />
+            <button onClick={sendMessage} disabled={isLoading}>
+              {isLoading ? 'Sending...' : 'Send'}
+            </button>
           </div>
         </div>
       )}
