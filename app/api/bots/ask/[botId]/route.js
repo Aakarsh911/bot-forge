@@ -10,7 +10,7 @@ export const POST = async (req, { params }) => {
   chatHistory.push({ role: 'user', content: question });
 
   const requestData = {
-    model: 'gpt-4',
+    model: 'gpt-4o',
     messages: [
       { role: 'system', content: prompt || 'You are a knowledgeable assistant.' }, // Use the prompt or default text
       ...chatHistory,
