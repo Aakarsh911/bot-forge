@@ -28,7 +28,7 @@ export const POST = async (req, { params }) => {
 
     const answer = response.data.choices[0].message.content;
     chatHistory.push({ role: 'assistant', content: answer });
-    console.log('Chat history:', chatHistory);
+    
     return NextResponse.json({ answer, chatHistory });
   } catch (error) {
     console.error('Error:', error.response ? error.response.data : error.message);
