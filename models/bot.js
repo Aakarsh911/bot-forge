@@ -28,13 +28,29 @@ const BotSchema = new Schema({
         type: String,
         required: [true, 'Bot Response Color is required!'],
     },
+    botTextColor: {
+        type: String,
+        required: [true, 'Bot Text Color is required!'],
+    },
     userResponseColor: {
         type: String,
         required: [true, 'User Response Color is required!'],
     },
+    userTextColor: {
+        type: String,
+        required: [true, 'User Text Color is required!'],
+    },
     botTypingColor: {
         type: String,
         required: [true, 'Bot Typing Color is required!'],
+    },
+    chatBackgroundColor: {
+        type: String,
+        required: [true, 'Chat Background Color is required!'],
+    },
+    botTypingTextColor: {
+        type: String,
+        required: [true, 'Bot Typing Text Color is required!'],
     },
     API_URLs: {
         type: [[String]],
@@ -54,6 +70,8 @@ const BotSchema = new Schema({
     endMessageRating: {
         type: [Number],
     },
+
+
 });
 
 const Bot = models.Bot || model("Bot", BotSchema);
