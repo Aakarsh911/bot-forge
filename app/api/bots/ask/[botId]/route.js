@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 
+let chatHistory = [];
+
 export const POST = async (req, { params }) => {
   const { botId } = params;
   const { question, prompt } = await req.json(); // Get question and prompt from request body
 
-  let chatHistory = [];
 
   chatHistory.push({ role: 'user', content: question });
 
@@ -27,7 +28,7 @@ export const POST = async (req, { params }) => {
 
     const answer = response.data.choices[0].message.content;
     chatHistory.push({ role: 'assistant', content: answer });
-
+    console.log('Chat history:', chatHistory);
     return NextResponse.json({ answer, chatHistory });
   } catch (error) {
     console.error('Error:', error.response ? error.response.data : error.message);

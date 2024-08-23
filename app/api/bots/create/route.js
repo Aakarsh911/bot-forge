@@ -98,6 +98,8 @@ export const POST = async (req) => {
         );
 
         // Respond with success message
+        // console log bot id
+        console.log(newBot._id);
         return NextResponse.json({message: 'Bot created successfully', bot: newBot}, {status: 201});
     } catch (error) {
         console.error('Error creating bot:', error);
