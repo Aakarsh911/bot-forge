@@ -25,11 +25,13 @@ export const POST = async (req) => {
             widgetColor,
             widgetLogo,
             visiblePrompt,
-            botResponseColor,
+            botBubbleColor,
             botTextColor,
-            userResponseColor,
+            userBubbleColor,
             userTextColor,
             botTypingColor,
+            botHeaderBackgroundColor,
+            botHeaderTextColor,
             chatBackgroundColor,
             botTypingTextColor,
             API_URLs,
@@ -74,11 +76,13 @@ export const POST = async (req) => {
             widgetLogo,
             visiblePrompt,
             prompt,
-            botResponseColor,
+            botBubbleColor,
             botTextColor,
-            userResponseColor,
+            userBubbleColor,
             userTextColor,
             botTypingColor,
+            botHeaderBackgroundColor,
+            botHeaderTextColor,
             chatBackgroundColor,
             botTypingTextColor,
             API_URLs,
@@ -86,6 +90,8 @@ export const POST = async (req) => {
             modelType,
             closeButtonColor,
         });
+
+        console.log(newBot);
 
         // Save the bot
         await newBot.save();

@@ -26,7 +26,11 @@ export default function ConfigBot() {
     userTextColor: '#000000',
     chatBackgroundColor: '#f0f0f0',
     botTypingColor: '#0157f9',
+    botHeaderBackgroundColor: '#0157f9',
+    botHeaderTextColor: '#ffffff',
     botTypingTextColor: '#ffffff',
+    botHeaderBackgroundColor: '#0157f9',
+    botHeaderTextColor: '#ffffff',
   });
 
   useEffect(() => {
@@ -38,13 +42,15 @@ export default function ConfigBot() {
           setBotName(data.bot.name);
           setPurpose(data.bot.visiblePrompt);
           setBotAppearance({
-            botBubbleColor: data.bot.botResponseColor || '#ffffff',
+            botBubbleColor: data.bot.botBubbleColor || '#ffffff',
             botTextColor: data.bot.botTextColor || '#000000',
-            userBubbleColor: data.bot.userResponseColor || '#ffffff',
+            userBubbleColor: data.bot.userBubbleColor || '#ffffff',
             userTextColor: data.bot.userTextColor || '#000000',
             chatBackgroundColor: data.bot.chatBackgroundColor || '#f0f0f0',
             botTypingColor: data.bot.botTypingColor || '#0157f9',
             botTypingTextColor: data.bot.botTypingTextColor || '#ffffff',
+            botHeaderBackgroundColor: data.bot.botHeaderBackgroundColor || '#0157f9',
+            botHeaderTextColor: data.bot.botHeaderTextColor || '#ffffff',
           });
         } else {
           console.error('Failed to fetch bot data');
@@ -96,6 +102,7 @@ export default function ConfigBot() {
                       <ColorPicker
                           value={botAppearance.botBubbleColor}
                           onChange={(color) => handleColorChange(color, 'botBubbleColor')}
+                          showText
                       />
                     </div>
 
@@ -104,6 +111,7 @@ export default function ConfigBot() {
                       <ColorPicker
                           value={botAppearance.botTextColor}
                           onChange={(color) => handleColorChange(color, 'botTextColor')}
+                          showText
                       />
                     </div>
 
@@ -112,6 +120,7 @@ export default function ConfigBot() {
                       <ColorPicker
                           value={botAppearance.userBubbleColor}
                           onChange={(color) => handleColorChange(color, 'userBubbleColor')}
+                          showText
                       />
                     </div>
 
@@ -120,6 +129,7 @@ export default function ConfigBot() {
                       <ColorPicker
                           value={botAppearance.userTextColor}
                           onChange={(color) => handleColorChange(color, 'userTextColor')}
+                          showText
                       />
                     </div>
 
@@ -128,6 +138,7 @@ export default function ConfigBot() {
                       <ColorPicker
                           value={botAppearance.botTypingColor}
                           onChange={(color) => handleColorChange(color, 'botTypingColor')}
+                          showText
                       />
                     </div>
 
@@ -136,6 +147,7 @@ export default function ConfigBot() {
                       <ColorPicker
                           value={botAppearance.botTypingTextColor}
                           onChange={(color) => handleColorChange(color, 'botTypingTextColor')}
+                          showText
                       />
                     </div>
 
@@ -144,6 +156,23 @@ export default function ConfigBot() {
                       <ColorPicker
                           value={botAppearance.chatBackgroundColor}
                           onChange={(color) => handleColorChange(color, 'chatBackgroundColor')}
+                          showText
+                      />
+                    </div>
+                    <div className="color-picker-container">
+                      <label>Header Background Color</label>
+                      <ColorPicker
+                          value={botAppearance.botHeaderBackgroundColor}
+                          onChange={(color) => handleColorChange(color, 'botHeaderBackgroundColor')}
+                          showText
+                      />
+                    </div>
+                    <div className="color-picker-container">
+                      <label>Header Text color</label>
+                      <ColorPicker
+                          value={botAppearance.botHeaderTextColor}
+                          onChange={(color) => handleColorChange(color, 'botHeaderTextColor')}
+                          showText
                       />
                     </div>
                   </div>

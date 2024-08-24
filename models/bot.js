@@ -52,6 +52,14 @@ const BotSchema = new Schema({
         type: String,
         required: [true, 'Bot Typing Text Color is required!'],
     },
+    botHeaderBackgroundColor: {
+        type: String,
+        required: [true, 'Bot Header Background Color is required!'],
+    },
+    botHeaderTextColor: {
+        type: String,
+        required: [true, 'Bot Header Text Color is required!'],
+    },
     API_URLs: {
         type: [[String]],
     },
@@ -69,9 +77,7 @@ const BotSchema = new Schema({
     },
     endMessageRating: {
         type: [Number],
-    },
-
-
+    }
 });
 
 const Bot = models.Bot || model("Bot", BotSchema);

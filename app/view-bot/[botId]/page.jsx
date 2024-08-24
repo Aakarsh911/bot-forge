@@ -61,11 +61,13 @@ export default function BotConfigPage() {
 
   // Dynamic chat window styles based on botConfig
   const chatStyles = {
+    '--headerBackgroundColor': botConfig?.botHeaderBackgroundColor || '#0157f9',
+    '--headerTextColor': botConfig?.botHeaderTextColor || '#ffffff',
     '--chatBackgroundColor': botConfig?.chatBackgroundColor || '#f0f0f0',
     '--widgetColor': botConfig?.widgetColor || '#1c1c1c',
-    '--botResponseColor': botConfig?.botResponseColor || '#005b96',
+    '--botResponseColor': botConfig?.botBubbleColor || '#005b96',
     '--botTextColor': botConfig?.botTextColor || '#ffffff',
-    '--userResponseColor': botConfig?.userResponseColor || '#4CAF50',
+    '--userResponseColor': botConfig?.userBubbleColor || '#4CAF50',
     '--userTextColor': botConfig?.userTextColor || '#ffffff',
     '--botTypingColor': botConfig?.botTypingColor || '#eeeeee', // Add botTypingColor
     '--botTypingTextColor': botConfig?.botTypingTextColor || '#000000' // Add botTypingTextColor

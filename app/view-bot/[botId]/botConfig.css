@@ -38,6 +38,7 @@ body {
 }
 
 h1 {
+  color: var(--headerTextColor, #ffffff);
   margin-left: 0.5em;
 }
 /* Styles for individual messages */
@@ -147,6 +148,7 @@ header {
   height: 5em;
   width: 100%;
   background: black;
+  background: var(--headerBackgroundColor, #000000);
 }
 
 .share-button {
