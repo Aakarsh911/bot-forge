@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faShare, faRobot} from '@fortawesome/free-solid-svg-icons';
 import './botConfig.css';
 
 export default function BotConfigPage() {
@@ -79,7 +81,7 @@ export default function BotConfigPage() {
     <div className="chat-container" style={chatStyles}>
       {botConfig && (
         <div className="chat-window">
-          <h1>{botConfig.name}</h1>
+          <header><h1> <FontAwesomeIcon icon={faRobot} className="header-bot-icon"/>{botConfig.name}</h1></header>
           <div className="messages">
             {messages.map((message, index) => (
               <div key={index} className={`message ${message.role}`}>
@@ -105,9 +107,7 @@ export default function BotConfigPage() {
               onKeyDown={handleKeyDown}
               placeholder="Type your message here..." 
             />
-            <button onClick={sendMessage} disabled={isLoading}>
-              {isLoading ? 'Sending...' : 'Send'}
-            </button>
+            <FontAwesomeIcon icon={faShare}  className="share-button"/>
           </div>
         </div>
       )}

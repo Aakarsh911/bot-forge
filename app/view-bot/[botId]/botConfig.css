@@ -20,7 +20,6 @@ body {
   flex: 1;
   background-color: var(--chatBackgroundColor, #1c1c1c); /* Dynamic widget background color */
   color: var(--botTextColor, #ffffff); /* Dynamic bot text color */
-  padding: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -32,11 +31,15 @@ body {
 .messages {
   flex: 1;
   overflow-y: auto;
-  margin-bottom: 20px;
+  margin: 1em;
+  margin-bottom: 0;
   display: flex;
   flex-direction: column;
 }
 
+h1 {
+  margin-left: 0.5em;
+}
 /* Styles for individual messages */
 .message {
   padding: 10px 15px;
@@ -51,6 +54,7 @@ body {
   background-color: var(--botResponseColor, #005b96); /* Dynamic bot response color */
   color: var(--botTextColor, #ffffff); /* Dynamic bot text color */
   align-self: flex-start;
+  border-bottom-left-radius: 3px;
 }
 
 /* User's message styling */
@@ -58,22 +62,24 @@ body {
   background-color: var(--userResponseColor, #4CAF50); /* Dynamic user response color */
   color: var(--userTextColor, #ffffff); /* Dynamic user text color */
   align-self: flex-end;
+  border-bottom-right-radius: 3px;
 }
 
 /* Input and send button container */
 .input-container {
   display: flex;
   gap: 10px;
-  padding: 10px;
+  width: 100%;
+  background: #ffffff;
 }
 
 /* Input field styling */
 input[type="text"] {
   flex: 1;
-  padding: 10px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
   font-size: 16px;
+  border: none;
+  height: 2em;
+  margin-left: 0.2em;
 }
 
 /* Send button styling */
@@ -135,4 +141,28 @@ button:disabled {
   30% {
     transform: translateY(-8px);
   }
+}
+
+header {
+  height: 5em;
+  width: 100%;
+  background: black;
+}
+
+.share-button {
+  border: none;
+  font-size: 1.5em;
+  margin-top: 0.2em;
+  margin-right: 0.2em;
+  color: dodgerblue;
+}
+
+input:focus {
+  outline: none; /* Removes the default focus outline */
+  border: none;  /* Removes the border if it is set */
+}
+
+.header-bot-icon {
+  margin-right: 0.5em;
+  margin-top: -1em;
 }
