@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faShare, faRobot} from '@fortawesome/free-solid-svg-icons';
+import { SendOutlined } from '@ant-design/icons';
 import './botConfig.css';
 
 export default function BotConfigPage() {
@@ -109,7 +110,7 @@ export default function BotConfigPage() {
               onKeyDown={handleKeyDown}
               placeholder="Type your message here..." 
             />
-            <FontAwesomeIcon icon={faShare}  className="share-button"/>
+            <SendOutlined className="share-button"/>
           </div>
         </div>
       )}

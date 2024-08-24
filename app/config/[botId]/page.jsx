@@ -100,79 +100,88 @@ export default function ConfigBot() {
                     <div className="color-picker-container">
                       <label>Bot Bubble Color</label>
                       <ColorPicker
-                          value={botAppearance.botBubbleColor}
-                          onChange={(color) => handleColorChange(color, 'botBubbleColor')}
-                          showText
+                        onChangeComplete={(color) => handleColorChange(color, 'botBubbleColor')}
+                        showText
+                        mode={['single', 'gradient']}
+                        defaultValue={botAppearance.botBubbleColor}
                       />
                     </div>
 
                     <div className="color-picker-container">
                       <label>Bot Text Color</label>
                       <ColorPicker
-                          value={botAppearance.botTextColor}
-                          onChange={(color) => handleColorChange(color, 'botTextColor')}
+                          defaultValue={botAppearance.botTextColor}
+                          onChangeComplete={(color) => handleColorChange(color, 'botTextColor')}
                           showText
+                          mode={['single', 'gradient']}
                       />
                     </div>
 
                     <div className="color-picker-container">
                       <label>User Bubble Color</label>
                       <ColorPicker
-                          value={botAppearance.userBubbleColor}
-                          onChange={(color) => handleColorChange(color, 'userBubbleColor')}
+                          defaultValue={botAppearance.userBubbleColor}
+                          onChangeComplete={(color) => handleColorChange(color, 'userBubbleColor')}
                           showText
+                          mode={['single', 'gradient']}
                       />
                     </div>
 
                     <div className="color-picker-container">
                       <label>User Text Color</label>
                       <ColorPicker
-                          value={botAppearance.userTextColor}
-                          onChange={(color) => handleColorChange(color, 'userTextColor')}
+                          defaultValue={botAppearance.userTextColor}
+                          onChangeComplete={(color) => handleColorChange(color, 'userTextColor')}
                           showText
+                          mode={['single', 'gradient']}
                       />
                     </div>
 
                     <div className="color-picker-container">
                       <label>Bot Typing Color</label>
                       <ColorPicker
-                          value={botAppearance.botTypingColor}
-                          onChange={(color) => handleColorChange(color, 'botTypingColor')}
+                          defaultValue={botAppearance.botTypingColor}
+                          onChangeComplete={(color) => handleColorChange(color, 'botTypingColor')}
                           showText
+                          mode={['single', 'gradient']}
                       />
                     </div>
 
                     <div className="color-picker-container">
                       <label>Bot Typing Text Color</label>
                       <ColorPicker
-                          value={botAppearance.botTypingTextColor}
-                          onChange={(color) => handleColorChange(color, 'botTypingTextColor')}
+                          defaultValue={botAppearance.botTypingTextColor}
+                          onChangeComplete={(color) => handleColorChange(color, 'botTypingTextColor')}
                           showText
+                          mode={['single', 'gradient']}
                       />
                     </div>
 
                     <div className="color-picker-container">
                       <label>Chat Background Color</label>
                       <ColorPicker
-                          value={botAppearance.chatBackgroundColor}
-                          onChange={(color) => handleColorChange(color, 'chatBackgroundColor')}
+                          defaultValue={botAppearance.chatBackgroundColor}
+                          onChangeComplete={(color) => handleColorChange(color, 'chatBackgroundColor')}
                           showText
+                          mode={['single', 'gradient']}
                       />
                     </div>
                     <div className="color-picker-container">
                       <label>Header Background Color</label>
                       <ColorPicker
-                          value={botAppearance.botHeaderBackgroundColor}
-                          onChange={(color) => handleColorChange(color, 'botHeaderBackgroundColor')}
+                          defaultValue={botAppearance.botHeaderBackgroundColor}
+                          onChangeComplete={(color) => handleColorChange(color, 'botHeaderBackgroundColor')}
                           showText
+                          mode={['single', 'gradient']}
                       />
                     </div>
                     <div className="color-picker-container">
                       <label>Header Text color</label>
                       <ColorPicker
-                          value={botAppearance.botHeaderTextColor}
-                          onChange={(color) => handleColorChange(color, 'botHeaderTextColor')}
+                          defaultValue={botAppearance.botHeaderTextColor}
+                          onChangeComplete={(color) => handleColorChange(color, 'botHeaderTextColor')}
                           showText
+                          mode={['single', 'gradient']}
                       />
                     </div>
                   </div>
