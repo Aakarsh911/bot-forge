@@ -185,6 +185,19 @@ body {
       width: 100em;
 }
 
+.color-wrapper {
+    gap: 2em;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.color-wrapper label {
+    font-weight: initial;
+}
+
+.appearance-settings h4 {
+    font-size: 1.25em;
+}
 
 
   

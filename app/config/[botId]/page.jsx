@@ -89,62 +89,63 @@ export default function ConfigBot() {
               </TabPane>
               <TabPane tab="Appearance" key="2">
                 <div className="appearance-settings">
-                  <h2>Customize Appearance</h2>
+                  <h4>Customize Appearance</h4>
+                  <div className="color-wrapper">
+                    <div className="color-picker-container">
+                      <label>Bot Bubble Color</label>
+                      <ColorPicker
+                          value={botAppearance.botBubbleColor}
+                          onChange={(color) => handleColorChange(color, 'botBubbleColor')}
+                      />
+                    </div>
 
-                  <div className="color-picker-container">
-                    <label>Bot Bubble Color</label>
-                    <ColorPicker
-                        value={botAppearance.botBubbleColor}
-                        onChange={(color) => handleColorChange(color, 'botBubbleColor')}
-                    />
-                  </div>
+                    <div className="color-picker-container">
+                      <label>Bot Text Color</label>
+                      <ColorPicker
+                          value={botAppearance.botTextColor}
+                          onChange={(color) => handleColorChange(color, 'botTextColor')}
+                      />
+                    </div>
 
-                  <div className="color-picker-container">
-                    <label>Bot Text Color</label>
-                    <ColorPicker
-                        value={botAppearance.botTextColor}
-                        onChange={(color) => handleColorChange(color, 'botTextColor')}
-                    />
-                  </div>
+                    <div className="color-picker-container">
+                      <label>User Bubble Color</label>
+                      <ColorPicker
+                          value={botAppearance.userBubbleColor}
+                          onChange={(color) => handleColorChange(color, 'userBubbleColor')}
+                      />
+                    </div>
 
-                  <div className="color-picker-container">
-                    <label>User Bubble Color</label>
-                    <ColorPicker
-                        value={botAppearance.userBubbleColor}
-                        onChange={(color) => handleColorChange(color, 'userBubbleColor')}
-                    />
-                  </div>
+                    <div className="color-picker-container">
+                      <label>User Text Color</label>
+                      <ColorPicker
+                          value={botAppearance.userTextColor}
+                          onChange={(color) => handleColorChange(color, 'userTextColor')}
+                      />
+                    </div>
 
-                  <div className="color-picker-container">
-                    <label>User Text Color</label>
-                    <ColorPicker
-                        value={botAppearance.userTextColor}
-                        onChange={(color) => handleColorChange(color, 'userTextColor')}
-                    />
-                  </div>
+                    <div className="color-picker-container">
+                      <label>Bot Typing Color</label>
+                      <ColorPicker
+                          value={botAppearance.botTypingColor}
+                          onChange={(color) => handleColorChange(color, 'botTypingColor')}
+                      />
+                    </div>
 
-                  <div className="color-picker-container">
-                    <label>Chat Background Color</label>
-                    <ColorPicker
-                        value={botAppearance.chatBackgroundColor}
-                        onChange={(color) => handleColorChange(color, 'chatBackgroundColor')}
-                    />
-                  </div>
+                    <div className="color-picker-container">
+                      <label>Bot Typing Text Color</label>
+                      <ColorPicker
+                          value={botAppearance.botTypingTextColor}
+                          onChange={(color) => handleColorChange(color, 'botTypingTextColor')}
+                      />
+                    </div>
 
-                  <div className="color-picker-container">
-                    <label>Bot Typing Color</label>
-                    <ColorPicker
-                        value={botAppearance.botTypingColor}
-                        onChange={(color) => handleColorChange(color, 'botTypingColor')}
-                    />
-                  </div>
-
-                  <div className="color-picker-container">
-                    <label>Bot Typing Text Color</label>
-                    <ColorPicker
-                        value={botAppearance.botTypingTextColor}
-                        onChange={(color) => handleColorChange(color, 'botTypingTextColor')}
-                    />
+                    <div className="color-picker-container">
+                      <label>Chat Background Color</label>
+                      <ColorPicker
+                          value={botAppearance.chatBackgroundColor}
+                          onChange={(color) => handleColorChange(color, 'chatBackgroundColor')}
+                      />
+                    </div>
                   </div>
                 </div>
               </TabPane>
