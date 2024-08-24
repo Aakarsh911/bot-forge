@@ -5,6 +5,9 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import './config.css';
+import { Tabs } from 'antd';
+
+const { TabPane } = Tabs;
 
 export default function ConfigBot() {
     const { data: session, status } = useSession();
@@ -25,10 +28,21 @@ export default function ConfigBot() {
     const [showUserMessage, setShowUserMessage] = useState(false);
 
     const [activeTab, setActiveTab] = useState('Appearance');
+    const [value, setValue] = useState(0);
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
     const handleTabClick = (tab) => {
         setActiveTab(tab);
     };
+    function a11yProps(index) {
+        return {
+            id: `simple-tab-${index}`,
+            'aria-controls': `simple-tabpanel-${index}`,
+        };
+    }
 
     useEffect(() => {
         const fetchBotData = async () => {
@@ -64,7 +78,22 @@ export default function ConfigBot() {
             <Sidebar />
             <div className="config-box">
                 <div className="grid-background-config"></div>
-                <div className="orb orb1"></div>
+                <div className="orb orb1">
+                    <Tabs defaultActiveKey="1">
+                        <TabPane tab="General" key="1">
+                            Content of Tab 1
+                        </TabPane>
+                        <TabPane tab="Appearance" key="2">
+                            Content of Tab 2
+                        </TabPane>
+                        <TabPane tab="APIs" key="3">
+                            Content of Tab 3
+                        </TabPane>
+                        <TabPane tab="Integration" key="4">
+                            Content of Tab 4
+                        </TabPane>
+                    </Tabs>
+                </div>
                 <div className="orb orb2"></div>
             </div>
         </div>

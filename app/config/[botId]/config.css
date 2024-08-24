@@ -31,6 +31,7 @@ body {
     animation: moveAndExpand 1s ease forwards;
     animation-delay: 2s;
     opacity: 0;
+    padding: 1em;
 }
 
 .orb2 {
@@ -58,11 +59,11 @@ body {
         left: 40%;
     }
     100% {
-        width: 60vw;
-        height: 90vh;
+        width: calc(30vw - 1em);
+        height: calc(90vh - 1em);
         border-radius: 1em;
-        top: 4.2%;
-        left: 2%;
+        top: 3.5%;
+        left: 17.5%;
         opacity: 1;
         box-shadow: none;
     }
@@ -84,11 +85,11 @@ body {
         left: 60%;
     }
     100% {
-        width: 30vw;
-        height: 90vh;
+        width: calc(30vw - 1em);
+        height: calc(90vh - 1em);
         border-radius: 1em;
-        top: 4.2%;
-        left: 67%;
+        top: 3.5%;
+        left: 51.5%;
         opacity: 1;
         box-shadow: none;
     }
