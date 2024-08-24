@@ -7,6 +7,7 @@ import Sidebar from '@/components/Sidebar';
 import './config.css';
 import { Tabs, ColorPicker } from 'antd';
 import { Flex, Input } from 'antd';
+import {PreviewButton} from "@/components/PreviewButton";
 
 const { TabPane } = Tabs;
 
@@ -155,7 +156,17 @@ export default function ConfigBot() {
               </TabPane>
             </Tabs>
           </div>
-          <div className="orb orb2"></div>
+          <div className="orb orb2">
+            <div className="preview-header">
+              <Tabs defaultActiveKey="1">
+                <TabPane tab="Chat" key="1">
+                </TabPane>
+                <TabPane tab="Widget" key="2">
+                </TabPane>
+              </Tabs>
+              <PreviewButton/>
+            </div>
+          </div>
         </div>
       </div>
   );

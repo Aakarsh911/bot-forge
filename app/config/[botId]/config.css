@@ -41,6 +41,8 @@ body {
     animation: moveAndExpand2 1s ease forwards;
     opacity: 0;
     animation-delay: 2s;
+    overflow-x: hidden;
+
 }
 
 /* Direct Movement and Expansion */
@@ -130,7 +132,7 @@ body {
     
 }
 
-.ant-tabs-nav, .ant-tabs-content-holder {
+.ant-tabs-nav, .ant-tabs-content-holder, .ant-btn {
     opacity: 0;
     animation: fadeIn 2s ease-in-out forwards;
     animation-delay: 2.5s;
@@ -152,15 +154,37 @@ body {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
-  }
+}
   
-  .color-picker-container label {
+.color-picker-container label {
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 5px;
-  }
+}
   
-  .color-picker-container .ant-picker {
+.color-picker-container .ant-picker {
     width: 100%;
-  }
+}
+
+.preview-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.ant-btn {
+    top: 1.75em;
+    right: 0.5em;
+    position: fixed;
+}
+
+.eye-icon {
+    opacity: 1 !important;
+}
+
+.orb2 .ant-tabs-nav {
+      width: 100em;
+}
+
+
+
   
