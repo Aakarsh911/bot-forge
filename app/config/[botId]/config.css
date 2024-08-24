@@ -173,7 +173,7 @@ body {
 
 .ant-btn {
     top: 1.75em;
-    right: 1em;
+    right: 1.5em;
     position: fixed;
 }
 
@@ -181,8 +181,8 @@ body {
     opacity: 1 !important;
 }
 
-.orb2 .ant-tabs-nav {
-      width: 27.5rem;
+.orb2 .ant-tabs {
+      width: 100%;
 }
 
 .color-wrapper {
