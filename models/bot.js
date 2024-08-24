@@ -24,7 +24,7 @@ const BotSchema = new Schema({
         type: Map,
         of: String,
     },
-    botResponseColor: {
+    botBubbleColor: {
         type: String,
         required: [true, 'Bot Response Color is required!'],
     },
@@ -32,7 +32,7 @@ const BotSchema = new Schema({
         type: String,
         required: [true, 'Bot Text Color is required!'],
     },
-    userResponseColor: {
+    userBubbleColor: {
         type: String,
         required: [true, 'User Response Color is required!'],
     },
