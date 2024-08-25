@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faShare, faRobot} from '@fortawesome/free-solid-svg-icons';
+import { faRobot } from '@fortawesome/free-solid-svg-icons';
 import { SendOutlined } from '@ant-design/icons';
+import { marked } from 'marked'; // Import marked for Markdown conversion
 import './botConfig.css';
 
 export default function BotConfigPage() {
@@ -50,17 +51,25 @@ export default function BotConfigPage() {
         chatHistory: messages // Send the chat history with the request
       });
 
-      const { answer, chatHistory } = response.data;
+      const { answer } = response.data;
 
-      // Update the chat with the new message
-      setMessages(chatHistory);
+      // Convert the bot's response to HTML using marked
+      const formattedAnswer = marked(answer);
+      
+      // Log the formatted HTML content
+      console.log('Formatted HTML:', formattedAnswer);
+
+      // Update the chat with the formatted bot response (only once)
+      setMessages(prevMessages => [
+        ...prevMessages, 
+        { role: 'assistant', content: formattedAnswer, isHTML: true }
+      ]);
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {
       setIsLoading(false);
     }
   };
-
 
   // Dynamic chat window styles based on botConfig
   const chatStyles = {
@@ -90,7 +99,12 @@ export default function BotConfigPage() {
           <div className="messages">
             {messages.map((message, index) => (
               <div key={index} className={`message ${message.role}`}>
-                {message.content}
+                {/* Render HTML if it's a bot's message with Markdown formatting */}
+                {message.isHTML ? (
+                  <div dangerouslySetInnerHTML={{ __html: message.content }} />
+                ) : (
+                  <span>{message.content}</span> // Render normal text for user messages
+                )}
               </div>
             ))}
             {isLoading && (
