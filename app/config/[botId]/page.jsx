@@ -269,7 +269,6 @@ export default function ConfigBot() {
                     />
                   </div>
                 </div>
-                <SaveButton onClick={saveConfig}/>
               </div>
             </TabPane>
             <TabPane tab="APIs" key="3">
@@ -279,6 +278,7 @@ export default function ConfigBot() {
               Content of Tab 4
             </TabPane>
           </Tabs>
+          <SaveButton onClick={saveConfig}/>
         </div>
         <div className="orb orb2">
           <div className="preview-header">

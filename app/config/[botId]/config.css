@@ -210,11 +210,11 @@ body {
 }
 
 .orb1 .ant-btn {
-    top: 100%;
+    top: 1.75em;
     position: fixed;
     animation: none;
     opacity: 1;
-    margin-top: 1em;
+    right: 2.5em;
 }
 
 .chat-container {
@@ -269,6 +269,11 @@ body {
     color: var(--botTextColor, #ffffff); /* Dynamic bot text color */
     align-self: flex-start;
     border-bottom-left-radius: 3px;
+  }
+
+  .message.assistant.typing {
+    background: var(--botTypingColor, #005b96);
+    color: var(--botTypingTextColor, #ffffff);
   }
   
   /* User's message styling */
