@@ -41,24 +41,26 @@ export default function BotConfigPage() {
     const newMessage = { role: 'user', content: input };
     setMessages([...messages, newMessage]);
     setInput('');
-    setIsLoading(true); // Start typing animation
+    setIsLoading(true);
 
     try {
       const response = await axios.post(`/api/bots/ask/${botId}`, {
         question: input,
-        prompt: botConfig?.prompt // Passing prompt from botConfig to the backend
+        prompt: botConfig?.prompt,
+        chatHistory: messages // Send the chat history with the request
       });
 
-      const botResponse = response.data.answer;
+      const { answer, chatHistory } = response.data;
 
-      // Process bot's response
-      setMessages((prevMessages) => [...prevMessages, { role: 'assistant', content: botResponse }]);
+      // Update the chat with the new message
+      setMessages(chatHistory);
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {
-      setIsLoading(false); // Stop typing animation
+      setIsLoading(false);
     }
   };
+
 
   // Dynamic chat window styles based on botConfig
   const chatStyles = {
