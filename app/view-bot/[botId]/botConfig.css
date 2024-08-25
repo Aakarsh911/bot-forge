@@ -176,3 +176,13 @@ a {
   color: var(--headerTextColor, #ffffff);
   text-decoration: underline;
 }
+
+ol, ul {
+  padding: 1em;
+  margin: 0;
+}
+
+li {
+  padding: 0.5em;
+  border-bottom: 1px solid white;
+}

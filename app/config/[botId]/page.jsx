@@ -132,6 +132,25 @@ export default function ConfigBot() {
     '--botTypingTextColor': botAppearance.botTypingTextColor,
   };
 
+  const modifyIframeLinks = () => {
+    const iframe = document.querySelector('.preview-iframe');
+    if (iframe) {
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+      const links = iframeDoc.querySelectorAll('a');
+      links.forEach(link => {
+        link.setAttribute('target', '_parent');
+      });
+    }
+  };
+
+  // Run the link modification script after the iframe loads
+  useEffect(() => {
+    const iframe = document.querySelector('.preview-iframe');
+    if (iframe) {
+      iframe.onload = modifyIframeLinks;
+    }
+  }, []);
+
   return (
     <div className="dashboard">
       <Sidebar />
@@ -297,7 +316,7 @@ export default function ConfigBot() {
                 </div>
               </TabPane>
               <TabPane tab="Widget" key="2">
-                <iframe src="http://localhost:3000/view-bot/66c8e498688a63489dcc4403" className='preview-iframe'></iframe>
+                <iframe src={`http://localhost:3000/view-bot/${botId}`} className='preview-iframe'></iframe>
               </TabPane>
             </Tabs>
             <PreviewButton />

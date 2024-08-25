@@ -64,6 +64,16 @@ export default function BotConfigPage() {
         ...prevMessages, 
         { role: 'assistant', content: formattedAnswer, isHTML: true }
       ]);
+      setTimeout(() => {
+        const chatWindow = document.querySelector('.messages');
+        if (chatWindow) {
+          const links = chatWindow.querySelectorAll('a');
+          links.forEach(link => {
+            link.setAttribute('target', '_blank'); // Open in a new tab
+            link.setAttribute('rel', 'noopener noreferrer'); // Security features to prevent access to the original window
+          });
+        }
+      }, 100); 
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {
