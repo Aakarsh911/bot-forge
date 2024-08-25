@@ -68,11 +68,45 @@ export default function ConfigBot() {
   }, [botId]);
 
   const handleColorChange = (color, field) => {
+    let colorValue;
+
+    if (Array.isArray(color.colors)) {
+        // Start building the gradient string
+        colorValue = 'linear-gradient(90deg, ';
+
+        // Loop through each color in the array and construct the gradient stops
+        color.colors.forEach((colorStop, index) => {
+            let percent = colorStop.percent;
+            let r = colorStop.color.metaColor.r;
+            let g = colorStop.color.metaColor.g;
+            let b = colorStop.color.metaColor.b;
+            let a = colorStop.color.metaColor.a;
+
+            // Append the current color stop to the gradient string
+            colorValue += `rgba(${r}, ${g}, ${b}, ${a}) ${percent}%`;
+
+            // Add a comma between color stops, but not after the last one
+            if (index < color.colors.length - 1) {
+                colorValue += ', ';
+            }
+        });
+
+        // Close the gradient string
+        colorValue += ')';
+
+        console.log('ColorValue:', colorValue);
+    } else {
+        // Handle single color case
+        colorValue = color.toHexString();
+    }
+
+    // Update the bot appearance with the correct color or gradient
     setBotAppearance((prev) => ({
       ...prev,
-      [field]: color.toHexString(),
+      [field]: colorValue,
     }));
   };
+
 
   const saveConfig = async () => {
     console.log('Saving bot configuration:', botAppearance);
@@ -133,7 +167,7 @@ export default function ConfigBot() {
                   <div className="color-picker-container">
                     <label>Bot Bubble Color</label>
                     <ColorPicker
-                      onChangeComplete={(color) => handleColorChange(color, 'botBubbleColor')}
+                      onChange={(color) => handleColorChange(color, 'botBubbleColor')}
                       showText
                       mode={['single', 'gradient']}
                       defaultValue={botAppearance.botBubbleColor}
@@ -143,7 +177,7 @@ export default function ConfigBot() {
                     <label>Bot Text Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.botTextColor}
-                      onChangeComplete={(color) => handleColorChange(color, 'botTextColor')}
+                      onChange={(color) => handleColorChange(color, 'botTextColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -152,7 +186,7 @@ export default function ConfigBot() {
                     <label>User Bubble Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.userBubbleColor}
-                      onChangeComplete={(color) => handleColorChange(color, 'userBubbleColor')}
+                      onChange={(color) => handleColorChange(color, 'userBubbleColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -161,7 +195,7 @@ export default function ConfigBot() {
                     <label>User Text Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.userTextColor}
-                      onChangeComplete={(color) => handleColorChange(color, 'userTextColor')}
+                      onChange={(color) => handleColorChange(color, 'userTextColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -170,7 +204,7 @@ export default function ConfigBot() {
                     <label>Bot Typing Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.botTypingColor}
-                      onChangeComplete={(color) => handleColorChange(color, 'botTypingColor')}
+                      onChange={(color) => handleColorChange(color, 'botTypingColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -179,7 +213,7 @@ export default function ConfigBot() {
                     <label>Bot Typing Text Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.botTypingTextColor}
-                      onChangeComplete={(color) => handleColorChange(color, 'botTypingTextColor')}
+                      onChange={(color) => handleColorChange(color, 'botTypingTextColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -188,7 +222,7 @@ export default function ConfigBot() {
                     <label>Chat Background Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.chatBackgroundColor}
-                      onChangeComplete={(color) => handleColorChange(color, 'chatBackgroundColor')}
+                      onChange={(color) => handleColorChange(color, 'chatBackgroundColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -197,7 +231,7 @@ export default function ConfigBot() {
                     <label>Header Background Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.botHeaderBackgroundColor}
-                      onChangeComplete={(color) => handleColorChange(color, 'botHeaderBackgroundColor')}
+                      onChange={(color) => handleColorChange(color, 'botHeaderBackgroundColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -206,7 +240,7 @@ export default function ConfigBot() {
                     <label>Header Text Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.botHeaderTextColor}
-                      onChangeComplete={(color) => handleColorChange(color, 'botHeaderTextColor')}
+                      onChange={(color) => handleColorChange(color, 'botHeaderTextColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -215,7 +249,7 @@ export default function ConfigBot() {
                     <label>Widget Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.widgetColor}
-                      onChangeComplete={(color) => handleColorChange(color, 'widgetColor')}
+                      onChange={(color) => handleColorChange(color, 'widgetColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -259,7 +293,9 @@ export default function ConfigBot() {
                   </div>
                 </div>
               </TabPane>
-              <TabPane tab="Widget" key="2"></TabPane>
+              <TabPane tab="Widget" key="2">
+                <iframe src="http://localhost:3000/view-bot/66c8e498688a63489dcc4403" className='preview-iframe'></iframe>
+              </TabPane>
             </Tabs>
             <PreviewButton />
           </div>

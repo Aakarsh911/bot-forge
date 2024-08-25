@@ -206,6 +206,7 @@ body {
 .preview-iframe {
     border: 1px solid black;
     border-radius: 1em;
+    height: 80vh;
 }
 
 .orb1 .ant-btn {
@@ -229,7 +230,7 @@ body {
   /* Chat window styles */
   .chat-window {
     flex: 1;
-    background-color: var(--chatBackgroundColor, #1c1c1c); /* Dynamic widget background color */
+    background: var(--chatBackgroundColor, #1c1c1c); /* Dynamic widget background color */
     color: var(--botTextColor, #ffffff); /* Dynamic bot text color */
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -264,7 +265,7 @@ body {
   
   /* Assistant's message styling */
   .message.assistant {
-    background-color: var(--botResponseColor, #005b96); /* Dynamic bot response color */
+    background: var(--botResponseColor, #005b96); /* Dynamic bot response color */
     color: var(--botTextColor, #ffffff); /* Dynamic bot text color */
     align-self: flex-start;
     border-bottom-left-radius: 3px;
@@ -272,7 +273,7 @@ body {
   
   /* User's message styling */
   .message.user {
-    background-color: var(--userResponseColor, #4CAF50); /* Dynamic user response color */
+    background: var(--userResponseColor, #4CAF50); /* Dynamic user response color */
     color: var(--userTextColor, #ffffff); /* Dynamic user text color */
     align-self: flex-end;
     border-bottom-right-radius: 3px;
@@ -359,8 +360,7 @@ body {
   header {
     height: 5em;
     width: 100%;
-    background: black;
-    background: var(--headerBackgroundColor, #000000);
+    background: var(--headerBackgroundColor);
   }
   
   .share-button {
