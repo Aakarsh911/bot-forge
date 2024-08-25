@@ -90,13 +90,8 @@ export default function ConfigBot() {
                 colorValue += ', ';
             }
         });
-
-        // Close the gradient string
         colorValue += ')';
-
-        console.log('ColorValue:', colorValue);
     } else {
-        // Handle single color case
         colorValue = color.toHexString();
     }
 
