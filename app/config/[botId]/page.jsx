@@ -280,10 +280,18 @@ export default function ConfigBot() {
                       <div className="message user">
                         <span>Example user message</span>
                       </div>
+                      <div className="message assistant typing">
+                        <span className="typing-text">Bot is typing</span>
+                        <div className="dot-container">
+                          <span className="dot"></span>
+                          <span className="dot"></span>
+                          <span className="dot"></span>
+                        </div>
+                      </div>
                     </div>
                     <div className="input-container">
-                      <input type="text" placeholder="Type your message here..." />
-                      <SendOutlined className="share-button" />
+                      <input type="text" placeholder="Type your message here..."/>
+                      <SendOutlined className="share-button"/>
                     </div>
                   </div>
                 </div>
