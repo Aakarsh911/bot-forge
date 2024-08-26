@@ -23,6 +23,12 @@ export default function ConfigBot() {
   const botId = params.botId;
   const [botName, setBotName] = useState('');
   const [purpose, setPurpose] = useState('');
+  
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/');
+    }
+  }, [status]);
 
   const [botAppearance, setBotAppearance] = useState({
     widgetColor: '#0157f9',
