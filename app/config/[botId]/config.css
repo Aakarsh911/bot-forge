@@ -212,8 +212,6 @@ body {
 .orb1 .ant-btn {
     top: 1.75em;
     position: fixed;
-    animation: none;
-    opacity: 1;
     right: 2.5em;
 }
 
