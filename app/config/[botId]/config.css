@@ -232,7 +232,7 @@ body {
     flex: 1;
     background: var(--chatBackgroundColor, #1c1c1c); /* Dynamic widget background color */
     color: var(--botTextColor, #ffffff); /* Dynamic bot text color */
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
     display: flex;
     flex-direction: column;
     justify-content: space-between;

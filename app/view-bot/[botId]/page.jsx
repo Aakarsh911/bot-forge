@@ -26,6 +26,14 @@ export default function BotConfigPage() {
     }
   }, [botId]);
 
+  useEffect(() => {
+    // Check if the page is inside an iframe
+    if (window.top === window.self) {
+      // Redirect or block access if not in an iframe
+      window.location.href = "/"; // Redirect to home page or another page
+    }
+  }, []);
+
   const fetchBotConfig = async () => {
     try {
       const response = await axios.get(`/api/bots/${botId}`);
