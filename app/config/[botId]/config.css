@@ -382,3 +382,7 @@ body {
     margin-top: -1em;
   }
   
+  .send-button {
+    background: transparent;
+    color: #000;
+  }

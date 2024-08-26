@@ -12,6 +12,7 @@ import { SaveButton } from '@/components/SaveButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShare, faRobot } from '@fortawesome/free-solid-svg-icons';
 import { SendOutlined } from '@ant-design/icons';
+import { UilMessage } from '@iconscout/react-unicons'
 
 const { TabPane } = Tabs;
 
@@ -310,7 +311,9 @@ export default function ConfigBot() {
                     </div>
                     <div className="input-container">
                       <input type="text" placeholder="Type your message here..."/>
-                      <SendOutlined className="share-button"/>
+                      <button className="send-button">
+                        <UilMessage size="20" className="send-button"/>
+                      </button>
                     </div>
                   </div>
                 </div>

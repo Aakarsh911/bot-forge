@@ -6,8 +6,9 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRobot } from '@fortawesome/free-solid-svg-icons';
 import { SendOutlined } from '@ant-design/icons';
-import { marked } from 'marked'; // Import marked for Markdown conversion
+import { marked } from 'marked';
 import './botConfig.css';
+import { UilMessage } from '@iconscout/react-unicons'
 
 export default function BotConfigPage() {
   const router = useRouter();
@@ -144,7 +145,9 @@ export default function BotConfigPage() {
               onKeyDown={handleKeyDown}
               placeholder="Type your message here..." 
             />
-            <SendOutlined className="share-button"/>
+            <button className="send-button" onClick={sendMessage}>
+              <UilMessage size="20" className="send-icon"/>
+            </button>
           </div>
         </div>
       )}

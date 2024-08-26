@@ -186,3 +186,8 @@ li {
   padding: 0.5em;
   border-bottom: 1px solid white;
 }
+
+.send-button {
+  background: transparent;
+  color: #000;
+}
