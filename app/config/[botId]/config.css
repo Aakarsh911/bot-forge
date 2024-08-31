@@ -195,11 +195,11 @@ body {
     font-weight: initial;
 }
 
-.appearance-settings h4 {
+h4 {
     font-size: 1.25em;
 }
 
-.appearance-settings {
+.appearance-settings, .api-settings, .widget-settings{
     margin-top: -1.5em;
 }
 
@@ -410,4 +410,9 @@ body {
   .api-endpoint {
     margin-bottom: 1em;
     border: 1px solid #ccc !important;
+  }
+
+  .input-container input {
+      border: none;
+      margin-top: 0.25em;
   }

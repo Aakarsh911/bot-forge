@@ -377,7 +377,7 @@ export default function ConfigBot() {
             </TabPane>
             <TabPane tab="APIs" key="3">
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="api-settings" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <h4>API Mappings</h4>
                   <div className='button' onClick={handleAddMapping}>
                     <FontAwesomeIcon icon={faPlus} />
@@ -516,13 +516,120 @@ export default function ConfigBot() {
                 </div>
               </TabPane>
               <TabPane tab="Widget" key="2">
-                <iframe
-                  src={`http://localhost:3000/view-bot/${botId}`}
-                  className="preview-iframe"
-                ></iframe>
+                <div className="widget-settings" >
+                  <h4>Customize Widget</h4>
+
+                  <div
+                      style={{
+                        width: '100%',
+                        height: '70vh',
+                        border: '1px solid #ccc',
+                        borderRadius: '10px',
+                        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
+                        overflow: 'hidden',
+                        position: 'relative',
+                        backgroundColor: '#f0f0f0',
+                      }}
+                  >
+                    {/* Mock Chrome browser top bar */}
+                    <div
+                        style={{
+                          backgroundColor: '#e3e3e3',
+                          height: '40px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          padding: '0 1rem',
+                          justifyContent: 'space-between',
+                          position: 'relative',
+                        }}
+                    >
+                      {/* Left corner buttons (close, minimize, maximize) */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div
+                            style={{
+                              width: '12px',
+                              height: '12px',
+                              backgroundColor: '#ff5f57',
+                              borderRadius: '50%',
+                            }}
+                        ></div>
+                        <div
+                            style={{
+                              width: '12px',
+                              height: '12px',
+                              backgroundColor: '#ffbd2e',
+                              borderRadius: '50%',
+                            }}
+                        ></div>
+                        <div
+                            style={{
+                              width: '12px',
+                              height: '12px',
+                              backgroundColor: '#28c840',
+                              borderRadius: '50%',
+                            }}
+                        ></div>
+                      </div>
+
+                      {/* URL bar */}
+                      <div style={{ flex: '1', marginLeft: '1rem', marginRight: '1rem' }}>
+                        <input
+                            type="text"
+                            value="https://chatbot.example.com"
+                            style={{
+                              width: '100%',
+                              padding: '6px 12px',
+                              borderRadius: '20px',
+                              border: '1px solid #ccc',
+                              outline: 'none',
+                              height: '1em'
+                            }}
+                            readOnly
+                        />
+                      </div>
+
+                      {/* Right side space for any additional buttons (optional) */}
+                      <div></div>
+                    </div>
+
+                    {/* Mock Chrome browser content area */}
+                    <div
+                        style={{
+                          padding: '1rem',
+                          backgroundColor: '#ffffff',
+                          height: 'calc(100% - 40px)',
+                          position: 'relative',
+                        }}
+                    >
+                    </div>
+
+                    {/* Bottom-right widget button inside Chrome window */}
+                    <button
+                        style={{
+                          position: 'absolute',
+                          bottom: '1rem',
+                          right: '1rem',
+                          background: botAppearance.widgetColor,
+                          color: '#fff',
+                          border: 'none',
+                          borderRadius: '50%',
+                          width: '50px',
+                          height: '50px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                          cursor: 'pointer',
+                        }}
+                    >
+                      <FontAwesomeIcon icon={faRobot} />
+                    </button>
+                  </div>
+                </div>
               </TabPane>
+
             </Tabs>
-            <PreviewButton />
+            <PreviewButton/>
           </div>
         </div>
       </div>
