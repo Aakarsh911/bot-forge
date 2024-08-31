@@ -294,7 +294,6 @@ body {
   input[type="text"] {
     flex: 1;
     font-size: 16px;
-    border: none;
     height: 2em;
     margin-left: 0.2em;
   }
@@ -385,4 +384,30 @@ body {
   .send-button {
     background: transparent;
     color: #000;
+  }
+
+  .button {
+    background: var(--widgetColor, #1c1c1c);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 2em;
+    height: 2em;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+  }
+
+  .parameter {
+    margin-bottom: 1em;
+    border: 1px solid #ccc !important;
+  }
+
+  .api-endpoint {
+    margin-bottom: 1em;
+    border: 1px solid #ccc !important;
   }

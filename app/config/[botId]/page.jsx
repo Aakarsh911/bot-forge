@@ -5,14 +5,13 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import './config.css';
-import { Tabs, ColorPicker } from 'antd';
-import { Flex, Input } from 'antd';
+import { Tabs, ColorPicker, Card, Space, Button, Input, Form } from 'antd';
+import { Flex } from 'antd';
 import { PreviewButton } from '@/components/PreviewButton';
 import { SaveButton } from '@/components/SaveButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShare, faRobot } from '@fortawesome/free-solid-svg-icons';
-import { SendOutlined } from '@ant-design/icons';
-import { UilMessage } from '@iconscout/react-unicons'
+import { faRobot, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { UilMessage } from '@iconscout/react-unicons';
 
 const { TabPane } = Tabs;
 
@@ -23,6 +22,30 @@ export default function ConfigBot() {
   const botId = params.botId;
   const [botName, setBotName] = useState('');
   const [purpose, setPurpose] = useState('');
+
+  // State for API mappings
+  const [apiMappings, setApiMappings] = useState([
+    {
+      id: Date.now(),
+      when: '',
+      apiEndpoint: '',
+      parameters: [{ key: '', value: '' }],
+    },
+  ]);
+
+  // State for managing color settings
+  const [botAppearance, setBotAppearance] = useState({
+    widgetColor: '#0157f9',
+    botBubbleColor: '#ffffff',
+    botTextColor: '#000000',
+    userBubbleColor: '#ffffff',
+    userTextColor: '#000000',
+    chatBackgroundColor: '#f0f0f0',
+    botTypingColor: '#0157f9',
+    botHeaderBackgroundColor: '#0157f9',
+    botHeaderTextColor: '#ffffff',
+    botTypingTextColor: '#ffffff',
+  });
 
   useEffect(() => {
     const fetchBots = async () => {
@@ -39,7 +62,7 @@ export default function ConfigBot() {
           }
           const data = await response.json();
           const botIds = data.bots.map(bot => bot._id);
-          if(botIds.indexOf(botId) === -1) {
+          if (botIds.indexOf(botId) === -1) {
             router.push('/');
           }
         } catch (error) {
@@ -52,20 +75,6 @@ export default function ConfigBot() {
 
     fetchBots();
   }, [status]);
-
-
-  const [botAppearance, setBotAppearance] = useState({
-    widgetColor: '#0157f9',
-    botBubbleColor: '#ffffff',
-    botTextColor: '#000000',
-    userBubbleColor: '#ffffff',
-    userTextColor: '#000000',
-    chatBackgroundColor: '#f0f0f0',
-    botTypingColor: '#0157f9',
-    botHeaderBackgroundColor: '#0157f9',
-    botHeaderTextColor: '#ffffff',
-    botTypingTextColor: '#ffffff',
-  });
 
   useEffect(() => {
     const fetchBotData = async () => {
@@ -87,6 +96,9 @@ export default function ConfigBot() {
             botHeaderBackgroundColor: data.bot.botHeaderBackgroundColor || '#0157f9',
             botHeaderTextColor: data.bot.botHeaderTextColor || '#ffffff',
           });
+          if (data.bot.apiMappings) {
+            setApiMappings(data.bot.apiMappings);
+          }
         } else {
           console.error('Failed to fetch bot data');
         }
@@ -102,54 +114,53 @@ export default function ConfigBot() {
     let colorValue;
 
     if (Array.isArray(color.colors)) {
-        // Start building the gradient string
-        colorValue = 'linear-gradient(90deg, ';
+      colorValue = 'linear-gradient(90deg, ';
 
-        // Loop through each color in the array and construct the gradient stops
-        color.colors.forEach((colorStop, index) => {
-            let percent = colorStop.percent;
-            let r = colorStop.color.metaColor.r;
-            let g = colorStop.color.metaColor.g;
-            let b = colorStop.color.metaColor.b;
-            let a = colorStop.color.metaColor.a;
+      color.colors.forEach((colorStop, index) => {
+        let percent = colorStop.percent;
+        let r = colorStop.color.metaColor.r;
+        let g = colorStop.color.metaColor.g;
+        let b = colorStop.color.metaColor.b;
+        let a = colorStop.color.metaColor.a;
 
-            // Append the current color stop to the gradient string
-            colorValue += `rgba(${r}, ${g}, ${b}, ${a}) ${percent}%`;
+        colorValue += `rgba(${r}, ${g}, ${b}, ${a}) ${percent}%`;
 
-            // Add a comma between color stops, but not after the last one
-            if (index < color.colors.length - 1) {
-                colorValue += ', ';
-            }
-        });
-        colorValue += ')';
+        if (index < color.colors.length - 1) {
+          colorValue += ', ';
+        }
+      });
+      colorValue += ')';
     } else {
-        colorValue = color.toHexString();
+      colorValue = color.toHexString();
     }
 
-    // Update the bot appearance with the correct color or gradient
-    setBotAppearance((prev) => ({
+    setBotAppearance(prev => ({
       ...prev,
       [field]: colorValue,
     }));
   };
 
-
   const saveConfig = async () => {
-    console.log('Saving bot configuration:', botAppearance);
+    console.log('Saving bot configuration:', {
+      botAppearance,
+      apiMappings,
+    });
     try {
       const response = await fetch('/api/bots/edit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ botId, botAppearance }),
+        body: JSON.stringify({ botId, botAppearance, apiMappings }),
       });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
     } catch (error) {
       console.error('Error saving bot configuration:', error);
     }
   };
 
-  // Chat styles based on real-time appearance updates
   const chatStyles = {
     '--headerBackgroundColor': botAppearance.botHeaderBackgroundColor,
     '--headerTextColor': botAppearance.botHeaderTextColor,
@@ -174,13 +185,73 @@ export default function ConfigBot() {
     }
   };
 
-  // Run the link modification script after the iframe loads
   useEffect(() => {
     const iframe = document.querySelector('.preview-iframe');
     if (iframe) {
       iframe.onload = modifyIframeLinks;
     }
   }, []);
+
+  // Handlers for API Mappings
+  const handleAddMapping = () => {
+    setApiMappings([
+      ...apiMappings,
+      {
+        id: Date.now(),
+        when: '',
+        apiEndpoint: '',
+        parameters: [{ key: '', value: '' }],
+      },
+    ]);
+  };
+
+  const handleRemoveMapping = id => {
+    setApiMappings(apiMappings.filter(mapping => mapping.id !== id));
+  };
+
+  const handleMappingChange = (id, field, value) => {
+    setApiMappings(
+      apiMappings.map(mapping =>
+        mapping.id === id ? { ...mapping, [field]: value } : mapping
+      )
+    );
+  };
+
+  const handleAddParameter = mappingId => {
+    setApiMappings(
+      apiMappings.map(mapping =>
+        mapping.id === mappingId
+          ? { ...mapping, parameters: [...mapping.parameters, { key: '', value: '' }] }
+          : mapping
+      )
+    );
+  };
+
+  const handleRemoveParameter = (mappingId, index) => {
+    setApiMappings(
+      apiMappings.map(mapping =>
+        mapping.id === mappingId
+          ? {
+              ...mapping,
+              parameters: mapping.parameters.filter((_, i) => i !== index),
+            }
+          : mapping
+      )
+    );
+  };
+
+  const handleParameterChange = (mappingId, index, field, value) => {
+    setApiMappings(
+      apiMappings.map(mapping => {
+        if (mapping.id === mappingId) {
+          const newParameters = [...mapping.parameters];
+          newParameters[index][field] = value;
+          return { ...mapping, parameters: newParameters };
+        }
+        return mapping;
+      })
+    );
+  };
 
   return (
     <div className="dashboard">
@@ -194,14 +265,16 @@ export default function ConfigBot() {
                 <label>Bot Name</label>
                 <Input
                   value={botName}
-                  onChange={(e) => setBotName(e.target.value)}
+                  onChange={e => setBotName(e.target.value)}
                   variant="filled"
+                  placeholder="Enter Bot Name"
                 />
                 <label>Purpose</label>
                 <Input
                   value={purpose}
-                  onChange={(e) => setPurpose(e.target.value)}
+                  onChange={e => setPurpose(e.target.value)}
                   variant="filled"
+                  placeholder="Enter Bot Purpose"
                 />
               </Flex>
             </TabPane>
@@ -212,7 +285,7 @@ export default function ConfigBot() {
                   <div className="color-picker-container">
                     <label>Bot Bubble Color</label>
                     <ColorPicker
-                      onChange={(color) => handleColorChange(color, 'botBubbleColor')}
+                      onChange={color => handleColorChange(color, 'botBubbleColor')}
                       showText
                       mode={['single', 'gradient']}
                       defaultValue={botAppearance.botBubbleColor}
@@ -222,7 +295,7 @@ export default function ConfigBot() {
                     <label>Bot Text Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.botTextColor}
-                      onChange={(color) => handleColorChange(color, 'botTextColor')}
+                      onChange={color => handleColorChange(color, 'botTextColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -231,7 +304,7 @@ export default function ConfigBot() {
                     <label>User Bubble Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.userBubbleColor}
-                      onChange={(color) => handleColorChange(color, 'userBubbleColor')}
+                      onChange={color => handleColorChange(color, 'userBubbleColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -240,7 +313,7 @@ export default function ConfigBot() {
                     <label>User Text Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.userTextColor}
-                      onChange={(color) => handleColorChange(color, 'userTextColor')}
+                      onChange={color => handleColorChange(color, 'userTextColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -249,7 +322,7 @@ export default function ConfigBot() {
                     <label>Bot Typing Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.botTypingColor}
-                      onChange={(color) => handleColorChange(color, 'botTypingColor')}
+                      onChange={color => handleColorChange(color, 'botTypingColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -258,7 +331,7 @@ export default function ConfigBot() {
                     <label>Bot Typing Text Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.botTypingTextColor}
-                      onChange={(color) => handleColorChange(color, 'botTypingTextColor')}
+                      onChange={color => handleColorChange(color, 'botTypingTextColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -267,7 +340,7 @@ export default function ConfigBot() {
                     <label>Chat Background Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.chatBackgroundColor}
-                      onChange={(color) => handleColorChange(color, 'chatBackgroundColor')}
+                      onChange={color => handleColorChange(color, 'chatBackgroundColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -276,7 +349,7 @@ export default function ConfigBot() {
                     <label>Header Background Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.botHeaderBackgroundColor}
-                      onChange={(color) => handleColorChange(color, 'botHeaderBackgroundColor')}
+                      onChange={color => handleColorChange(color, 'botHeaderBackgroundColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -285,7 +358,7 @@ export default function ConfigBot() {
                     <label>Header Text Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.botHeaderTextColor}
-                      onChange={(color) => handleColorChange(color, 'botHeaderTextColor')}
+                      onChange={color => handleColorChange(color, 'botHeaderTextColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -294,7 +367,7 @@ export default function ConfigBot() {
                     <label>Widget Color</label>
                     <ColorPicker
                       defaultValue={botAppearance.widgetColor}
-                      onChange={(color) => handleColorChange(color, 'widgetColor')}
+                      onChange={color => handleColorChange(color, 'widgetColor')}
                       showText
                       mode={['single', 'gradient']}
                     />
@@ -303,13 +376,107 @@ export default function ConfigBot() {
               </div>
             </TabPane>
             <TabPane tab="APIs" key="3">
-              Content of Tab 3
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <h4>API Mappings</h4>
+                  <div className='button' onClick={handleAddMapping}>
+                    <FontAwesomeIcon icon={faPlus} />
+                  </div>
+                </div>
+                <Space direction="vertical" style={{ width: '100%' }}>
+                  {apiMappings.map((mapping, index) => (
+                    <Card
+                      key={mapping.id}
+                      title={`Mapping ${index + 1}`}
+                      extra={
+                        apiMappings.length > 1 ? (
+                          <FontAwesomeIcon
+                            icon={faTrash}
+                            color="red"
+                            onClick={() => handleRemoveMapping(mapping.id)}
+                            style={{ cursor: 'pointer' }}
+                          />
+                        ) : null
+                      }
+                      style={{ marginBottom: 16 }}
+                    >
+                      <Form layout="vertical">
+                        <Form.Item label="When">
+                          <Input
+                            placeholder="Enter trigger string"
+                            value={mapping.when}
+                            onChange={e =>
+                              handleMappingChange(mapping.id, 'when', e.target.value)
+                            }
+                          />
+                        </Form.Item>
+                        <Form.Item label="API Endpoint">
+                          <Input
+                            placeholder="Enter API endpoint"
+                            value={mapping.apiEndpoint}
+                            onChange={e =>
+                              handleMappingChange(mapping.id, 'apiEndpoint', e.target.value)
+                            }
+                          />
+                        </Form.Item>
+                        <Form.Item label="">
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <label>Parameters</label>
+                            <div className='button' onClick={() => handleAddParameter(mapping.id)}>
+                              <FontAwesomeIcon icon={faPlus} />
+                            </div>
+                          </div>
+                          <Space direction="vertical" style={{ width: '100%' }}>
+                            {mapping.parameters.map((param, paramIndex) => (
+                              <Space key={paramIndex} align="baseline">
+                                <Input
+                                  placeholder="Key"
+                                  value={param.key}
+                                  onChange={e =>
+                                    handleParameterChange(
+                                      mapping.id,
+                                      paramIndex,
+                                      'key',
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                                <Input
+                                  placeholder="Value"
+                                  value={param.value}
+                                  onChange={e =>
+                                    handleParameterChange(
+                                      mapping.id,
+                                      paramIndex,
+                                      'value',
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                                {mapping.parameters.length > 1 && (
+                                  <FontAwesomeIcon
+                                    icon={faTrash}
+                                    color="red"
+                                    onClick={() => handleRemoveParameter(mapping.id, paramIndex)}
+                                    style={{ cursor: 'pointer' }}
+                                  />
+                                )}
+                              </Space>
+                            ))}
+                          </Space>
+                        </Form.Item>
+                      </Form>
+                    </Card>
+                  ))}
+                </Space>
+              </div>
             </TabPane>
             <TabPane tab="Integration" key="4">
-              Content of Tab 4
+              {/* Integration content can be added here */}
+              <p>Integration settings will be available soon.</p>
             </TabPane>
           </Tabs>
-          <SaveButton onClick={saveConfig}/>
+          <SaveButton onClick={saveConfig} />
         </div>
         <div className="orb orb2">
           <div className="preview-header">
@@ -340,16 +507,19 @@ export default function ConfigBot() {
                       </div>
                     </div>
                     <div className="input-container">
-                      <input type="text" placeholder="Type your message here..."/>
+                      <input type="text" placeholder="Type your message here..." />
                       <button className="send-button">
-                        <UilMessage size="20" className="send-button"/>
+                        <UilMessage size="20" className="send-button" />
                       </button>
                     </div>
                   </div>
                 </div>
               </TabPane>
               <TabPane tab="Widget" key="2">
-                <iframe src={`http://localhost:3000/view-bot/${botId}`} className='preview-iframe'></iframe>
+                <iframe
+                  src={`http://localhost:3000/view-bot/${botId}`}
+                  className="preview-iframe"
+                ></iframe>
               </TabPane>
             </Tabs>
             <PreviewButton />
