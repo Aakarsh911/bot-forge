@@ -25,10 +25,34 @@ export default function ConfigBot() {
   const [purpose, setPurpose] = useState('');
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/');
-    }
+    const fetchBots = async () => {
+      if (status === 'authenticated') {
+        try {
+          const response = await fetch('/api/bots/fetch', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+          const data = await response.json();
+          const botIds = data.bots.map(bot => bot._id);
+          if(botIds.indexOf(botId) === -1) {
+            router.push('/');
+          }
+        } catch (error) {
+          console.error('Error fetching bots:', error);
+        }
+      } else {
+        router.push('/');
+      }
+    };
+
+    fetchBots();
   }, [status]);
+
 
   const [botAppearance, setBotAppearance] = useState({
     widgetColor: '#0157f9',
