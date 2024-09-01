@@ -3,7 +3,7 @@ import Bot from '@/models/bot';
 
 export const POST = async (req) => {
   // Extract the entire bot configuration from the request body
-  const { botId, botName, purpose, botAppearance, apiMappings3 } = await req.json();
+  const { botId, botName, purpose, botAppearance, apiMappingsNew } = await req.json();
 
   try {
     await connectToDB();
@@ -11,11 +11,11 @@ export const POST = async (req) => {
     // Find the bot by ID and update with new data
     const updatedBot = await Bot.findByIdAndUpdate(
         botId,
+        botAppearance,
         {
           name: botName,
           visiblePrompt: purpose,
-          botAppearance,
-          API_URLs: apiMappings3, // Ensure this matches the schema definition
+          API_URLs: apiMappingsNew, // Ensure this matches the schema definition
         },
         { new: true }
     );

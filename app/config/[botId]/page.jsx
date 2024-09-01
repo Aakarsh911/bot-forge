@@ -164,17 +164,17 @@ export default function ConfigBot() {
       apiMappings,
     });
     
-    let apiMappings2 = apiMappings;
+    let apiMappingsNew = apiMappings;
 
     try {
       // Ensure apiMappings is an array of objects
       if (typeof apiMappings === 'string') {
-        apiMappings2 = JSON.parse(apiMappings);
+        apiMappingsNew = JSON.parse(apiMappings);
       }
   
       let apiMappings3 = [];
       // Check each mapping to ensure it's correctly structured
-      apiMappings3 = apiMappings2.map(mapping => {
+      apiMappingsNew = apiMappingsNew.map(mapping => {
         return {
           ...mapping,
           id: String(mapping.id), // Ensure ID is a string
@@ -185,8 +185,7 @@ export default function ConfigBot() {
         };
       });
 
-      // stringify the apiMappings3 object
-      apiMappings3 = JSON.stringify(apiMappings3);
+      apiMappingsNew = JSON.stringify(apiMappingsNew);
   
       const response = await fetch('/api/bots/edit', {
         method: 'POST',
@@ -198,7 +197,7 @@ export default function ConfigBot() {
           botName,
           purpose,
           botAppearance,
-          apiMappings3 // Ensure it's correctly structured
+          apiMappingsNew
         }),
       });
   
