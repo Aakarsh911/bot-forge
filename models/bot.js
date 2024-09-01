@@ -1,5 +1,20 @@
 import { Schema, model, models } from 'mongoose';
 
+// Define the schema for parameters within API_URLs
+const ParameterSchema = new Schema({
+    key: { type: String },
+    value: { type: String }
+});
+
+// Define the schema for API_URLs
+const APISchema = new Schema({
+    id: { type: String, required: true }, // Changed to String, as IDs are typically strings in databases
+    when: { type: String, required: true },
+    apiEndpoint: { type: String, required: true },
+    parameters: [ParameterSchema]
+});
+
+// Define the main BotSchema
 const BotSchema = new Schema({
     name: {
         type: String,
@@ -9,7 +24,7 @@ const BotSchema = new Schema({
         type: String,
         required: [true, 'Widget Color is required!'],
     },
-    widgetLogo : {
+    widgetLogo: {
         type: String,
         required: [true, 'Widget Logo is required!'],
     },
@@ -60,9 +75,7 @@ const BotSchema = new Schema({
         type: String,
         required: [true, 'Bot Header Text Color is required!'],
     },
-    API_URLs: {
-        type: [[String]],
-    },
+    API_URLs: [APISchema], // Update here to use the new API Schema
     botPosition: {
         type: String,
         required: [true, 'Bot Position is required!'],

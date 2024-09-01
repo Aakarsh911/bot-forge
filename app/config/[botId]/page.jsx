@@ -158,17 +158,27 @@ export default function ConfigBot() {
 
   const saveConfig = async () => {
     console.log('Saving bot configuration:', {
+      botName,
+      purpose,
       botAppearance,
       apiMappings,
     });
+
     try {
       const response = await fetch('/api/bots/edit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ botId, botAppearance, apiMappings }),
+        body: JSON.stringify({
+          botId,
+          botName,
+          purpose,
+          botAppearance,
+          apiMappings
+        }), // Include botName, purpose, botAppearance, and apiMappings in the request
       });
+
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       } else {
