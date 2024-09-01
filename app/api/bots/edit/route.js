@@ -3,7 +3,7 @@ import Bot from '@/models/bot';
 
 export const POST = async (req) => {
   // Extract the entire bot configuration from the request body
-  const { botId, botName, purpose, botAppearance, apiMappings } = await req.json();
+  const { botId, botName, purpose, botAppearance, apiMappings3 } = await req.json();
 
   try {
     await connectToDB();
@@ -15,7 +15,7 @@ export const POST = async (req) => {
           name: botName,
           visiblePrompt: purpose,
           botAppearance,
-          API_URLs: apiMappings, // Ensure this matches the schema definition
+          API_URLs: apiMappings3, // Ensure this matches the schema definition
         },
         { new: true }
     );

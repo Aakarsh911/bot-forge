@@ -163,8 +163,31 @@ export default function ConfigBot() {
       botAppearance,
       apiMappings,
     });
+    
+    let apiMappings2 = apiMappings;
 
     try {
+      // Ensure apiMappings is an array of objects
+      if (typeof apiMappings === 'string') {
+        apiMappings2 = JSON.parse(apiMappings);
+      }
+  
+      let apiMappings3 = [];
+      // Check each mapping to ensure it's correctly structured
+      apiMappings3 = apiMappings2.map(mapping => {
+        return {
+          ...mapping,
+          id: String(mapping.id), // Ensure ID is a string
+          parameters: mapping.parameters.map(param => ({
+            key: String(param.key),
+            value: String(param.value)
+          }))
+        };
+      });
+
+      // stringify the apiMappings3 object
+      apiMappings3 = JSON.stringify(apiMappings3);
+  
       const response = await fetch('/api/bots/edit', {
         method: 'POST',
         headers: {
@@ -175,10 +198,10 @@ export default function ConfigBot() {
           botName,
           purpose,
           botAppearance,
-          apiMappings
-        }), // Include botName, purpose, botAppearance, and apiMappings in the request
+          apiMappings3 // Ensure it's correctly structured
+        }),
       });
-
+  
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       } else {
@@ -188,6 +211,7 @@ export default function ConfigBot() {
       console.error('Error saving bot configuration:', error);
     }
   };
+  
 
   const chatStyles = {
     '--headerBackgroundColor': botAppearance.botHeaderBackgroundColor,
