@@ -45,6 +45,7 @@ export default function ConfigBot() {
     botHeaderBackgroundColor: '#0157f9',
     botHeaderTextColor: '#ffffff',
     botTypingTextColor: '#ffffff',
+    widgetLogo: null, // State to store the selected widget icon
   });
 
   useEffect(() => {
@@ -95,6 +96,7 @@ export default function ConfigBot() {
             botTypingTextColor: data.bot.botTypingTextColor || '#ffffff',
             botHeaderBackgroundColor: data.bot.botHeaderBackgroundColor || '#0157f9',
             botHeaderTextColor: data.bot.botHeaderTextColor || '#ffffff',
+            widgetLogo: data.bot.widgetLogo || null, // Set initial widget icon if available
           });
           if (data.bot.apiMappings) {
             setApiMappings(data.bot.apiMappings);
@@ -140,6 +142,20 @@ export default function ConfigBot() {
     }));
   };
 
+  const handleIconChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setBotAppearance(prev => ({
+          ...prev,
+          widgetLogo: reader.result, // Store the base64 image data
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const saveConfig = async () => {
     console.log('Saving bot configuration:', {
       botAppearance,
@@ -155,6 +171,8 @@ export default function ConfigBot() {
       });
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
+      } else {
+        console.log('Bot configuration saved successfully.');
       }
     } catch (error) {
       console.error('Error saving bot configuration:', error);
@@ -372,154 +390,203 @@ export default function ConfigBot() {
                       mode={['single', 'gradient']}
                     />
                   </div>
-                </div>
-              </div>
-            </TabPane>
-            <TabPane tab="APIs" key="3">
-              <div>
-                <div className="api-settings" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h4>API Mappings</h4>
-                  <div className='button' onClick={handleAddMapping}>
-                    <FontAwesomeIcon icon={faPlus} />
-                  </div>
-                </div>
-                <Space direction="vertical" style={{ width: '100%' }}>
-                  {apiMappings.map((mapping, index) => (
-                    <Card
-                      key={mapping.id}
-                      title={`Mapping ${index + 1}`}
-                      extra={
-                        apiMappings.length > 1 ? (
-                          <FontAwesomeIcon
-                            icon={faTrash}
-                            color="red"
-                            onClick={() => handleRemoveMapping(mapping.id)}
-                            style={{ cursor: 'pointer' }}
-                          />
-                        ) : null
-                      }
-                      style={{ marginBottom: 16 }}
+                  <div className="widget-icon-container">
+                    <label>Widget Icon</label>
+                    <div
+                      style={{
+                        width: '100%',
+                        height: '150px',
+                        border: '2px dashed #ccc',
+                        borderRadius: '10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        backgroundColor: '#f9f9f9',
+                      }}
+                      onClick={() => document.getElementById('widgetLogoInput').click()}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        const file = e.dataTransfer.files[0];
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                          setBotAppearance(prev => ({
+                            ...prev,
+                            widgetLogo: reader.result,
+                          }));
+                        };
+                        reader.readAsDataURL(file);
+                      }}
                     >
-                      <Form layout="vertical">
-                        <Form.Item label="When">
-                          <Input
-                            placeholder="Enter trigger string"
-                            value={mapping.when}
-                            onChange={e =>
-                              handleMappingChange(mapping.id, 'when', e.target.value)
-                            }
-                          />
-                        </Form.Item>
-                        <Form.Item label="API Endpoint">
-                          <Input
-                            placeholder="Enter API endpoint"
-                            value={mapping.apiEndpoint}
-                            onChange={e =>
-                              handleMappingChange(mapping.id, 'apiEndpoint', e.target.value)
-                            }
-                          />
-                        </Form.Item>
-                        <Form.Item label="">
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <label>Parameters</label>
-                            <div className='button' onClick={() => handleAddParameter(mapping.id)}>
-                              <FontAwesomeIcon icon={faPlus} />
-                            </div>
-                          </div>
-                          <Space direction="vertical" style={{ width: '100%' }}>
-                            {mapping.parameters.map((param, paramIndex) => (
-                              <Space key={paramIndex} align="baseline">
-                                <Input
-                                  placeholder="Key"
-                                  value={param.key}
-                                  onChange={e =>
-                                    handleParameterChange(
-                                      mapping.id,
-                                      paramIndex,
-                                      'key',
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                                <Input
-                                  placeholder="Value"
-                                  value={param.value}
-                                  onChange={e =>
-                                    handleParameterChange(
-                                      mapping.id,
-                                      paramIndex,
-                                      'value',
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                                {mapping.parameters.length > 1 && (
-                                  <FontAwesomeIcon
-                                    icon={faTrash}
-                                    color="red"
-                                    onClick={() => handleRemoveParameter(mapping.id, paramIndex)}
-                                    style={{ cursor: 'pointer' }}
-                                  />
-                                )}
-                              </Space>
-                            ))}
-                          </Space>
-                        </Form.Item>
-                      </Form>
-                    </Card>
-                  ))}
-                </Space>
-              </div>
-            </TabPane>
-            <TabPane tab="Integration" key="4">
-              {/* Integration content can be added here */}
-              <p>Integration settings will be available soon.</p>
-            </TabPane>
-          </Tabs>
-          <SaveButton onClick={saveConfig} />
-        </div>
-        <div className="orb orb2">
-          <div className="preview-header">
-            <Tabs defaultActiveKey="1">
-              <TabPane tab="Chat" key="1">
-                <div className="chat-container" style={chatStyles}>
-                  <div className="chat-window">
-                    <header>
-                      <h1>
-                        <FontAwesomeIcon icon={faRobot} className="header-bot-icon" />
-                        {botName || 'ChatBot'}
-                      </h1>
-                    </header>
-                    <div className="messages">
-                      <div className="message assistant">
-                        <span>Hello! How can I help you today?</span>
-                      </div>
-                      <div className="message user">
-                        <span>Example user message</span>
-                      </div>
-                      <div className="message assistant typing">
-                        <span className="typing-text">Bot is typing</span>
-                        <div className="dot-container">
-                          <span className="dot"></span>
-                          <span className="dot"></span>
-                          <span className="dot"></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="input-container">
-                      <input type="text" placeholder="Type your message here..." />
-                      <button className="send-button">
-                        <UilMessage size="20" className="send-button" />
-                      </button>
+                      {botAppearance.widgetLogo ? (
+                        <img
+                          src={botAppearance.widgetLogo}
+                          alt="Widget Icon"
+                          style={{ maxHeight: '100%', maxWidth: '100%' }}
+                        />
+                      ) : (
+                        <span style={{ color: '#ccc' }}>Drag & Drop or Click to Upload</span>
+                      )}
+                      <input
+                        type="file"
+                        id="widgetLogoInput"
+                        style={{ display: 'none' }}
+                        accept="image/*"
+                        onChange={handleIconChange}
+                      />
                     </div>
                   </div>
+                </div>
                 </div>
               </TabPane>
-              <TabPane tab="Widget" key="2">
-                <div className="widget-settings" >
-                  <h4>Customize Widget</h4>
+              <TabPane tab="APIs" key="3">
+                <div>
+                  <div className="api-settings" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h4>API Mappings</h4>
+                    <div className='button' onClick={handleAddMapping}>
+                      <FontAwesomeIcon icon={faPlus} />
+                    </div>
+                  </div>
+                  <Space direction="vertical" style={{ width: '100%' }}>
+                    {apiMappings.map((mapping, index) => (
+                      <Card
+                        key={mapping.id}
+                        title={`Mapping ${index + 1}`}
+                        extra={
+                          apiMappings.length > 1 ? (
+                            <FontAwesomeIcon
+                              icon={faTrash}
+                              color="red"
+                              onClick={() => handleRemoveMapping(mapping.id)}
+                              style={{ cursor: 'pointer' }}
+                            />
+                          ) : null
+                        }
+                        style={{ marginBottom: 16 }}
+                      >
+                        <Form layout="vertical">
+                          <Form.Item label="When">
+                            <Input
+                              placeholder="Enter trigger string"
+                              value={mapping.when}
+                              onChange={e =>
+                                handleMappingChange(mapping.id, 'when', e.target.value)
+                              }
+                            />
+                          </Form.Item>
+                          <Form.Item label="API Endpoint">
+                            <Input
+                              placeholder="Enter API endpoint"
+                              value={mapping.apiEndpoint}
+                              onChange={e =>
+                                handleMappingChange(mapping.id, 'apiEndpoint', e.target.value)
+                              }
+                            />
+                          </Form.Item>
+                          <Form.Item label="">
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <label>Parameters</label>
+                              <div className='button' onClick={() => handleAddParameter(mapping.id)}>
+                                <FontAwesomeIcon icon={faPlus} />
+                              </div>
+                            </div>
+                            <Space direction="vertical" style={{ width: '100%' }}>
+                              {mapping.parameters.map((param, paramIndex) => (
+                                <Space key={paramIndex} align="baseline">
+                                  <Input
+                                    placeholder="Key"
+                                    value={param.key}
+                                    onChange={e =>
+                                      handleParameterChange(
+                                        mapping.id,
+                                        paramIndex,
+                                        'key',
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <Input
+                                    placeholder="Value"
+                                    value={param.value}
+                                    onChange={e =>
+                                      handleParameterChange(
+                                        mapping.id,
+                                        paramIndex,
+                                        'value',
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  {mapping.parameters.length > 1 && (
+                                    <FontAwesomeIcon
+                                      icon={faTrash}
+                                      color="red"
+                                      onClick={() => handleRemoveParameter(mapping.id, paramIndex)}
+                                      style={{ cursor: 'pointer' }}
+                                    />
+                                  )}
+                                </Space>
+                              ))}
+                            </Space>
+                          </Form.Item>
+                        </Form>
+                      </Card>
+                    ))}
+                  </Space>
+                </div>
+              </TabPane>
+              <TabPane tab="Integration" key="4">
+                {/* Integration content can be added here */}
+                <p>Integration settings will be available soon.</p>
+              </TabPane>
+            </Tabs>
+            <SaveButton onClick={saveConfig} />
+          </div>
+          <div className="orb orb2">
+            <div className="preview-header">
+              <Tabs defaultActiveKey="1">
+                <TabPane tab="Chat" key="1">
+                  <div className="chat-container" style={chatStyles}>
+                    <div className="chat-window">
+                      <header>
+                        <h1>
+                          <FontAwesomeIcon icon={faRobot} className="header-bot-icon" />
+                          {botName || 'ChatBot'}
+                        </h1>
+                      </header>
+                      <div className="messages">
+                        <div className="message assistant">
+                          <span>Hello! How can I help you today?</span>
+                        </div>
+                        <div className="message user">
+                          <span>Example user message</span>
+                        </div>
+                        <div className="message assistant typing">
+                          <span className="typing-text">Bot is typing</span>
+                          <div className="dot-container">
+                            <span className="dot"></span>
+                            <span className="dot"></span>
+                            <span className="dot"></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="input-container">
+                        <input type="text" placeholder="Type your message here..." />
+                        <button className="send-button">
+                          <UilMessage size="20" className="send-button" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </TabPane>
+                <TabPane tab="Widget" key="2">
+                  <div className="widget-settings" >
+                    <h4>Customize Widget</h4>
 
-                  <div
+                    <div
                       style={{
                         width: '100%',
                         height: '70vh',
@@ -530,9 +597,9 @@ export default function ConfigBot() {
                         position: 'relative',
                         backgroundColor: '#f0f0f0',
                       }}
-                  >
-                    {/* Mock Chrome browser top bar */}
-                    <div
+                    >
+                      {/* Mock Chrome browser top bar */}
+                      <div
                         style={{
                           backgroundColor: '#e3e3e3',
                           height: '40px',
@@ -542,38 +609,38 @@ export default function ConfigBot() {
                           justifyContent: 'space-between',
                           position: 'relative',
                         }}
-                    >
-                      {/* Left corner buttons (close, minimize, maximize) */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div
+                      >
+                        {/* Left corner buttons (close, minimize, maximize) */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div
                             style={{
                               width: '12px',
                               height: '12px',
                               backgroundColor: '#ff5f57',
                               borderRadius: '50%',
                             }}
-                        ></div>
-                        <div
+                          ></div>
+                          <div
                             style={{
                               width: '12px',
                               height: '12px',
                               backgroundColor: '#ffbd2e',
                               borderRadius: '50%',
                             }}
-                        ></div>
-                        <div
+                          ></div>
+                          <div
                             style={{
                               width: '12px',
                               height: '12px',
                               backgroundColor: '#28c840',
                               borderRadius: '50%',
                             }}
-                        ></div>
-                      </div>
+                          ></div>
+                        </div>
 
-                      {/* URL bar */}
-                      <div style={{ flex: '1', marginLeft: '1rem', marginRight: '1rem' }}>
-                        <input
+                        {/* URL bar */}
+                        <div style={{ flex: '1', marginLeft: '1rem', marginRight: '1rem' }}>
+                          <input
                             type="text"
                             value="https://chatbot.example.com"
                             style={{
@@ -585,26 +652,26 @@ export default function ConfigBot() {
                               height: '1em'
                             }}
                             readOnly
-                        />
+                          />
+                        </div>
+
+                        {/* Right side space for any additional buttons (optional) */}
+                        <div></div>
                       </div>
 
-                      {/* Right side space for any additional buttons (optional) */}
-                      <div></div>
-                    </div>
-
-                    {/* Mock Chrome browser content area */}
-                    <div
+                      {/* Mock Chrome browser content area */}
+                      <div
                         style={{
                           padding: '1rem',
                           backgroundColor: '#ffffff',
                           height: 'calc(100% - 40px)',
                           position: 'relative',
                         }}
-                    >
-                    </div>
+                      >
+                      </div>
 
-                    {/* Bottom-right widget button inside Chrome window */}
-                    <button
+                      {/* Bottom-right widget button inside Chrome window */}
+                      <button
                         style={{
                           position: 'absolute',
                           bottom: '1rem',
@@ -621,18 +688,26 @@ export default function ConfigBot() {
                           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
                           cursor: 'pointer',
                         }}
-                    >
-                      <FontAwesomeIcon icon={faRobot} />
-                    </button>
+                      >
+                        {botAppearance.widgetLogo ? (
+                          <img
+                            src={botAppearance.widgetLogo}
+                            alt="Widget Icon"
+                            style={{ height: '2.5em', width: '2.5em', borderRadius: '50%' }}
+                          />
+                        ) : (
+                          <FontAwesomeIcon icon={faRobot} />
+                        )}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </TabPane>
+                </TabPane>
 
-            </Tabs>
-            <PreviewButton/>
+              </Tabs>
+              <PreviewButton/>
+            </div>
           </div>
         </div>
       </div>
-    </div>
   );
 }
