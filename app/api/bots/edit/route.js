@@ -7,25 +7,28 @@ export const POST = async (req) => {
   try {
     await connectToDB();
 
+    // Ensure that apiMappingsNew is an array and not a string
+    const apiURLs = Array.isArray(apiMappingsNew) ? apiMappingsNew : JSON.parse(apiMappingsNew);
+
     // Find the bot by ID and update with specific fields from botAppearance and other data
     const updatedBot = await Bot.findByIdAndUpdate(
       botId,
       {
         $set: {
-          name: botName, // Update bot name
-          visiblePrompt: purpose, // Update visible prompt
-          API_URLs: apiMappingsNew, // Update API URLs
-          widgetColor: botAppearance.widgetColor, // Update widget color from botAppearance
-          botBubbleColor: botAppearance.botBubbleColor, // Update bot bubble color
-          botTextColor: botAppearance.botTextColor, // Update bot text color
-          userBubbleColor: botAppearance.userBubbleColor, // Update user bubble color
-          userTextColor: botAppearance.userTextColor, // Update user text color
-          chatBackgroundColor: botAppearance.chatBackgroundColor, // Update chat background color
-          botTypingColor: botAppearance.botTypingColor, // Update bot typing color
-          botHeaderBackgroundColor: botAppearance.botHeaderBackgroundColor, // Update bot header background color
-          botHeaderTextColor: botAppearance.botHeaderTextColor, // Update bot header text color
-          botTypingTextColor: botAppearance.botTypingTextColor, // Update bot typing text color
-          widgetLogo: botAppearance.widgetLogo, // Update widget logo
+          name: botName,
+          visiblePrompt: purpose,
+          API_URLs: apiURLs, // Update API_URLs with the parsed array
+          widgetColor: botAppearance.widgetColor,
+          botBubbleColor: botAppearance.botBubbleColor,
+          botTextColor: botAppearance.botTextColor,
+          userBubbleColor: botAppearance.userBubbleColor,
+          userTextColor: botAppearance.userTextColor,
+          chatBackgroundColor: botAppearance.chatBackgroundColor,
+          botTypingColor: botAppearance.botTypingColor,
+          botHeaderBackgroundColor: botAppearance.botHeaderBackgroundColor,
+          botHeaderTextColor: botAppearance.botHeaderTextColor,
+          botTypingTextColor: botAppearance.botTypingTextColor,
+          widgetLogo: botAppearance.widgetLogo
         }
       },
       { new: true } // Return the updated document
