@@ -22,6 +22,7 @@ export default function ConfigBot() {
   const botId = params.botId;
   const [botName, setBotName] = useState('');
   const [purpose, setPurpose] = useState('');
+  const [apiURLs, setApiURLs] = useState([]); // Add state for storing API URLs
 
   // State for API mappings
   const [apiMappings, setApiMappings] = useState([
@@ -83,6 +84,7 @@ export default function ConfigBot() {
         const response = await fetch(`/api/bots/${botId}`);
         if (response.ok) {
           const data = await response.json();
+          console.log('Bot data:', data.bot.API_URLs);
           setBotName(data.bot.name);
           setPurpose(data.bot.visiblePrompt);
           setBotAppearance({
@@ -98,8 +100,11 @@ export default function ConfigBot() {
             botHeaderTextColor: data.bot.botHeaderTextColor || '#ffffff',
             widgetLogo: data.bot.widgetLogo || null, // Set initial widget icon if available
           });
-          if (data.bot.apiMappings) {
-            setApiMappings(data.bot.apiMappings);
+          if (data.bot.API_URLs) {
+            setApiMappings(data.bot.API_URLs); // Store the fetched API mappings
+          }
+          if (data.bot.apiURLs) {
+            setApiURLs(data.bot.apiURLs); // Store the fetched API URLs
           }
         } else {
           console.error('Failed to fetch bot data');
@@ -163,30 +168,25 @@ export default function ConfigBot() {
       botAppearance,
       apiMappings,
     });
-    
+
     let apiMappingsNew = apiMappings;
 
     try {
-      // Ensure apiMappings is an array of objects
       if (typeof apiMappings === 'string') {
         apiMappingsNew = JSON.parse(apiMappings);
       }
-  
-      let apiMappings3 = [];
-      // Check each mapping to ensure it's correctly structured
-      apiMappingsNew = apiMappingsNew.map(mapping => {
-        return {
-          ...mapping,
-          id: String(mapping.id), // Ensure ID is a string
-          parameters: mapping.parameters.map(param => ({
-            key: String(param.key),
-            value: String(param.value)
-          }))
-        };
-      });
+
+      apiMappingsNew = apiMappingsNew.map(mapping => ({
+        ...mapping,
+        id: String(mapping.id), // Ensure ID is a string
+        parameters: mapping.parameters.map(param => ({
+          key: String(param.key),
+          value: String(param.value),
+        })),
+      }));
 
       apiMappingsNew = JSON.stringify(apiMappingsNew);
-  
+
       const response = await fetch('/api/bots/edit', {
         method: 'POST',
         headers: {
@@ -197,10 +197,10 @@ export default function ConfigBot() {
           botName,
           purpose,
           botAppearance,
-          apiMappingsNew
+          apiMappingsNew,
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       } else {
@@ -210,7 +210,6 @@ export default function ConfigBot() {
       console.error('Error saving bot configuration:', error);
     }
   };
-  
 
   const chatStyles = {
     '--headerBackgroundColor': botAppearance.botHeaderBackgroundColor,
