@@ -24,20 +24,23 @@ export const POST = async (req, { params }) => {
 
   // Prepare the API_URLs information to send to OpenAI
   const apiInfo = bot.API_URLs.map(api => {
-    return `API ID: ${api.id}, when: ${api.when}, endpoint: ${api.apiEndpoint}, parameters: ${api.parameters.map(p => `${p.key}: ${p.value}`).join(', ')}`;
+    // Truncate only dynamic parameters from the API endpoint (e.g., /api/:barcode -> /api/)
+    const truncatedEndpoint = api.apiEndpoint.replace(/:\w+/g, '');
+    return `API endpoint: ${truncatedEndpoint}, when: ${api.when}`;
   }).join("\n");
 
   // Construct the system message for OpenAI
   const openAISystemMessage = `
-    You are a chatbot whose purpose is : ${prompt}. You can also suggest APIs to execute based on the user's request. If you do so, just provide the api id as a string and NOTHING ELSE AND I REPEAT NOTHING ELSE and I will execute the api on my own. Also, do not ask for confirmation to execute the api. Just output the api id.
+    You are a chatbot whose purpose is: ${prompt}. You can suggest APIs to execute based on the user's request. 
+    Provide the full API endpoint (with replaced query parameters) as a string and nothing else (no other text but the endpoint) and I will execute the API. 
+    Do not ask for confirmation to execute the API, just provide the endpoint and I will handle it. 
     Below is a list of available APIs:
     ${apiInfo}
-    If the user's prompt matches any of the "when" conditions of the APIs, suggest the appropriate API for execution. 
-    Extract relevant parameter values like match IDs and ask for any missing ones.
+    If the user's prompt matches any of the "when" conditions, suggest the appropriate API for execution. 
   `;
 
   const requestData = {
-    model: 'gpt-4o',
+    model: 'gpt-4',
     messages: [
       { role: 'system', content: openAISystemMessage },
       ...updatedChatHistory,
@@ -48,6 +51,7 @@ export const POST = async (req, { params }) => {
   let apiToCall = null;
 
   try {
+    // Make the request to OpenAI API
     const gptResponse = await axios.post('https://api.openai.com/v1/chat/completions', requestData, {
       headers: {
         'Content-Type': 'application/json',
@@ -55,49 +59,50 @@ export const POST = async (req, { params }) => {
       },
     });
 
-    const openAIResponse = gptResponse.data.choices[0].message.content;
+    let openAIResponse = gptResponse.data.choices[0].message.content.trim();
 
-    // Check if OpenAI suggests an API to call
-    const apiMatch = bot.API_URLs.find(api => openAIResponse.toLowerCase().includes(api.id.toLowerCase()));
+    // Remove quotes from the OpenAI response
+    openAIResponse = openAIResponse.replace(/['"]+/g, '');
 
-    if (apiMatch) {
-      apiToCall = apiMatch;
-      console.log(`OpenAI suggested API: ${apiMatch.apiEndpoint}`);
+    // Convert all the bot's API endpoints to lowercase and remove dynamic params for comparison
+    const truncatedApiEndpoints = bot.API_URLs.map(api => 
+      api.apiEndpoint.replace(/:\w+/g, '').toLowerCase()
+    );
 
-      // Check for dynamic placeholders in the API endpoint (e.g., /api/:barcode)
-      const dynamicParams = apiMatch.apiEndpoint.match(/:\w+/g);
-      let finalApiEndpoint = apiMatch.apiEndpoint;
+    // Truncate the OpenAI-provided endpoint only at dynamic parameters (keep the path intact)
+    let truncatedSuggestedEndpoint = openAIResponse.split('?')[0].toLowerCase(); // Remove query parameters
+    console.log(`Truncated API endpoints: ${truncatedApiEndpoints}`);
+    console.log(`OpenAI suggested endpoint: ${openAIResponse}`);
+    console.log(`Truncated suggested endpoint: ${truncatedSuggestedEndpoint}`);
 
-      if (dynamicParams) {
-        console.log(`Dynamic parameters detected: ${dynamicParams}`);
+    // Check if OpenAI suggests an API endpoint that matches
+    const matchedApi = bot.API_URLs.find((api, index) => 
+      truncatedSuggestedEndpoint.includes(truncatedApiEndpoints[index])
+    );
 
-        // Replace dynamic placeholders with values from the user's question or provided values
-        dynamicParams.forEach(param => {
-          const paramName = param.slice(1);  // Remove the colon from :barcode -> barcode
-          finalApiEndpoint = finalApiEndpoint.replace(param, question);  // Replace with the user's input (question)
-        });
+    console.log(`Matched API: ${matchedApi ? matchedApi.apiEndpoint : 'None'}`);
 
-        console.log(`Final API endpoint after replacement: ${finalApiEndpoint}`);
-      }
+    if (matchedApi) {
+      apiToCall = openAIResponse; // Use the full OpenAI-provided endpoint
 
-      // Execute the corresponding API
+      console.log(`OpenAI suggested API: ${apiToCall}`);
+
+      // Execute the corresponding API using the full endpoint (with query parameters already replaced by OpenAI)
       let apiResponse;
       try {
-        apiResponse = await axios.get(finalApiEndpoint, {
-          headers: apiMatch.parameters.reduce((acc, param) => {
+        apiResponse = await axios.get(apiToCall, {
+          headers: matchedApi.parameters.reduce((acc, param) => {
             acc[param.key] = param.value;
             return acc;
           }, {}),
         });
 
-        console.log("API response received:", apiResponse.data);  // Log API response
-
         // Send the API result to OpenAI for refinement
         const refinedRequestData = {
-          model: 'gpt-4o',
+          model: 'gpt-4',
           messages: [
             ...updatedChatHistory,
-            { role: 'assistant', content: `API call result: ${JSON.stringify(apiResponse.data)}` }  // Include API response
+            { role: 'assistant', content: `API call result: ${JSON.stringify(apiResponse.data)}` },  // Include API response
           ],
         };
 
@@ -109,7 +114,6 @@ export const POST = async (req, { params }) => {
         });
 
         responseMessage = refinedResponse.data.choices[0].message.content;
-        console.log("Refined response from OpenAI:", responseMessage);  // Log refined response
 
       } catch (apiError) {
         console.error('Error calling API:', apiError.response ? apiError.response.data : apiError.message);
