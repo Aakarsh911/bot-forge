@@ -17,6 +17,8 @@ export const POST = async (req, { params }) => {
     return NextResponse.json({ message: 'Bot not found' }, { status: 404 });
   }
 
+  const prompt = bot.prompt;
+
   // Add the user's question to the chat history
   const updatedChatHistory = [...chatHistory, { role: 'user', content: question }];
 
@@ -27,10 +29,11 @@ export const POST = async (req, { params }) => {
 
   // Construct the system message for OpenAI
   const openAISystemMessage = `
-    You are a bot that can suggest APIs to execute based on the user's request. 
+    You are a chatbot whose purpose is : ${prompt}. You can also suggest APIs to execute based on the user's request. If you do so, just provide the api id as a string and NOTHING ELSE AND I REPEAT NOTHING ELSE and I will execute the api on my own. Also, do not ask for confirmation to execute the api. Just output the api id.
     Below is a list of available APIs:
     ${apiInfo}
-    If the user's prompt matches any of the "when" conditions of the APIs, suggest the appropriate API for execution. If not, provide a general response based on the user's input.
+    If the user's prompt matches any of the "when" conditions of the APIs, suggest the appropriate API for execution. 
+    Extract relevant parameter values like match IDs and ask for any missing ones.
   `;
 
   const requestData = {

@@ -35,6 +35,12 @@ body {
   margin-bottom: 0;
   display: flex;
   flex-direction: column;
+  scrollbar-width: none;
+  -ms-overflow-style: none
+}
+
+.messages::-webkit-scrollbar {
+  display: none;
 }
 
 h1 {

@@ -40,8 +40,8 @@ export const POST = async (req) => {
             closeButtonColor,
         } = body;
 
-        const chatgptInput = `This is a chatbot prompt: ${visiblePrompt} You have to refine this prompt and only return the prompt and nothing else. You have to add 
-        things such as if the user ask anything unrelated tell them the main purpose of the chatbot. Do not mention that you are an AI made by OpenAI. If need be, search the internet to get the information and provide links to things if the user asks. If you provide any links, make sure that the target for the link is set to parent`;
+        const chatgptInput = `This is a chatbot prompt: ${visiblePrompt} You have to refine this prompt and only return the prompt and nothing else. This should still be the prompt that I would give to a chatbot. You have to add 
+        things such as if the user ask anything unrelated tell them the main purpose of the chatbot. Do not mention that you are an AI made by OpenAI.`;
 
         const requestData = {
             model: 'gpt-4',
