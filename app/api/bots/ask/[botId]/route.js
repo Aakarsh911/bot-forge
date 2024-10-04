@@ -31,12 +31,13 @@ export const POST = async (req, { params }) => {
 
   // Construct the system message for OpenAI
   const openAISystemMessage = `
-    You are a chatbot whose purpose is: ${prompt}. You can suggest APIs to execute based on the user's request. 
+    You are a chatbot whose purpose is: ${prompt}. You can also suggest APIs (this only happens if an api is given to you and the when condition in the api matches) to execute based on the user's request. 
     Provide the full API endpoint (with replaced query parameters) as a string and nothing else (no other text but the endpoint) and I will execute the API. 
     Do not ask for confirmation to execute the API, just provide the endpoint and I will handle it. 
     Below is a list of available APIs:
     ${apiInfo}
-    If the user's prompt matches any of the "when" conditions, suggest the appropriate API for execution. 
+    If the user's prompt matches any of the "when" conditions, suggest the appropriate API for execution.
+    If not then respond according to your purpose and do not recommend an api. 
   `;
 
   const requestData = {
