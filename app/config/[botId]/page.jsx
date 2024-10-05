@@ -161,6 +161,8 @@ export default function ConfigBot() {
     }
   };
 
+
+
   const saveConfig = async () => {
     console.log('Saving bot configuration:', {
       botName,
@@ -736,7 +738,6 @@ export default function ConfigBot() {
                 </TabPane>
 
               </Tabs>
-              <PreviewButton/>
             </div>
           </div>
         </div>

@@ -4,7 +4,12 @@ import { AntDesignOutlined } from '@ant-design/icons';
 import { css } from '@emotion/css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye} from '@fortawesome/free-solid-svg-icons';
+import { useRouter, useParams } from 'next/navigation';
+
 export const PreviewButton = () => {
+    const router = useRouter();
+    const params = useParams();
+    const botId = params.botId;
     const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
     const rootPrefixCls = getPrefixCls();
     const linearGradientButton = css`
@@ -31,6 +36,12 @@ export const PreviewButton = () => {
       }
     }
   `;
+
+    const handlePreview = () => {
+      console.log('Previewing bot:', botId);
+      router.push(`/sample-page/${botId}`);
+    }
+
     return (
         <ConfigProvider
             button={{
@@ -38,7 +49,7 @@ export const PreviewButton = () => {
             }}
         >
             <Space>
-                <Button type="primary" size="medium" icon={<FontAwesomeIcon icon={faEye} className="eye-icon" />}>
+                <Button type="primary" size="medium" onClick={handlePreview} icon={<FontAwesomeIcon icon={faEye} className="eye-icon" />}>
                     Live Preview
                 </Button>
             </Space>
