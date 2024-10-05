@@ -738,6 +738,7 @@ export default function ConfigBot() {
                 </TabPane>
 
               </Tabs>
+              <PreviewButton/>
             </div>
           </div>
         </div>
