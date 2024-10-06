@@ -16,7 +16,8 @@ export default function CreateBot() {
     const [showCheckmark, setShowCheckmark] = useState(false); // For checkmark animation
     const [showBotCreated, setShowBotCreated] = useState(false); // To show "Bot Created" text
     const [userImage, setUserImage] = useState(null);
-    const [loading, setLoading] = useState(false); // Loading state for bot creation
+    const [loading, setLoading] = useState(false);
+    const [isBeingCreated , setIsBeingCreated] = useState(false);// Loading state for bot creation
 
     // Typing effect states
     const [botMessage, setBotMessage] = useState("");
@@ -185,7 +186,7 @@ export default function CreateBot() {
 
     const createBot = async () => {
         setLoading(true);
-
+        setIsBeingCreated(true);
         try {
             const response = await fetch(`${window.location.origin}/api/bots/create`, {
                 method: 'POST',
@@ -217,6 +218,7 @@ export default function CreateBot() {
             console.error('Error creating bot:', error);
         } finally {
             setLoading(false);
+            setIsBeingCreated(false);
         }
     };
 
@@ -230,12 +232,13 @@ export default function CreateBot() {
                             {entry.bot ? (
                                 <div className="bot-message-container">
                                     <span className="bot-message-text">
-                                        <FontAwesomeIcon icon={faRobot} className="bot-icon" /> <span className="bot-message">{index === chatLog.length - 1 ? botMessage : entry.message}</span>
+                                        <FontAwesomeIcon icon={faRobot} className="bot-icon"/> <span
+                                        className="bot-message">{index === chatLog.length - 1 ? botMessage : entry.message}</span>
                                     </span>
                                 </div>
                             ) : (
                                 <div className="user-message-wrapper">
-                                    <FontAwesomeIcon icon={faUser} className="user-icon" />
+                                    <FontAwesomeIcon icon={faUser} className="user-icon"/>
                                     <span className='user-message-text'>{entry.message}</span>
                                 </div>
                             )}
@@ -257,7 +260,7 @@ export default function CreateBot() {
                             )}
                         </div>
                     ))}
-                    <div ref={chatEndRef} />
+                    <div ref={chatEndRef}/>
 
                     <div className="user-input">
                         <input
@@ -275,12 +278,21 @@ export default function CreateBot() {
                     <div className="wave"></div>
                 </div>
                 <div className="anim-loader">
+                    {isBeingCreated && (
+                        <div className="create-loader">
+                            <div className="inner-loader">
+                                <div className="create-circle"></div>
+                                <div className="create-circle"></div>
+                                <div className="create-circle"></div>
+                            </div>
+                        </div>
+                    )}
                     {showCheckmark && (
                         <div className="checkmark-container">
                             <div className="checkmark-wrapper">
                                 <svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                                    <circle className="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
-                                    <path className="checkmark-check" fill="none" d="M14 27l7 7 15-15" />
+                                    <circle className="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                                    <path className="checkmark-check" fill="none" d="M14 27l7 7 15-15"/>
                                 </svg>
                             </div>
                             {showBotCreated && <p className="bot-created-text">Bot Created!</p>}

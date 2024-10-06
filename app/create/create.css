@@ -361,3 +361,49 @@ body {
         opacity: 0;
     }
 }
+
+.create-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.inner-loader {
+    position: relative;
+    width: 100px;
+    height: 40px;
+}
+
+.create-circle {
+    width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    position: absolute;
+    animation: create-move 1.2s ease-in-out infinite;
+}
+
+.create-circle:nth-child(1) {
+    left: 0;
+    animation-delay: -0.4s;
+}
+.create-circle:nth-child(2) {
+    left: calc(50% - 10px);
+    animation-delay: -0.2s;
+}
+.create-circle:nth-child(3) {
+    right: 0;
+}
+
+@keyframes create-move {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+
