@@ -5,21 +5,23 @@ import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRobot } from '@fortawesome/free-solid-svg-icons';
-import { SendOutlined } from '@ant-design/icons';
+import { Upload, Button } from 'antd'; // Import Ant Design Upload and Button components
+import { PaperClipOutlined, SendOutlined } from '@ant-design/icons'; // Import icons
 import { marked } from 'marked';
 import './botConfig.css';
-import { UilMessage } from '@iconscout/react-unicons'
 
 export default function BotConfigPage() {
   const router = useRouter();
-  const params = useParams(); 
+  const params = useParams();
   const botId = params.botId;
-
+  const [isImageModel,setIsImageModel] = useState(false);
   const [botConfig, setBotConfig] = useState(null); // Bot configuration from the database
   const [input, setInput] = useState(''); // User input for the chat
   const [messages, setMessages] = useState([{ role: 'assistant', content: 'Hello! How can I help you today?' }]); // Chat messages
   const [isLoading, setIsLoading] = useState(false); // Loading state for bot typing animation
-  
+  const [fileList, setFileList] = useState([]); // Store uploaded files
+  const [previewFiles, setPreviewFiles] = useState([]); // Store base64 preview of the files
+
   // Fetch bot configuration on page load
   useEffect(() => {
     if (botId) {
@@ -27,66 +29,80 @@ export default function BotConfigPage() {
     }
   }, [botId]);
 
-  useEffect(() => {
-    // Check if the page is inside an iframe
-    if (window.top === window.self) {
-      // Redirect or block access if not in an iframe
-      window.location.href = "/"; // Redirect to home page or another page
-    }
-  }, []);
-
   const fetchBotConfig = async () => {
     try {
       const response = await axios.get(`/api/bots/${botId}`);
       setBotConfig(response.data.bot);
+      if (response.data.bot.modelType === 'image') {
+        setIsImageModel(true);
+      }
+
     } catch (error) {
       console.error('Error fetching bot config:', error);
     }
   };
 
+  const handleFileChange = ({ fileList }) => {
+    setFileList(fileList); // Update the file list when files are uploaded
+
+    // Convert the file to a base64 string for preview
+    const previewPromises = fileList.map(file => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          resolve({ base64: reader.result, type: file.type });
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file.originFileObj);
+      });
+    });
+
+    // Set preview file list
+    Promise.all(previewPromises).then(previews => {
+      setPreviewFiles(previews);
+    });
+  };
+
   // Handle sending the message to the bot
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() && fileList.length === 0) return;
 
     const newMessage = { role: 'user', content: input };
-    setMessages([...messages, newMessage]);
+    const previewMessage = previewFiles.map((file) => (
+        file.type.startsWith('image/') ?
+            { role: 'user', content: `<img src="${file.base64}" alt="Uploaded" style="max-width: 100%;">` } :
+            { role: 'user', content: 'Document uploaded.' }
+    ));
+
+    setMessages([...messages, newMessage, ...previewMessage]);
     setInput('');
     setIsLoading(true);
 
+    const formData = new FormData();
+    formData.append('question', input);
+    fileList.forEach((file) => {
+      formData.append('files', file.originFileObj); // Append all files
+    });
+
     try {
-      const response = await axios.post(`/api/bots/ask/${botId}`, {
-        question: input,
-        prompt: botConfig?.prompt,
-        chatHistory: messages // Send the chat history with the request
+      const response = await axios.post(`/api/bots/ask/${botId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Important to set for file uploads
+        },
       });
 
       const { answer } = response.data;
-
-      // Convert the bot's response to HTML using marked
       const formattedAnswer = marked(answer);
-      
-      // Log the formatted HTML content
-      console.log('Formatted HTML:', formattedAnswer);
-
-      // Update the chat with the formatted bot response (only once)
-      setMessages(prevMessages => [
-        ...prevMessages, 
-        { role: 'assistant', content: formattedAnswer, isHTML: true }
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: 'assistant', content: formattedAnswer, isHTML: true },
       ]);
-      setTimeout(() => {
-        const chatWindow = document.querySelector('.messages');
-        if (chatWindow) {
-          const links = chatWindow.querySelectorAll('a');
-          links.forEach(link => {
-            link.setAttribute('target', '_blank'); // Open in a new tab
-            link.setAttribute('rel', 'noopener noreferrer'); // Security features to prevent access to the original window
-          });
-        }
-      }, 100); 
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {
       setIsLoading(false);
+      setFileList([]); // Clear the file list after sending
+      setPreviewFiles([]); // Clear preview files
     }
   };
 
@@ -100,8 +116,8 @@ export default function BotConfigPage() {
     '--botTextColor': botConfig?.botTextColor || '#ffffff',
     '--userResponseColor': botConfig?.userBubbleColor || '#4CAF50',
     '--userTextColor': botConfig?.userTextColor || '#ffffff',
-    '--botTypingColor': botConfig?.botTypingColor || '#eeeeee', // Add botTypingColor
-    '--botTypingTextColor': botConfig?.botTypingTextColor || '#000000' // Add botTypingTextColor
+    '--botTypingColor': botConfig?.botTypingColor || '#eeeeee',
+    '--botTypingTextColor': botConfig?.botTypingTextColor || '#000000',
   };
 
   const handleKeyDown = (event) => {
@@ -111,46 +127,62 @@ export default function BotConfigPage() {
   };
 
   return (
-    <div className="chat-container" style={chatStyles}>
-      {botConfig && (
-        <div className="chat-window">
-          <header><h1> <FontAwesomeIcon icon={faRobot} className="header-bot-icon"/>{botConfig.name}</h1></header>
-          <div className="messages">
-            {messages.map((message, index) => (
-              <div key={index} className={`message ${message.role}`}>
-                {/* Render HTML if it's a bot's message with Markdown formatting */}
-                {message.isHTML ? (
-                  <div dangerouslySetInnerHTML={{ __html: message.content }} />
-                ) : (
-                  <span>{message.content}</span> // Render normal text for user messages
+      <div className="chat-container" style={chatStyles}>
+        {botConfig && (
+            <div className="chat-window">
+              <header>
+                <h1>
+                  <FontAwesomeIcon icon={faRobot} className="header-bot-icon" />
+                  {botConfig.name}
+                </h1>
+              </header>
+              <div className="messages">
+                {messages.map((message, index) => (
+                    <div key={index} className={`message ${message.role}`}>
+                      {/* Render HTML if it's a bot's message with Markdown formatting */}
+                      {message.isHTML ? (
+                          <div dangerouslySetInnerHTML={{ __html: message.content }} />
+                      ) : (
+                          <span dangerouslySetInnerHTML={{ __html: message.content }} /> // Render normal text and uploaded content for user messages
+                      )}
+                    </div>
+                ))}
+                {isLoading && (
+                    <div className="message assistant typing">
+                      <span className="typing-text">Bot is typing</span>
+                      <div className="dot-container">
+                        <span className="dot"></span>
+                        <span className="dot"></span>
+                        <span className="dot"></span>
+                      </div>
+                    </div>
                 )}
               </div>
-            ))}
-            {isLoading && (
-              <div className="message assistant typing">
-                <span className="typing-text">Bot is typing</span>
-                <div className="dot-container">
-                  <span className="dot"></span>
-                  <span className="dot"></span>
-                  <span className="dot"></span>
-                </div>
+
+              <div className="input-container">
+                <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Type your message here..."
+                />
+                {isImageModel && (
+                    <Upload fileList={fileList}
+                      onChange={handleFileChange}
+                      multiple
+                      beforeUpload={() => false} // Prevent auto-upload
+                      showUploadList={false} // Do not show default upload list
+                    >
+                      <Button icon={<PaperClipOutlined/>}/>
+                    </Upload>
+              )}
+                <button className="send-button" onClick={sendMessage}>
+                  <SendOutlined className="send-icon" />
+                </button>
               </div>
-            )}
-          </div>
-          <div className="input-container">
-            <input 
-              type="text" 
-              value={input} 
-              onChange={(e) => setInput(e.target.value)} 
-              onKeyDown={handleKeyDown}
-              placeholder="Type your message here..." 
-            />
-            <button className="send-button" onClick={sendMessage}>
-              <UilMessage size="20" className="send-icon"/>
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+            </div>
+        )}
+      </div>
   );
 }

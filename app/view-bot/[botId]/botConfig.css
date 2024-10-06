@@ -143,8 +143,8 @@ button:disabled {
 
 @keyframes bounce {
   to {
-      opacity: 0.3;
-      transform: translateY(-8px);
+    opacity: 0.3;
+    transform: translateY(-8px);
   }
 }
 
@@ -196,4 +196,33 @@ li {
 .send-button {
   background: transparent;
   color: #000;
+}
+
+.uploaded-previews {
+  margin-top: 10px;
+}
+
+.preview-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.preview-item {
+  margin-right: 10px;
+}
+
+.uploaded-image-preview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.document-box {
+  width: 100px;
+  height: 100px;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #dcdcdc;
 }
