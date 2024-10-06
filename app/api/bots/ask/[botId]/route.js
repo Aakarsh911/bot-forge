@@ -65,8 +65,22 @@ export const POST = async (req, { params }) => {
 
     const prompt = bot.prompt;
 
-    // Add the user's question to the chat history
-    const updatedChatHistory = [...chatHistory, { role: 'user', content: question }];
+    // Add the user's question and image (if any) to the chat history
+    let updatedChatHistory = [...chatHistory, { role: 'user', content: question }];
+
+    if (base64Image) {
+      updatedChatHistory = [
+        ...updatedChatHistory,
+        {
+          role: 'user',
+          content: `<img src="data:image/jpeg;base64,${base64Image}" alt="Uploaded image" style="max-width: 100%;">`,
+        },
+        {
+          role: 'user',
+          content: 'Image uploaded by the user.', // Add image description to the chat history
+        },
+      ];
+    }
 
     // Prepare the API_URLs information to send to OpenAI
     const apiInfo = bot.API_URLs.map(api => {
@@ -91,7 +105,7 @@ export const POST = async (req, { params }) => {
       model: 'gpt-4o',
       messages: [
         { role: 'system', content: openAISystemMessage },
-        ...updatedChatHistory, // Include the user's chat history
+        ...updatedChatHistory, // Include the user's chat history with the image
         {
           role: 'user',
           content: [
@@ -100,7 +114,7 @@ export const POST = async (req, { params }) => {
               text: question || 'No question provided by the user.', // Use user-provided text
             },
             ...(base64Image
-                ? [
+              ? [
                   {
                     type: 'image_url',
                     image_url: {
@@ -108,25 +122,83 @@ export const POST = async (req, { params }) => {
                     },
                   },
                 ]
-                : []), // Only add the image if it exists
+              : []), // Only add the image if it exists
           ],
         },
       ],
       max_tokens: 300,
     };
 
-    // Send the request to OpenAI
-    const gptResponse = await axios.post('https://api.openai.com/v1/chat/completions', payload, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-    });
+    let responseMessage = '';
+    let apiToCall = null;
 
-    const responseMessage = gptResponse.data.choices[0].message.content;
+    // Send the request to OpenAI
+    try {
+      const gptResponse = await axios.post('https://api.openai.com/v1/chat/completions', payload, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        },
+      });
+
+      let openAIResponse = gptResponse.data.choices[0].message.content.trim();
+      openAIResponse = openAIResponse.replace(/['"]+/g, '');  // Remove quotes
+
+      // Handle API suggestions and responses
+      const truncatedApiEndpoints = bot.API_URLs.map(api => 
+        api.apiEndpoint.replace(/:\w+/g, '').toLowerCase()
+      );
+      let truncatedSuggestedEndpoint = openAIResponse.split('?')[0].toLowerCase();
+
+      const matchedApi = bot.API_URLs.find((api, index) =>
+        truncatedSuggestedEndpoint.includes(truncatedApiEndpoints[index])
+      );
+
+      if (matchedApi) {
+        apiToCall = openAIResponse;
+        let apiResponse;
+        try {
+          apiResponse = await axios.get(apiToCall, {
+            headers: matchedApi.parameters.reduce((acc, param) => {
+              acc[param.key] = param.value;
+              return acc;
+            }, {}),
+          });
+
+          // Send API result to OpenAI for refinement
+          const refinedRequestData = {
+            model: 'gpt-4o',
+            messages: [
+              ...updatedChatHistory,
+              { role: 'assistant', content: `API call result: ${JSON.stringify(apiResponse.data)}` },
+            ],
+          };
+
+          const refinedResponse = await axios.post('https://api.openai.com/v1/chat/completions', refinedRequestData, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+            },
+          });
+
+          responseMessage = refinedResponse.data.choices[0].message.content;
+        } catch (apiError) {
+          console.error('Error calling API:', apiError.message);
+          responseMessage = 'Error fetching data from the API.';
+        }
+      } else {
+        responseMessage = openAIResponse;
+      }
+    } catch (error) {
+      console.error('Error with GPT response:', error.message);
+      responseMessage = 'Error generating response from the assistant.';
+    }
 
     // Add assistant's response to the chat history
-    const updatedChatHistoryWithResponse = [...updatedChatHistory, { role: 'assistant', content: responseMessage }];
+    const updatedChatHistoryWithResponse = [
+      ...updatedChatHistory,
+      { role: 'assistant', content: responseMessage },
+    ];
 
     // Delete the uploaded image file
     if (filePath) {
