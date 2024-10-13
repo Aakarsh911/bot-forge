@@ -1,9 +1,9 @@
 import { signOut } from 'next-auth/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faRobot, faChartLine, faFileAlt, faSignOutAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faRobot, faChartLine, faFileAlt, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import '../css/sidebar.css';
 
-export default function Sidebar() {
+export default function Sidebar({ redirectToSettings }) {
     return (
         <div className="sidebar">
             <ul>
@@ -24,8 +24,9 @@ export default function Sidebar() {
                 </li>
             </ul>
             <ul className="bottom">
-                <li>
-                    <a href="#" title="Settings">
+                <li className="settings-icon">
+                    {/* Using the passed redirectToSettings function */}
+                    <a href="#" title="Settings" onClick={redirectToSettings}>
                         <FontAwesomeIcon icon={faCog} className="fa-icon" />
                     </a>
                 </li>

@@ -260,24 +260,53 @@ body {
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 10;
-  }
+}
   
-  .dropdown-menu div {
+.dropdown-menu div {
     padding: 10px 20px;
     cursor: pointer;
     color: #fff;
     transition: background-color 0.3s ease;
-  }
-  
-  .dropdown-menu div:hover {
+}
+
+.dropdown-menu div:hover {
     background-color: #444;
-  }
+}
 
-  .delete-text {
+.delete-text {
     color: #FF4500;
-  }
+}
 
-  .edit {
+.edit {
     border-bottom: 0.1px solid white;
-  }
+}
+
+@keyframes shrink {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(0);
+    }
+}
+
+.blinking-cursor {
+    display: inline-block;
+    width: 1px;
+    background-color: #fff; /* The color of the cursor */
+    animation: blink 1s infinite;
+    margin-left: 2px; /* Add some space between the text and the cursor */
+    height: 1em; /* Adjust to the height of the text */
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+
   

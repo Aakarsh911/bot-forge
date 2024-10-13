@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faCog } from '@fortawesome/free-solid-svg-icons';
+
 import Sidebar from '@/components/Sidebar';
 import './dashboard.css';
 
@@ -87,6 +88,60 @@ export default function Dashboard() {
     };
   }, []);
 
+  // This function will be passed to Sidebar as a prop
+  function redirectToSettings() {
+    const botList = document.querySelectorAll('.chatbot-item');
+    const chatbotButton = document.querySelector('.add-chatbot-button');
+    const dashboardHeading = document.querySelector('h1'); // Target the dashboard heading
+
+    // Step 1: Animate chatbot items and button to shrink
+    chatbotButton.style.animation = 'shrink 0.5s forwards';
+    for (let i = 0; i < botList.length; i++) {
+      botList[i].style.animation = 'shrink 0.5s forwards';
+    }
+
+    // Step 2: Add a blinking cursor element
+    const cursorSpan = document.createElement('span');
+    cursorSpan.classList.add('blinking-cursor');
+    dashboardHeading.textContent = "Dashboard"; // Reset text
+    dashboardHeading.appendChild(cursorSpan);
+
+    let currentText = "Dashboard";
+    let newText = "Settings";
+    let currentLength = currentText.length;
+    let index = 0;
+
+    // Backspace the "Dashboard" text
+    function backspaceText() {
+      if (currentLength > 0) {
+        currentText = currentText.slice(0, -1);
+        dashboardHeading.textContent = currentText;
+        dashboardHeading.appendChild(cursorSpan); // Re-add the cursor
+        currentLength--;
+        setTimeout(backspaceText, 100); // Control backspace speed
+      } else {
+        typeSettingsText(); // Start typing "Settings" after backspacing
+      }
+    }
+
+    // Type the "Settings" text
+    function typeSettingsText() {
+      if (index < newText.length) {
+        dashboardHeading.textContent += newText.charAt(index);
+        dashboardHeading.appendChild(cursorSpan); // Re-add the cursor
+        index++;
+        setTimeout(typeSettingsText, 150); // Control typing speed
+      }
+    }
+
+    backspaceText();
+    setTimeout(() => {
+      document.querySelector('.blinking-cursor').style.display = 'none';
+    }, 2500); // Hide the cursor after typing
+
+  }
+
+
   if (status === 'loading') {
     return <p>Loading...</p>;
   }
@@ -130,65 +185,65 @@ export default function Dashboard() {
 
   const handleDelete = async (botId) => {
     try {
-        const response = await fetch('/api/bots/delete', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ botId }),
-        });
+      const response = await fetch('/api/bots/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ botId }),
+      });
 
-        if (response.ok) {
-            console.log('Bot deleted successfully');
-            // Remove the deleted bot from the local state to update the UI
-            setBots(bots.filter((bot) => bot._id !== botId));
-        } else {
-            console.error('Failed to delete bot');
-        }
+      if (response.ok) {
+        console.log('Bot deleted successfully');
+        // Remove the deleted bot from the local state to update the UI
+        setBots(bots.filter((bot) => bot._id !== botId));
+      } else {
+        console.error('Failed to delete bot');
+      }
     } catch (error) {
-        console.error('Error deleting bot:', error);
+      console.error('Error deleting bot:', error);
     }
-};
-
+  };
 
   return (
-    <div className="dashboard">
-      <Sidebar />
-      <div className="main-content">
-        <div className="grid-background"></div>
+      <div className="dashboard">
+        {/* Passing redirectToSettings as a prop to Sidebar */}
+        <Sidebar redirectToSettings={redirectToSettings} />
+        <div className="main-content">
+          <div className="grid-background"></div>
 
-        <h1>Dashboard</h1>
+          <h1>Dashboard</h1>
 
-        <div className="chatbots-list">
-          <div className="add-chatbot-button" onClick={handleExpand}>
-            <FontAwesomeIcon icon={faPlus} className="plus-icon" />
-            <p>Add Chatbot</p>
-          </div>
-
-          {/* Render the list of bots */}
-          {bots && bots.length > 0 && bots.map((bot) => (
-            <div key={bot._id} className="chatbot-item">
-              <h2 className='bot-header-name'>
-                {bot.name} 
-                <FontAwesomeIcon 
-                  icon={faCog} 
-                  className="bot-settings-button" 
-                  onClick={() => toggleDropdown(bot._id)}
-                />
-              </h2>
-              <div className="bubble"></div>
-              
-              {/* Dropdown Menu */}
-              {activeDropdown === bot._id && (
-                <div className="dropdown-menu">
-                  <div className="edit" onClick={() => handleEdit(bot._id)}>Edit</div>
-                  <div onClick={() => handleDelete(bot._id)}><span className="delete-text">Delete</span></div>
-                </div>
-              )}
+          <div className="chatbots-list">
+            <div className="add-chatbot-button" onClick={handleExpand}>
+              <FontAwesomeIcon icon={faPlus} className="plus-icon" />
+              <p>Add Chatbot</p>
             </div>
-          ))}
+
+            {/* Render the list of bots */}
+            {bots && bots.length > 0 && bots.map((bot) => (
+                <div key={bot._id} className="chatbot-item">
+                  <h2 className='bot-header-name'>
+                    {bot.name}
+                    <FontAwesomeIcon
+                        icon={faCog}
+                        className="bot-settings-button"
+                        onClick={() => toggleDropdown(bot._id)}
+                    />
+                  </h2>
+                  <div className="bubble"></div>
+
+                  {/* Dropdown Menu */}
+                  {activeDropdown === bot._id && (
+                      <div className="dropdown-menu">
+                        <div className="edit" onClick={() => handleEdit(bot._id)}>Edit</div>
+                        <div onClick={() => handleDelete(bot._id)}><span className="delete-text">Delete</span></div>
+                      </div>
+                  )}
+                </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
   );
 }
