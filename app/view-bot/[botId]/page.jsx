@@ -22,6 +22,14 @@ export default function BotConfigPage() {
   const [fileList, setFileList] = useState([]); // Store uploaded files
   const [previewFiles, setPreviewFiles] = useState([]); // Store base64 preview of the files
 
+
+  useEffect(() => {
+    if (window.self === window.top) {
+      // If the page is not in an iframe, redirect to the homepage
+      router.push('/');
+    }
+  }, [router]);
+
   // Fetch bot configuration on page load
   useEffect(() => {
     if (botId) {
