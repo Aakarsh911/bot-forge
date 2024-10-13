@@ -308,5 +308,12 @@ body {
     }
 }
 
-
-  
+.chatbot-icon {
+    height: 10em;
+    width: 10em;
+    opacity: 1;
+    right: -2em;
+    bottom: -2em;
+    position: absolute;
+    rotate: -60deg;
+}

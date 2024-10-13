@@ -5,6 +5,8 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faCog } from '@fortawesome/free-solid-svg-icons';
+import botSVG from './bot-icon.png';
+import Image from 'next/image';
 
 import Sidebar from '@/components/Sidebar';
 import './dashboard.css';
@@ -232,6 +234,7 @@ export default function Dashboard() {
                     />
                   </h2>
                   <div className="bubble"></div>
+                  <Image className="chatbot-icon" src={botSVG} alt="Chatbot Logo" />
 
                   {/* Dropdown Menu */}
                   {activeDropdown === bot._id && (
