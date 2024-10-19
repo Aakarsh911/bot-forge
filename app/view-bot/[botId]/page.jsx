@@ -14,14 +14,15 @@ export default function BotConfigPage() {
   const router = useRouter();
   const params = useParams();
   const botId = params.botId;
-  const [isImageModel,setIsImageModel] = useState(false);
+  const [isImageModel, setIsImageModel] = useState(false);
   const [botConfig, setBotConfig] = useState(null); // Bot configuration from the database
   const [input, setInput] = useState(''); // User input for the chat
   const [messages, setMessages] = useState([{ role: 'assistant', content: 'Hello! How can I help you today?' }]); // Chat messages
   const [isLoading, setIsLoading] = useState(false); // Loading state for bot typing animation
   const [fileList, setFileList] = useState([]); // Store uploaded files
   const [previewFiles, setPreviewFiles] = useState([]); // Store base64 preview of the files
-
+  const [credits, setCredits] = useState(0); // User credits for the bot
+  const [userId, setUserId] = useState(null); // User information
 
   useEffect(() => {
     if (window.self === window.top) {
@@ -34,19 +35,40 @@ export default function BotConfigPage() {
   useEffect(() => {
     if (botId) {
       fetchBotConfig();
+
     }
   }, [botId]);
+
+  // Track when userId changes and log or perform actions
+  useEffect(() => {
+    if (userId) {
+      console.log("User ID has been updated:", userId);
+      fetchCredits();
+      // Perform actions based on the updated userId (e.g., fetch credits)
+    }
+  }, [userId]);
 
   const fetchBotConfig = async () => {
     try {
       const response = await axios.get(`/api/bots/${botId}`);
       setBotConfig(response.data.bot);
-      if (response.data.bot.modelType === 'image') {
-        setIsImageModel(true);
-      }
+      setUserId(response.data.bot.userId); // Update userId here
 
     } catch (error) {
       console.error('Error fetching bot config:', error);
+    } finally {
+
+    }
+  };
+
+  const fetchCredits = async () => {
+    console.log("Fetching user credits...");
+    try {
+      const response = await axios.get(`/api/users/${userId}`);
+      console.log(response.data.credits);
+      setCredits(response.data.credits);
+    } catch (error) {
+      console.error('Error fetching user credits:', error);
     }
   };
 
@@ -71,6 +93,15 @@ export default function BotConfigPage() {
     });
   };
 
+  const reduceCredits = async () => {
+    try {
+      const response = await axios.post(`/api/users/${userId}/reduce-credits/${botConfig.modelType}`);
+      console.log('Credits reduced:', response.data);
+      setCredits(response.data.credits);
+    } catch (error) {
+      console.error('Error reducing credits:', error);
+    }
+  }
   // Handle sending the message to the bot
   const sendMessage = async () => {
     if (!input.trim() && fileList.length === 0) return;
@@ -138,6 +169,7 @@ export default function BotConfigPage() {
       <div className="chat-container" style={chatStyles}>
         {botConfig && (
             <div className="chat-window">
+              <p>{credits}</p>
               <header>
                 <h1>
                   <FontAwesomeIcon icon={faRobot} className="header-bot-icon" />
@@ -176,15 +208,16 @@ export default function BotConfigPage() {
                     placeholder="Type your message here..."
                 />
                 {isImageModel && (
-                    <Upload fileList={fileList}
-                      onChange={handleFileChange}
-                      multiple
-                      beforeUpload={() => false} // Prevent auto-upload
-                      showUploadList={false} // Do not show default upload list
+                    <Upload
+                        fileList={fileList}
+                        onChange={handleFileChange}
+                        multiple
+                        beforeUpload={() => false} // Prevent auto-upload
+                        showUploadList={false} // Do not show default upload list
                     >
-                      <Button icon={<PaperClipOutlined/>}/>
+                      <Button icon={<PaperClipOutlined />} />
                     </Upload>
-              )}
+                )}
                 <button className="send-button" onClick={sendMessage}>
                   <SendOutlined className="send-icon" />
                 </button>

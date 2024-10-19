@@ -90,6 +90,9 @@ const BotSchema = new Schema({
     },
     endMessageRating: {
         type: [Number],
+    },
+    userId: {
+        type: String,
     }
 });
 

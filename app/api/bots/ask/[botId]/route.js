@@ -102,7 +102,7 @@ export const POST = async (req, { params }) => {
 
     // Prepare the OpenAI request payload (including text and image)
     const payload = {
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: openAISystemMessage },
         ...updatedChatHistory, // Include the user's chat history with the image
@@ -167,7 +167,7 @@ export const POST = async (req, { params }) => {
 
           // Send API result to OpenAI for refinement
           const refinedRequestData = {
-            model: 'gpt-4o',
+            model: 'gpt-4o-mini',
             messages: [
               ...updatedChatHistory,
               { role: 'assistant', content: `API call result: ${JSON.stringify(apiResponse.data)}` },

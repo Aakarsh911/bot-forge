@@ -18,7 +18,7 @@ const UserSchema = new Schema({
     type: [Schema.Types.ObjectId],
     ref: 'Bot',
   },
-  Credits: {
+  credits: {
     type: Number,
     required: [true, 'Credits is required!'],
     default: 10,

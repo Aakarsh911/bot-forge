@@ -234,7 +234,7 @@ export default function Dashboard() {
                     />
                   </h2>
                   <div className="bubble"></div>
-                  <Image className="chatbot-icon" src={botSVG} alt="Chatbot Logo" />
+                  {/*<Image className="chatbot-icon" src={botSVG} alt="Chatbot Logo" />*/}
 
                   {/* Dropdown Menu */}
                   {activeDropdown === bot._id && (

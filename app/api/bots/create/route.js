@@ -10,14 +10,19 @@ export const POST = async (req) => {
     try {
         // Ensure the user is authenticated
         const token = await getToken({req, secret: process.env.NEXTAUTH_SECRET});
-
         if (!token) {
             return NextResponse.json({message: 'Unauthorized'}, {status: 401});
         }
 
         // Connect to the database
         await connectToDB();
-
+        //get user id
+        const user = await User.findOne({email: token.email});
+        if (!user) {
+            return NextResponse.json({message: 'User not found'}, {status: 404});
+        }
+        const userId = user._id;
+        console.log(userId);
         // Extract bot data from request body (convert to JSON)
         const body = await req.json();
         const {
@@ -61,7 +66,7 @@ export const POST = async (req) => {
                 });
 
                 prompt = response.data.choices[0].message.content;
-                console.log(prompt);
+
 
             } catch (error) {
                 console.error('Error:', error.response ? error.response.data : error.message);
@@ -89,6 +94,7 @@ export const POST = async (req) => {
             botPosition,
             modelType,
             closeButtonColor,
+            userId,
         });
 
         console.log(newBot);
