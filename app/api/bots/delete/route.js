@@ -1,6 +1,6 @@
 import { getToken } from 'next-auth/jwt';
-import User from '../../../../models/user';
-import Bot from '../../../../models/bot';
+import User from '@/models/user';
+import Bot from '@/models/bot';
 import { connectToDB } from '../../../../utils/database';
 import { NextResponse } from 'next/server';
 

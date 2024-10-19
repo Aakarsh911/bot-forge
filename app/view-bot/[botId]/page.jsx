@@ -52,12 +52,10 @@ export default function BotConfigPage() {
     try {
       const response = await axios.get(`/api/bots/${botId}`);
       setBotConfig(response.data.bot);
+      console.log(response.data.bot);
       setUserId(response.data.bot.userId); // Update userId here
-
     } catch (error) {
       console.error('Error fetching bot config:', error);
-    } finally {
-
     }
   };
 
@@ -142,6 +140,7 @@ export default function BotConfigPage() {
       setIsLoading(false);
       setFileList([]); // Clear the file list after sending
       setPreviewFiles([]); // Clear preview files
+      await reduceCredits();
     }
   };
 
