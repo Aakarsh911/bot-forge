@@ -7,7 +7,7 @@ body {
 
 .dashboard {
 	display: flex;
-	height: 100%;
+	height: 100vh;
 }
 
 .main-content {
@@ -316,4 +316,43 @@ body {
     bottom: -2em;
     position: absolute;
     rotate: -60deg;
+}
+
+.settings-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    position: fixed;
+}
+
+.css-1u32qsq {
+    display: flex !important;
+    width: auto !important;
+}
+
+.custom-credit {
+    margin-left: 15px !important;
+}
+
+.credit-input {
+    border-radius: 5px;
+    height: 20px;
+    padding: 6px;
+    border: 1px solid white;
+    width: 80px;
+}
+
+/* Remove the spinner controls in Chrome, Safari, and Edge */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Remove the spinner controls in Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
 }

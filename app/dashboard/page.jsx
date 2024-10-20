@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faCog } from '@fortawesome/free-solid-svg-icons';
 import botSVG from './bot-icon.png';
 import Image from 'next/image';
-
+import Pricing from '@/components/Pricing';
 import Sidebar from '@/components/Sidebar';
 import './dashboard.css';
 
@@ -16,7 +16,8 @@ export default function Dashboard() {
   const router = useRouter();
   const [expanded, setExpanded] = useState(false);
   const [bots, setBots] = useState([]); // State to store fetched bots
-  const [activeDropdown, setActiveDropdown] = useState(null); // State for active dropdown
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   useEffect(() => {
     const fetchBots = async () => {
@@ -92,6 +93,10 @@ export default function Dashboard() {
 
   // This function will be passed to Sidebar as a prop
   function redirectToSettings() {
+    if(isSettingsOpen) {
+      return;
+    }
+    setIsSettingsOpen(true);
     const botList = document.querySelectorAll('.chatbot-item');
     const chatbotButton = document.querySelector('.add-chatbot-button');
     const dashboardHeading = document.querySelector('h1'); // Target the dashboard heading
@@ -247,6 +252,12 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
+        {isSettingsOpen &&
+            <div className="settings-container">
+              <Pricing />
+            </div>
+        }
+
       </div>
   );
 }
