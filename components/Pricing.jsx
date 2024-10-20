@@ -12,9 +12,13 @@ import Typography from '@mui/joy/Typography';
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import { useRouter } from 'next/navigation';
 import {useState} from "react";
 
 export default function PricingCards() {
+
+    const router = useRouter();
+
     const [customCreditAmount, setCustomCreditAmount] = useState(0);
     function handleCreditInputChange(e) {
         const inputValue = e.target.value;
@@ -84,6 +88,10 @@ export default function PricingCards() {
                         variant="soft"
                         color="neutral"
                         endDecorator={<KeyboardArrowRight />}
+                        onClick={() => {
+                            router.push('stripe/3');
+                            }
+                        }
                     >
                         Start now
                     </Button>

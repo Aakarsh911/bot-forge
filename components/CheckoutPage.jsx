@@ -1,8 +1,9 @@
-"use client";
+'use client';
 
 import React, { useEffect, useState } from "react";
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import { useSession, signIn } from 'next-auth/react'; // Import NextAuth session
 import "../css/CheckoutPage.css";
 
 // Initialize Stripe with the public key
@@ -12,42 +13,49 @@ const CheckoutPage = ({ amount }) => {
   const [clientSecret, setClientSecret] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { data: session, status } = useSession(); // Get the session and authentication status
 
   useEffect(() => {
-    if (amount > 0) {
+    // Redirect to login if user is not authenticated
+    if (status === 'unauthenticated') {
+      signIn();
+    }
+
+    if (amount > 0 && session) {
       // Fetch the clientSecret from your backend
       fetch("/api/create-payment-intent", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify({ amount, userId: session.user.id }), // Send user ID with the request
       })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.clientSecret) {
-            setClientSecret(data.clientSecret);
-            console.log("Client secret:", data.clientSecret);
-          } else {
-            throw new Error("Client secret not returned");
-          }
-        })
-        .catch((err) => {
-          console.error("Error fetching client secret:", err);
-          setErrorMessage("Failed to load payment details. Please try again.");
-        });
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("Payment details:", data);
+            if (data.clientSecret) {
+              setClientSecret(data.clientSecret);
+              console.log("Client secret:", data.clientSecret);
+            } else {
+              throw new Error("Client secret not returned");
+            }
+          })
+          .catch((err) => {
+            console.error("Error fetching client secret:", err);
+            setErrorMessage("Failed to load payment details. Please try again.");
+          });
     } else {
       setErrorMessage("Invalid amount.");
     }
-  }, [amount]);
+  }, [amount, session]);
 
   if (!clientSecret) {
     return (
-      <div className="loading-container">
-        <div className="spinner" role="status">
-          <span className="visually-hidden">Loading...</span>
+        <div className="loading-container">
+          <div className="spinner" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
         </div>
-      </div>
     );
   }
 
@@ -55,9 +63,9 @@ const CheckoutPage = ({ amount }) => {
   const options = { clientSecret };
 
   return (
-    <Elements stripe={stripePromise} options={options}>
-      <CheckoutForm amount={amount} />
-    </Elements>
+      <Elements stripe={stripePromise} options={options}>
+        <CheckoutForm amount={amount} />
+      </Elements>
   );
 };
 
@@ -102,16 +110,16 @@ const CheckoutForm = ({ amount }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="checkout-form">
-      <PaymentElement />
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
-      <button
-        disabled={!stripe || !elements || loading}
-        className={`submit-button ${loading ? "disabled" : ""}`}
-      >
-        {!loading ? `Pay $${amount}` : "Processing..."}
-      </button>
-    </form>
+      <form onSubmit={handleSubmit} className="checkout-form">
+        <PaymentElement />
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
+        <button
+            disabled={!stripe || !elements || loading}
+            className={`submit-button ${loading ? "disabled" : ""}`}
+        >
+          {!loading ? `Pay $${amount}` : "Processing..."}
+        </button>
+      </form>
   );
 };
 
