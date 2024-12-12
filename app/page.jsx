@@ -4,6 +4,10 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import Provider from '../components/Provider';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import '/css/main.css';
+import Image from 'next/image';
+import configImg from '/images/config-img.png';
+import configImg2 from '/images/config-img2.png';
 
 const Page = () => {
   const { data: session } = useSession();
@@ -18,20 +22,31 @@ const Page = () => {
     localStorage.clear();
   };
 
-  useEffect(() => {
-    if (session) {
-      router.push('/dashboard');
-    }
-  }, [session, router]);
-
   return (
     <Provider>
-      <div className='main'>
-        <h1>Welcome to BotForge</h1>
-        
-        {!session && (
+      <nav className='navbar'>
+        <h1 className=''>Bot Forge</h1>
+        <div className='nav-links'>
+          <button>Dashboard</button>
+          <button>Pricing</button>
+          <button>Support</button>
+          {session && (
+            <>
+              <button onClick={handleLogout}>Logout</button>
+            </>
+          )}
+        </div>
+      </nav>
+      <div className='main-content '>
+        <div className='left-side'>
+          <h1 className='header-logo'>Bot Forge</h1>
+        </div>
+        <div className='right-side'>
+          <Image src={configImg} className='config-img' />
+          <Image src={configImg2} className='config-img2' />
+        </div>
+        {/* {!session && (
           <>
-            <p>You are not logged in.</p>
             <button onClick={() => signIn('google', { prompt: 'select_account' })}>
               Login with Google
             </button>
@@ -43,7 +58,10 @@ const Page = () => {
             <p>Welcome, {session.user.name}!</p>
             <button onClick={handleLogout}>Logout</button>
           </>
-        )}
+        )} */}
+      </div>
+      <div className="features">
+        
       </div>
     </Provider>
   );

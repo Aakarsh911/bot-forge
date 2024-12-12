@@ -50,7 +50,9 @@ export default function ConfigBot() {
   });
 
   useEffect(() => {
+    console.log('Session:', session);
     const fetchBots = async () => {
+      if (status === 'loading') return;
       if (status === 'authenticated') {
         try {
           const response = await fetch('/api/bots/fetch', {

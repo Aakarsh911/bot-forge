@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: black;
+    margin: 0;
+    padding: 0;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.left-side {
+    color: white;
+    width: 50%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: slideInFromLeft 2s ease; 
+}
+
+.right-side {
+    width: 50%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: slideInFromRight 2s ease;
+}
+
+.header-logo {
+    font-size: 10rem;
+    /* Gradient background */
+    background: linear-gradient(90deg, #0157f9, #ffffff, #4f2ab6);
+    background-size: 200% 100%; /* Makes the gradient twice as wide */
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    /* Smooth edges */
+    text-rendering: optimizeLegibility;
+    margin-top: 0.5em;
+    animation: moveGradient 3s linear infinite;
+}
+
+.config-img {
+    height: 70%;
+    width: auto;
+    border-radius: 1em;
+    position: relative;
+    top: 0em;
+    left: 6em;
+}
+
+.config-img2 {
+    height: 70%;
+    width: auto;
+    border-radius: 1em;
+    position: relative;
+    top: 2em;
+    left: 0%;
+    border: 1px solid black;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1em;
+    padding-right: 1em;
+    color: white;
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+    margin-bottom: 2em;
+    animation: fadeIn 4s ease;
+    background: black;
+    height: 5em;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2.5em;
+    margin-right: 1.5em;
+}
+
+.nav-links button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.25em;
+    cursor: pointer;
+}
+
+@keyframes slideInFromRight {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    
+}
+
+@keyframes slideInFromLeft {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+    
+}
+
+.features {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2em;
+    margin-top: 2em;
+    height: 100vh;
+    background: white;
+}
+
+@keyframes moveGradient {
+    0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+  }

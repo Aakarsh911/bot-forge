@@ -16,6 +16,7 @@ const CheckoutPage = ({ amount }) => {
   const { data: session, status } = useSession(); // Get the session and authentication status
 
   useEffect(() => {
+    console.log('checkout:', session);
     // Redirect to login if user is not authenticated
     if (status === 'unauthenticated') {
       signIn();

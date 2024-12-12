@@ -15,35 +15,45 @@ export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [expanded, setExpanded] = useState(false);
-  const [bots, setBots] = useState([]); // State to store fetched bots
+  const [bots, setBots] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   useEffect(() => {
+    console.log('Session:', session);
+
+    // Do not proceed until the session is loaded
+    if (status === 'loading') return;
+
+    if (status === 'unauthenticated') {
+      // Redirect to home if not authenticated
+      router.push('/');
+      return;
+    }
+
     const fetchBots = async () => {
-      if (status === 'authenticated') {
-        try {
-          const response = await fetch('/api/bots/fetch', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
+      try {
+        const response = await fetch('/api/bots/fetch', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
 
-          if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
-          }
-
-          const data = await response.json();
-          setBots(data.bots);
-        } catch (error) {
-          console.error('Error fetching bots:', error);
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
         }
+
+        const data = await response.json();
+        setBots(data.bots);
+      } catch (error) {
+        console.error('Error fetching bots:', error);
       }
     };
 
-    fetchBots();
-  }, [status]);
+    // Fetch bots only if authenticated
+    if (status === 'authenticated') {
+      fetchBots();
+    }
+  }, [status, session, router]);
 
   useEffect(() => {
     const body = document.querySelector('body');
@@ -51,25 +61,18 @@ export default function Dashboard() {
 
     const generateGlowingLineWithBorders = () => {
       const mainContent = document.querySelector('.main-content');
-      const gridSize = 40; // Match the grid size used in the background
+      const gridSize = 40;
       const line = document.createElement('div');
       line.classList.add('glowing-line');
-
-      // Random column placement snapped to grid
       const randomColumn = Math.floor(Math.random() * (mainContent.offsetWidth / gridSize)) * gridSize;
       line.style.left = `${randomColumn}px`;
-
-      // Append the glowing line
       mainContent.appendChild(line);
-
-      // Remove the line after animation
       setTimeout(() => {
         mainContent.removeChild(line);
-      }, 3000); // Line duration
+      }, 3000);
     };
 
-    // Spawn the glowing line at intervals
-    const intervalId = setInterval(generateGlowingLineWithBorders, 750); // Reduced frequency
+    const intervalId = setInterval(generateGlowingLineWithBorders, 750);
 
     return () => {
       clearInterval(intervalId);
@@ -91,26 +94,20 @@ export default function Dashboard() {
     };
   }, []);
 
-  // This function will be passed to Sidebar as a prop
-  function redirectToSettings() {
-    if(isSettingsOpen) {
-      return;
-    }
+  const redirectToSettings = () => {
+    if (isSettingsOpen) return;
+
     setIsSettingsOpen(true);
     const botList = document.querySelectorAll('.chatbot-item');
     const chatbotButton = document.querySelector('.add-chatbot-button');
-    const dashboardHeading = document.querySelector('h1'); // Target the dashboard heading
+    const dashboardHeading = document.querySelector('h1');
 
-    // Step 1: Animate chatbot items and button to shrink
     chatbotButton.style.animation = 'shrink 0.5s forwards';
-    for (let i = 0; i < botList.length; i++) {
-      botList[i].style.animation = 'shrink 0.5s forwards';
-    }
+    botList.forEach(bot => bot.style.animation = 'shrink 0.5s forwards');
 
-    // Step 2: Add a blinking cursor element
     const cursorSpan = document.createElement('span');
     cursorSpan.classList.add('blinking-cursor');
-    dashboardHeading.textContent = "Dashboard"; // Reset text
+    dashboardHeading.textContent = "Dashboard";
     dashboardHeading.appendChild(cursorSpan);
 
     let currentText = "Dashboard";
@@ -118,44 +115,35 @@ export default function Dashboard() {
     let currentLength = currentText.length;
     let index = 0;
 
-    // Backspace the "Dashboard" text
-    function backspaceText() {
+    const backspaceText = () => {
       if (currentLength > 0) {
         currentText = currentText.slice(0, -1);
         dashboardHeading.textContent = currentText;
-        dashboardHeading.appendChild(cursorSpan); // Re-add the cursor
+        dashboardHeading.appendChild(cursorSpan);
         currentLength--;
-        setTimeout(backspaceText, 100); // Control backspace speed
+        setTimeout(backspaceText, 100);
       } else {
-        typeSettingsText(); // Start typing "Settings" after backspacing
+        typeSettingsText();
       }
-    }
+    };
 
-    // Type the "Settings" text
-    function typeSettingsText() {
+    const typeSettingsText = () => {
       if (index < newText.length) {
         dashboardHeading.textContent += newText.charAt(index);
-        dashboardHeading.appendChild(cursorSpan); // Re-add the cursor
+        dashboardHeading.appendChild(cursorSpan);
         index++;
-        setTimeout(typeSettingsText, 150); // Control typing speed
+        setTimeout(typeSettingsText, 150);
       }
-    }
+    };
 
     backspaceText();
     setTimeout(() => {
       document.querySelector('.blinking-cursor').style.display = 'none';
-    }, 2500); // Hide the cursor after typing
-
-  }
-
+    }, 2500);
+  };
 
   if (status === 'loading') {
     return <p>Loading...</p>;
-  }
-
-  if (status === 'unauthenticated') {
-    router.push('/');
-    return null;
   }
 
   const handleExpand = () => {
@@ -167,9 +155,8 @@ export default function Dashboard() {
     const sidebar = document.querySelector('.sidebar');
     const body = document.querySelector('body');
     const chatBotItems = document.querySelectorAll('.chatbot-item');
-    chatBotItems.forEach(item => {
-      item.style.display = "none";
-    });
+
+    chatBotItems.forEach(item => (item.style.display = "none"));
     body.style.background = "#131313";
     sidebar.style.background = "#131313";
     plusIcon.style.display = "none";
@@ -177,6 +164,7 @@ export default function Dashboard() {
     chatbot.style.maxWidth = "none";
     chatbot.style.animation = "expand 0.5s forwards";
     mainContent.style.animation = "remove-margin 0.5s forwards";
+
     setTimeout(() => {
       router.push('/create');
     }, 1100);
@@ -194,16 +182,13 @@ export default function Dashboard() {
     try {
       const response = await fetch('/api/bots/delete', {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ botId }),
       });
 
       if (response.ok) {
         console.log('Bot deleted successfully');
-        // Remove the deleted bot from the local state to update the UI
-        setBots(bots.filter((bot) => bot._id !== botId));
+        setBots(bots.filter(bot => bot._id !== botId));
       } else {
         console.error('Failed to delete bot');
       }
@@ -214,23 +199,18 @@ export default function Dashboard() {
 
   return (
       <div className="dashboard">
-        {/* Passing redirectToSettings as a prop to Sidebar */}
         <Sidebar redirectToSettings={redirectToSettings} />
         <div className="main-content">
           <div className="grid-background"></div>
-
           <h1>Dashboard</h1>
-
           <div className="chatbots-list">
             <div className="add-chatbot-button" onClick={handleExpand}>
               <FontAwesomeIcon icon={faPlus} className="plus-icon" />
               <p>Add Chatbot</p>
             </div>
-
-            {/* Render the list of bots */}
-            {bots && bots.length > 0 && bots.map((bot) => (
+            {bots && bots.length > 0 && bots.map(bot => (
                 <div key={bot._id} className="chatbot-item">
-                  <h2 className='bot-header-name'>
+                  <h2 className="bot-header-name">
                     {bot.name}
                     <FontAwesomeIcon
                         icon={faCog}
@@ -239,9 +219,6 @@ export default function Dashboard() {
                     />
                   </h2>
                   <div className="bubble"></div>
-                  {/*<Image className="chatbot-icon" src={botSVG} alt="Chatbot Logo" />*/}
-
-                  {/* Dropdown Menu */}
                   {activeDropdown === bot._id && (
                       <div className="dropdown-menu">
                         <div className="edit" onClick={() => handleEdit(bot._id)}>Edit</div>
@@ -252,12 +229,11 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
-        {isSettingsOpen &&
+        {isSettingsOpen && (
             <div className="settings-container">
               <Pricing />
             </div>
-        }
-
+        )}
       </div>
   );
 }
