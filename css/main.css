@@ -10,24 +10,22 @@ body {
 
 .main-content {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 90%;
+    margin-left: 5%;
 }
 
 .left-side {
     color: white;
-    width: 50%;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     animation: slideInFromLeft 2s ease; 
-    padding-left: 5em;
 }
 
 .right-side {
-    width: 50%;
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -78,7 +76,6 @@ body {
     width: 90%;
     z-index: 100;
     animation: fadeIn 4s ease;
-    background: black;
     height: 5em;
 }
 
@@ -135,18 +132,8 @@ body {
 }
 
 .features {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2em;
-    margin-top: 2em;
     height: 100vh;
     background: white;
-}
-
-.curve {
-    position: relative;
-    top: -50%;
 }
 
 @keyframes moveGradient {
@@ -160,3 +147,30 @@ body {
 		background-position: 0% 50%;
 	}
   }
+
+  .feature-heading {
+  }
+
+  .feature-subheading {
+      color: #0157f9;
+  }
+
+  .features-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .grid-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 110vh;
+    background-image: linear-gradient(white 1px, transparent 1px),
+                      linear-gradient(90deg, white 1px, transparent 1px);
+    background-size: 40px 40px; /* Grid size */
+    opacity: 0.1; /* Makes the grid lines very subtle */
+    z-index: -2; /* Ensures the grid stays behind all other content */
+}

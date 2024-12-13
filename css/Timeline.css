@@ -1,0 +1,99 @@
+.timeline-wrapper {
+    position: relative;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5em;
+    opacity: 0; /* Initially hidden */
+    transform: translateY(20px); /* Slightly shifted for entrance effect */
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Smooth transition */
+}
+
+.timeline-wrapper.visible {
+    opacity: 1; /* Fade in when visible */
+    transform: translateY(0); /* Reset position when visible */
+}
+
+.timeline-line {
+    position: absolute;
+    left: 0;
+    height: 2px;
+    background: rgb(100,21,135);
+    background: linear-gradient(90deg, rgba(100,21,135,1) 0%, rgba(110,21,149,1) 0%, rgba(66,42,193,1) 88%);
+    width: 0; /* Start with 0 width */
+    transition: width 3s linear; /* Smooth animation for the line */
+}
+
+.timeline-wrapper.visible .timeline-line {
+    width: 100%; /* Full width when visible */
+}
+
+.timeline-points {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 0; /* Align points directly on the line */
+}
+
+.timeline-point {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3.6em;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.5s ease; /* Smooth fade-in */
+}
+
+.timeline-wrapper.visible .timeline-point:nth-child(1) {
+    animation: FadeIn 0.5s ease 0.25s forwards;
+}
+
+.timeline-wrapper.visible .timeline-point:nth-child(2) {
+    animation: FadeIn 0.5s ease 0.9s forwards;
+}
+
+.timeline-wrapper.visible .timeline-point:nth-child(3) {
+    animation: FadeIn 0.5s ease 1.75s forwards;
+}
+
+.timeline-wrapper.visible .timeline-point:nth-child(4) {
+    animation: FadeIn 0.5s ease 2.75s forwards;
+}
+
+.timeline-point-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #9b3cf7;
+    position: relative;
+    top: -6px; /* Adjust to align with the line */
+}
+
+.timeline-point-text {
+    margin-top: 10px;
+    text-align: center;
+    color: black;
+}
+
+.timeline-point-text h3 {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.timeline-point-text p {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+@keyframes FadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
