@@ -144,6 +144,11 @@ body {
     background: white;
 }
 
+.curve {
+    position: relative;
+    top: -50%;
+}
+
 @keyframes moveGradient {
     0% {
 		background-position: 0% 50%;
