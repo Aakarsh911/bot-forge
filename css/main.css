@@ -149,10 +149,23 @@ body {
   }
 
   .feature-heading {
+    font-size: 3rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, #0157f9, #000000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Gradient text effect */
+    text-rendering: optimizeLegibility;
+    margin: 0;
+    animation: textGlow 3s ease-in-out infinite;
   }
 
   .feature-subheading {
-      color: #0157f9;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #333;
+    margin-top: 1rem;
+    line-height: 1.8;
+    letter-spacing: 0.5px;
   }
 
   .features-container {
@@ -160,6 +173,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 2em
   }
 
   .grid-background {
