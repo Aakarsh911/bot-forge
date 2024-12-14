@@ -22,7 +22,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: slideInFromLeft 2s ease; 
+    animation: fadeIn 4s ease; 
 }
 
 .right-side {
@@ -30,7 +30,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: slideInFromRight 2s ease;
+    animation: fadeIn 4s ease;
 }
 
 .header-logo {

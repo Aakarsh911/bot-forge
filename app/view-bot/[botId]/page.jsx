@@ -117,6 +117,7 @@ export default function BotConfigPage() {
 
     const formData = new FormData();
     formData.append('question', input);
+    formData.append('chatHistory', JSON.stringify(messages));
     fileList.forEach((file) => {
       formData.append('files', file.originFileObj); // Append all files
     });

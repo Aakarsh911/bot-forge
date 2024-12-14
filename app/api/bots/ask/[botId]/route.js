@@ -67,6 +67,7 @@ export const POST = async (req, { params }) => {
 
     // Add the user's question and image (if any) to the chat history
     let updatedChatHistory = [...chatHistory, { role: 'user', content: question }];
+    console.log('Chat history:', updatedChatHistory);
 
     if (base64Image) {
       updatedChatHistory = [
