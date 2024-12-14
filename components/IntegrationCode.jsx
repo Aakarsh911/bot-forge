@@ -7,7 +7,7 @@ export default function IntegrationCode() {
   const codeString = `
 <script type="text/javascript">
   window.customChatBot = window.customChatBot || {};
-  window.customChatBot.id = "18787687686jhwebkjqwiqwu21iuihu12eehiu21hiue12e12hiu"; // Replace with the unique bot ID
+  window.customChatBot.id = "<your_bot_id>"; // Replace with the unique bot ID
   (function() {
       var script = document.createElement('script');
       script.type = 'text/javascript';
