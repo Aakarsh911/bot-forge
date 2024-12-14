@@ -10,6 +10,7 @@ import configImg from '/images/config-img.png';
 import configImg2 from '/images/config-img2.png';
 import '/css/main.css';
 import Timeline from '@/components/Timeline';
+import IntegrationCode from '@/components/IntegrationCode';
 
 const Page = () => {
   const { data: session } = useSession();
@@ -80,6 +81,7 @@ const Page = () => {
           <h1 className="feature-heading">Forge the Future of Conversations</h1>
           <h3 className="feature-subheading">Create custom AI chatbots effortlessly and bring your ideas to life—fast, flexible, and uniquely yours.</h3>
           <Timeline />
+          <IntegrationCode />
         </div>
       </div>
     </Provider>

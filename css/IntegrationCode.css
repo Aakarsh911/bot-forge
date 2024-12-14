@@ -1,0 +1,43 @@
+.integration-section {
+    padding: 2rem;
+    margin: 2rem auto;
+    border-radius: 10px;
+    text-align: center;
+    width: 90%;
+  }
+  
+  .integration-heading {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #333;
+    background: linear-gradient(90deg, #0157f9, #000000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .integration-description {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 2rem;
+  }
+  
+  .code-box {
+    text-align: left;
+    background: #1e1e1e;
+    color: #dcdcdc;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .code-box code {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.95rem;
+  }
+  
+  pre {
+    margin: 0;
+  }
+  
