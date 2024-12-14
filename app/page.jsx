@@ -55,7 +55,7 @@ const Page = () => {
               <button onClick={handleLogout}>Logout</button>
             </>
           ) : (
-            <button onClick={() => signIn('google', { prompt: 'select_account' })}>
+            <button onClick={() => signIn('google', { prompt: 'select_account',callbackUrl: '/dashboard' })}>
               Login with Google
             </button>
           )}
@@ -63,10 +63,13 @@ const Page = () => {
       </nav>
 
       {/* Hero Section */}
-      <div className="main-content">
+      <div className="main-content-landing">
       <div className="grid-background"></div>
         <div className="left-side">
-          <h1 className="header-logo">Forge Your Chatbot</h1>
+          <div className="cta">
+            <h1 className="header-logo">Forge Your Chatbot</h1>
+            <button onClick={() => router.push('/dashboard')} className="get-started-btn">Get Started</button>
+          </div>
         </div>
         <div className="right-side">
           <Image src={configImg} className="config-img" alt="Chatbot Configuration" />

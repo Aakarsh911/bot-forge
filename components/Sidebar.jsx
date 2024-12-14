@@ -8,7 +8,7 @@ export default function Sidebar({ redirectToSettings }) {
         <div className="sidebar">
             <ul>
                 <li>
-                    <a href="#" title="My Bots" className='active'>
+                    <a href="/dashboard" title="My Bots" className='active'>
                         <FontAwesomeIcon icon={faRobot} className="fa-icon" />
                     </a>
                 </li>

@@ -7,7 +7,7 @@
   }
   
   .integration-heading {
-    font-size: 2rem;
+    font-size: 3rem;
     font-weight: bold;
     margin-bottom: 1rem;
     color: #333;
@@ -17,8 +17,8 @@
   }
   
   .integration-description {
-    font-size: 1.2rem;
-    color: #555;
+    font-size: 1.5rem;
+    color: black;
     margin-bottom: 2rem;
   }
   
