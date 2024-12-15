@@ -1,48 +1,55 @@
-// /pages/api/users/update-credits.js
-
 import { getSession } from 'next-auth/react';
-import User from '@/models/User'; // Adjust the path to your User model
+import User from '../../../../models/user'; // Adjust the path to your User model
 import { connectToDB } from '@/utils/database'; // Ensure the database connection is handled
 
-export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method Not Allowed' });
+export const POST = async (req) => {
+  try {
+    // Parse the JSON request body
+    const body = await req.json(); 
+    // Get the session to identify the user
+   
+
+    // Connect to the database
+    await connectToDB();
+
+    // Extract the amount from the request body
+    const { amount , userId } = body;
+    const updatedCredit = parseInt(amount)/0.03;
+    if (!amount || isNaN(amount)) {
+      return new Response(JSON.stringify({ error: 'Invalid amount' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
-    try {
-        // Get the session to identify the user
-        const session = await getSession({ req });
+    // Fetch the user by ID
+    const user = await User.findById(userId);
 
-        if (!session) {
-            return res.status(401).json({ error: 'Not authenticated' });
-        }
-
-        // Connect to the database
-        await connectToDB();
-
-        // Extract the amount from the request body
-        const { amount } = req.body;
-
-        if (!amount || isNaN(amount)) {
-            return res.status(400).json({ error: 'Invalid amount' });
-        }
-
-        // Find the user by their email from the session
-        const user = await User.findOne({ email: session.user.email });
-
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        // Update the user's credits (for simplicity, we're just adding the amount here)
-        user.credits = (user.credits || 0) + parseInt(amount, 10); // Convert amount to integer and update credits
-
-        // Save the updated user to the database
-        await user.save();
-
-        return res.status(200).json({ message: 'Credits updated successfully', credits: user.credits });
-    } catch (error) {
-        console.error('Error updating credits:', error);
-        return res.status(500).json({ error: 'Internal Server Error' });
+    if (!user) {
+      return new Response(JSON.stringify({ error: 'User not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
-}
+
+    // Update the user's credits (for simplicity, we're just adding the amount here)
+    user.credits = (user.credits || 0) + updatedCredit; // Convert amount to integer and update credits
+
+    // Save the updated user to the database
+    await user.save();
+
+    return new Response(
+      JSON.stringify({
+        message: 'Credits updated successfully',
+        credits: user.credits,
+      }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
+    );
+  } catch (error) {
+    console.error('Error updating credits:', error);
+    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+};

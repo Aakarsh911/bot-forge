@@ -1,50 +1,54 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useSession, getSession } from 'next-auth/react';
-import { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function PaymentSuccess() {
-    const searchParams = useSearchParams();
-    const router = useRouter();
-    const { data: session, status } = useSession();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  const [hasProcessed, setHasProcessed] = useState(false); // Track if payment success has been handled
 
-    //get session
-    useEffect(() => {
-        getSession().then(r => console.log(r));
-    }, []);
+  useEffect(() => {
+    const handlePaymentSuccess = async () => {
+      if (hasProcessed || status !== 'authenticated') return; // Prevent multiple executions or if not authenticated
 
-    useEffect(() => {
-        console.log('Session status:', status);
-
+      try {
+        console.log(session);
         const amount = searchParams.get('amount');
+        const userId = searchParams.get('userId'); // Get userId from query params
 
-        // Function to update user credits
-        const updateCredits = async () => {
-            try {
-                if (amount && status === 'authenticated') {
-                    // Update credits based on payment amount
-                    await axios.post('/api/users/update-credits', { amount });
-                    console.log('Credits updated successfully');
-                }
-            } catch (error) {
-                console.error('Error updating credits:', error);
-            } finally {
-                // Redirect to the dashboard or homepage after updating credits
-                router.push('/dashboard');
-            }
-        };
+        if (amount && userId) {
+          console.log('Updating credits...');
+          await axios.post('/api/users/update-credits', { amount, userId });
 
-        // Handle different session states
-        if (status === 'loading') {
-            // If session is still loading, don't do anything yet
-            console.log('Session is loading...');
-        } else if (status === 'authenticated') {
-            // If session is authenticated, update credits
-            updateCredits();
+          console.log('Credits updated successfully');
+          setHasProcessed(true); // Mark as processed
+          router.push('/dashboard'); // Redirect after success
+        } else {
+          console.error('Missing amount or userId');
+          router.push('/error'); // Redirect to an error page
         }
-    }, [searchParams, status, router]);
+      } catch (error) {
+        console.error('Error updating credits:', error);
+        router.push('/error');
+      }
+    };
 
-    return <p>Redirecting to the dashboard...</p>;
+    if (status === 'authenticated') {
+      handlePaymentSuccess();
+    }
+  }, [status, hasProcessed, searchParams, router, session]);
+
+  if (status === 'loading') {
+    return <p>Loading session...</p>;
+  }
+
+  if (hasProcessed) {
+    return <p>Redirecting to your dashboard...</p>;
+  }
+
+  return <p>Processing payment success...</p>;
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import User from '@/models/User'; // Adjust the path if necessary
+import User from '../../../../models/user'; // Adjust the path if necessary
 import { connectToDB } from '@/utils/database'; // Utility to connect to the MongoDB database
 
 export async function POST(request, { params }) {
