@@ -12,7 +12,7 @@ export default function IntegrationCode() {
       var script = document.createElement('script');
       script.type = 'text/javascript';
       script.async = true;
-      script.src = 'https://botforge-plugin-js.vercel.app/plugin.js'; // Link to hosted plugin.js file
+      script.src = 'https://botforge-plugin-js.vercel.app/plugin.js';
       var firstScript = document.getElementsByTagName('script')[0];
       firstScript.parentNode.insertBefore(script, firstScript);
   })();

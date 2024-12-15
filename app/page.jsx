@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 import configImg from '/images/config-img.png';
 import configImg2 from '/images/config-img2.png';
+import api from '/images/api.png';
 import '/css/main.css';
 import Timeline from '@/components/Timeline';
 import IntegrationCode from '@/components/IntegrationCode';
@@ -84,6 +85,39 @@ const Page = () => {
           <h1 className="feature-heading">Forge the Future of Conversations</h1>
           <h3 className="feature-subheading">Create custom AI chatbots effortlessly and bring your ideas to life—fast, flexible, and uniquely yours.</h3>
           <Timeline />
+          <div className="api-feature">
+            <h1 className="feature-heading">Not your average chatbot</h1>
+            <h3 className="feature-subheading">Redefining Chatbots with Advanced Customization and Integration</h3>
+            <div className="api-feature-points">
+              <div className="api-feature-point">
+                <div className="api-feature-image">
+                  <Image src={api} alt="Feature 1" />
+                </div>
+                <div className="api-feature-content">
+                  <h3>Seamlessly Connect Your APIs</h3>
+                  <p>Integrate your existing APIs to enable dynamic, real-time responses tailored to your business needs. <span className="highlight">No hardcoding</span> required—our chatbot adapts to your API's behavior with <span className="highlight">intelligent triggers</span>.</p>
+                </div>
+              </div>
+              <div className="api-feature-point">
+                <div className="api-feature-content">
+                  <h3>Seamlessly Connect Your APIs</h3>
+                  <p>Integrate your existing APIs to enable dynamic, real-time responses tailored to your business needs. <span className="highlight">No hardcoding</span> required—our chatbot adapts to your API's behavior with <span className="highlight">intelligent triggers</span>.</p>
+                </div>
+                <div className="api-feature-image">
+                  <Image src={api} alt="Feature 2" />
+                </div>
+              </div>
+              <div className="api-feature-point">
+                <div className="api-feature-image">
+                  <Image src={api} alt="Feature 3" />
+                </div>
+                <div className="api-feature-content">
+                  <h3>Seamlessly Connect Your APIs</h3>
+                  <p>Integrate your existing APIs to enable dynamic, real-time responses tailored to your business needs. <span className="highlight">No hardcoding</span> required—our chatbot adapts to your API's behavior with <span className="highlight">intelligent triggers</span>.</p>
+                </div>
+              </div>
+            </div>
+          </div>
           <IntegrationCode />
         </div>
       </div>
