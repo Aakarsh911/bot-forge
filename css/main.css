@@ -32,7 +32,7 @@ body {
 }
 
 .header-logo {
-    font-size: 9rem;
+    font-size: 7rem;
     /* Gradient background */
     background: linear-gradient(90deg, #0157f9, #ffffff, #4f2ab6);
     background-size: 200% 100%; /* Makes the gradient twice as wide */
@@ -42,7 +42,7 @@ body {
 
     /* Smooth edges */
     text-rendering: optimizeLegibility;
-    margin-top: -0.5em;
+    margin-top: -1em;
     animation: moveGradient 3s linear infinite;
     margin-bottom: 0;
 }
