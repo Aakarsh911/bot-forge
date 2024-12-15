@@ -235,7 +235,8 @@ body {
 
   .api-feature-image, .api-feature-content {
     width: 45%;
-    height: 30em;
+    height: auto;
+    padding: 1em;
   }
 
   .api-feature-content {
@@ -269,9 +270,9 @@ body {
 
   .api-feature-image img {
     height: auto;
-    width: 80%;
+    width: calc(100% - 1em);
     border-radius: 8px;
-    object-fit: scale-down;
+    object-fit: cover;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
@@ -286,4 +287,3 @@ body {
     font-size: 2rem;
     margin-left: 0.1em;
   }
-  

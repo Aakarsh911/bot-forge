@@ -2,7 +2,18 @@ import { connectToDB } from '../../../../utils/database';
 import Bot from '../../../../models/bot';
 import { NextResponse } from 'next/server';
 
+
 export const GET = async (req, { params }) => {
+    // Add CORS headers to allow requests from http://localhost:3001
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3001");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // Handle preflight requests
+  if (req.method === "OPTIONS") {
+    res.status(204).end(); // Respond OK to preflight request
+    return;
+  }
     try {
         // Connect to the database
         await connectToDB();

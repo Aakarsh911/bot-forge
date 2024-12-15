@@ -9,6 +9,8 @@ import Image from 'next/image';
 import configImg from '/images/config-img.png';
 import configImg2 from '/images/config-img2.png';
 import api from '/images/api.png';
+import frenchBot from '/images/french-bot.png';
+import appearnce from '/images/appearance.png';
 import '/css/main.css';
 import Timeline from '@/components/Timeline';
 import IntegrationCode from '@/components/IntegrationCode';
@@ -105,12 +107,12 @@ const Page = () => {
                   <p>From the bot's appearance to its tone and functionality, every detail is <span className="highlight">customizable</span>. Match your chatbot's personality to <span className="highlight">your brand effortlessly</span>.</p>
                 </div>
                 <div className="api-feature-image">
-                  <Image src={api} alt="Feature 2" />
+                  <Image src={appearnce} alt="Feature 2" />
                 </div>
               </div>
               <div className="api-feature-point">
                 <div className="api-feature-image">
-                  <Image src={api} alt="Feature 3" />
+                  <Image src={frenchBot}  className="small" alt="Feature 3" />
                 </div>
                 <div className="api-feature-content">
                   <h3>Speak Their Language</h3>
