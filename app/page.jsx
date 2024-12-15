@@ -100,8 +100,8 @@ const Page = () => {
               </div>
               <div className="api-feature-point">
                 <div className="api-feature-content">
-                  <h3>Seamlessly Connect Your APIs</h3>
-                  <p>Integrate your existing APIs to enable dynamic, real-time responses tailored to your business needs. <span className="highlight">No hardcoding</span> required—our chatbot adapts to your API's behavior with <span className="highlight">intelligent triggers</span>.</p>
+                  <h3>Your Brand, Your Way</h3>
+                  <p>From the bot's appearance to its tone and functionality, every detail is <span className="highlight">customizable</span>. Match your chatbot's personality to <span className="highlight">your brand effortlessly</span>.</p>
                 </div>
                 <div className="api-feature-image">
                   <Image src={api} alt="Feature 2" />
@@ -112,8 +112,8 @@ const Page = () => {
                   <Image src={api} alt="Feature 3" />
                 </div>
                 <div className="api-feature-content">
-                  <h3>Seamlessly Connect Your APIs</h3>
-                  <p>Integrate your existing APIs to enable dynamic, real-time responses tailored to your business needs. <span className="highlight">No hardcoding</span> required—our chatbot adapts to your API's behavior with <span className="highlight">intelligent triggers</span>.</p>
+                  <h3>Speak Their Language</h3>
+                  <p>Break language barriers with support for <span className="highlight">multiple languages</span>, enabling seamless communication with users <span className="highlight">worldwide</span>.</p>
                 </div>
               </div>
             </div>
