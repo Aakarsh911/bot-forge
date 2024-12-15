@@ -69,6 +69,7 @@ const Page = () => {
         <div className="left-side">
           <div className="cta">
             <h1 className="header-logo">Forge Your Chatbot</h1>
+            <h3 className="header-subheading">No Code, No Hassle — Just Powerful Chatbot at Your Fingertips.</h3>
             <button onClick={() => router.push('/dashboard')} className="get-started-btn">Get Started</button>
           </div>
         </div>

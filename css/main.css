@@ -42,8 +42,9 @@ body {
 
     /* Smooth edges */
     text-rendering: optimizeLegibility;
-    margin-top: -1em;
+    margin-top: -0.5em;
     animation: moveGradient 3s linear infinite;
+    margin-bottom: 0;
 }
 
 .config-img {
@@ -200,6 +201,7 @@ body {
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease, background 0.5s ease; /* Smooth transition for gradient */
+    margin-left: 0.1em;
   }
   
   .get-started-btn:hover {
@@ -277,5 +279,11 @@ body {
     background: linear-gradient(90deg, #0157f9, #4f2ab6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+
+  .header-subheading {
+    color: white;
+    font-size: 2rem;
+    margin-left: 0.1em;
   }
   
