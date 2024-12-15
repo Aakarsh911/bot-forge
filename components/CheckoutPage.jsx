@@ -106,7 +106,9 @@ const CheckoutForm = ({ amount }) => {
         console.log("Payment successful:", paymentIntent);
         // Redirect manually
         console.log(session);
-        window.location.href = redirectString;
+        if (typeof window !== 'undefined') {
+          window.location.href = redirectString;
+        }        
       } else {
         // Payment status not succeeded
         setErrorMessage("Payment could not be completed. Please try again.");

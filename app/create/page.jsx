@@ -188,7 +188,7 @@ export default function CreateBot() {
         setLoading(true);
         setIsBeingCreated(true);
         try {
-            const response = await fetch(`${window.location.origin}/api/bots/create`, {
+            const response = await fetch(`/api/bots/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

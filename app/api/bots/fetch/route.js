@@ -3,7 +3,10 @@ import { connectToDB } from '../../../../utils/database';
 import User from '../../../../models/user';
 import Bot from '../../../../models/bot';
 
+export const runtime = 'nodejs';
+
 export async function GET(req) {
+
   try {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
