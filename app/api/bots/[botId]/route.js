@@ -2,37 +2,45 @@ import { connectToDB } from '../../../../utils/database';
 import Bot from '../../../../models/bot';
 import { NextResponse } from 'next/server';
 
-
 export const GET = async (req, { params }) => {
-    // Add CORS headers to allow requests from http://localhost:3001
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3001");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  // Add CORS headers using NextResponse
+  const headers = new Headers();
+  headers.set("Access-Control-Allow-Origin", "http://localhost:3001"); // Allow requests from the front-end
+  headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  headers.set("Access-Control-Allow-Headers", "Content-Type");
 
-  // Handle preflight requests
+  // Handle preflight OPTIONS request
   if (req.method === "OPTIONS") {
-    res.status(204).end(); // Respond OK to preflight request
-    return;
+    return new NextResponse(null, { status: 204, headers }); // Respond to preflight request
   }
-    try {
-        // Connect to the database
-        await connectToDB();
 
-        // Extract botId from the request parameters
-        const { botId } = params;
+  try {
+    // Connect to the database
+    await connectToDB();
 
-        // Find the bot by ID
-        const bot = await Bot.findById(botId);
+    // Extract botId from the request parameters
+    const { botId } = params;
 
-        // Check if the bot exists
-        if (!bot) {
-            return NextResponse.json({ message: 'Bot not found' }, { status: 404 });
-        }
+    // Find the bot by ID
+    const bot = await Bot.findById(botId);
 
-        // Respond with the bot data
-        return NextResponse.json({ bot }, { status: 200 });
-    } catch (error) {
-        console.error('Error fetching bot:', error);
-        return NextResponse.json({ message: 'Server error' }, { status: 500 });
+    // Check if the bot exists
+    if (!bot) {
+      return NextResponse.json(
+        { message: "Bot not found" },
+        { status: 404, headers }
+      );
     }
+
+    // Respond with the bot data
+    return NextResponse.json({ bot }, { status: 200, headers });
+  } catch (error) {
+    console.error("Error fetching bot:", error);
+
+    // Respond with an error message
+    return NextResponse.json(
+      { message: "Server error" },
+      { status: 500, headers }
+    );
+  }
 };
