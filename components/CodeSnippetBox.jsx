@@ -15,7 +15,7 @@ const CodeSnippetBox = ({ botId }) => {
       var script = document.createElement('script');
       script.type = 'text/javascript';
       script.async = true;
-      script.src = 'https://botforge-plugin-js.vercel.app/plugin.js';
+      script.src = 'https://botforge-plugin-js.vercel.app/plugin.obfuscated.js';
       var firstScript = document.getElementsByTagName('script')[0];
       firstScript.parentNode.insertBefore(script, firstScript);
   })();
