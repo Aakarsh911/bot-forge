@@ -12,6 +12,7 @@ import { SaveButton } from '@/components/SaveButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRobot, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { UilMessage } from '@iconscout/react-unicons';
+import CodeSnippetBox from '@/components/CodeSnippetBox';
 
 const { TabPane } = Tabs;
 
@@ -575,8 +576,7 @@ export default function ConfigBot() {
                 </div>
               </TabPane>
               <TabPane tab="Integration" key="4">
-                {/* Integration content can be added here */}
-                <p>Integration settings will be available soon.</p>
+                <CodeSnippetBox botId={botId} />
               </TabPane>
             </Tabs>
             <SaveButton onClick={saveConfig} />
