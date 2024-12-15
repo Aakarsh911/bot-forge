@@ -6,11 +6,10 @@ import { promises as fsPromises } from 'fs';
 import { connectToDB } from '../../../../../utils/database';
 import Bot from '../../../../../models/bot';
 
-// Enable parsing of multipart/form-data requests
-export const config = {
-  api: {
-    bodyParser: false, // Disable Next.js body parser for handling file uploads
-  },
+export const runtime = 'nodejs'; // Optional, specify the runtime (edge or node.js)
+
+export const api = {
+  bodyParser: false, // Disable Next.js body parser for handling file uploads
 };
 
 // Utility to save uploaded files
