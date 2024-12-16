@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import '../css/main.css';
 
 export default function PricingCards() {
   const router = useRouter();
@@ -24,168 +25,119 @@ export default function PricingCards() {
 
   function handleCreditInputChange(e) {
     const inputValue = e.target.value;
-
+    if (e.target.value === '') {
+        setCustomCreditAmount(0);
+        return;
+    }
     if (validatePositiveInteger(inputValue)) {
-      setCustomCreditAmount(inputValue * 0.03);
+      // Calculate and round to 2 decimal places
+      const roundedValue = (inputValue * 0.03).toFixed(2);
+      setCustomCreditAmount(Number(roundedValue)); // Ensure it's stored as a number
     } else {
       e.target.value = ''; // Clear input or handle invalid input
     }
   }
+
 
   function validatePositiveInteger(value) {
     // Regular expression to check if the value is a positive integer and disallow 'e'
     return /^[0-9]+$/.test(value);
   }
 
+
   return (
-    <Box
-      sx={{
-        width: '100%',
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
-        gap: 2,
-      }}
-    >
-      <ToastContainer /> {/* Add the ToastContainer here */}
-
-      <Card size="lg" variant="outlined">
-        <Chip size="sm" variant="outlined" color="neutral">
-          BASIC
-        </Chip>
-        <Typography level="h2">Starter Pack</Typography>
-        <Divider inset="none" />
-        <List size="sm" sx={{ mx: 'calc(-1 * var(--ListItem-paddingX))' }}>
-          <ListItem>
-            <ListItemDecorator>
-              <Check />
-            </ListItemDecorator>
-            100 Credits
-          </ListItem>
-          <ListItem>
-            <ListItemDecorator>
-              <Close />
-            </ListItemDecorator>
-            Auto Refill
-          </ListItem>
-          <ListItem>
-            <ListItemDecorator>
-              <Check />
-            </ListItemDecorator>
-            Checking Account
-          </ListItem>
-          <ListItem>
-            <ListItemDecorator>
-              <Check />
-            </ListItemDecorator>
-            API Integration
-          </ListItem>
-        </List>
-        <Divider inset="none" />
-        <CardActions>
-          <Typography level="title-lg" sx={{ mr: 'auto' }}>
-            3.00${' '}
-            <Typography textColor="text.tertiary" sx={{ fontSize: 'sm' }}>
-              at 0.03/credit
-            </Typography>
-          </Typography>
-          <Button
-            variant="soft"
-            color="neutral"
-            endDecorator={<KeyboardArrowRight />}
-            onClick={() => {
+      <div className="pricing-section2">
+        <div className="pricing-cards2">
+          <div className="pricing-card">
+            <div className="pricing-card-header">
+              <h2 className="plan-title">Starter Plan</h2>
+              <p className='plan-tagline'>Ideal for individuals, small-scale use and testing.</p>
+            </div>
+            <div className="plan-price">
+              <p>$3</p>
+            </div>
+            <button className="select-plan"  onClick={() => {
               router.push('stripe/3');
-            }}
-          >
-            Start now
-          </Button>
-        </CardActions>
-      </Card>
-      <Card
-        size="lg"
-        variant="solid"
-        color="neutral"
-        invertedColors
-        sx={{ bgcolor: 'neutral.900' }}
-      >
-        <Chip size="sm" variant="outlined">
-          MOST POPULAR
-        </Chip>
-        <Typography level="h2">Professional Pack</Typography>
-        <Divider inset="none" />
-        <List
-          size="sm"
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            mx: 'calc(-1 * var(--ListItem-paddingX))',
-          }}
-        >
-          <ListItem>
-            <ListItemDecorator>
-              <Check />
-            </ListItemDecorator>
-            Custom Credit Amount
-          </ListItem>
-          <ListItem>
-            <ListItemDecorator>
-              <Check />
-            </ListItemDecorator>
-            Auto Refill
-          </ListItem>
-          <ListItem>
-            <ListItemDecorator>
-              <Check />
-            </ListItemDecorator>
-            Checking Account
-          </ListItem>
-          <ListItem>
-            <ListItemDecorator>
-              <Check />
-            </ListItemDecorator>
-            API Integration
-          </ListItem>
-          <ListItem>
-            <ListItemDecorator>
-              <Check />
-            </ListItemDecorator>
-            Cancel Anytime
-          </ListItem>
-        </List>
-        <Divider inset="none" />
-        <CardActions>
-          <Typography level="title-lg" sx={{ mr: 'auto' }}>
-            <input
-              className="credit-input"
-              type="number"
-              onChange={handleCreditInputChange}
-              onKeyDown={(e) => {
-                // Prevent 'e', '-', and '.' from being typed
-                if (e.key === 'e' || e.key === '-' || e.key === '.') {
-                  e.preventDefault();
-                }
-              }}
-              style={{ appearance: 'textfield' }} // Add for cross-browser support
-            />
+            }}>Buy Now</button>
+            <div className="plan-details">
+              <p>
+                <span className="tick-icon">✔</span> 100 credits included ($0.03 per credit).
+              </p>
+              <p>
+                <span className="tick-icon">✔</span> Ideal for small projects or testing.
+              </p>
+              <p>
+                <span className="tick-icon">✔</span> Simple one-time payment.
+              </p>
+            </div>
+          </div>
+          <div className="pricing-card best-seller-plan">
+            <div className="pricing-card-header">
+              <div className="plan-title-container">
+                <h2 className="plan-title">Smart Plan</h2>
 
-            <Typography textColor="text.tertiary" sx={{ mr: 'auto' }} className="custom-credit">
-              {customCreditAmount}$
-            </Typography>
-          </Typography>
-          <Button
-            endDecorator={<KeyboardArrowRight />}
-            onClick={() => {
-              if (customCreditAmount > 0) {
+              </div>
+              <p className='plan-tagline'>Recharge automatically whenever credits run out.</p>
+            </div>
+            <div className="plan-price input-flex">
+              <h3 className="custom-input">${customCreditAmount}</h3>
+              <input className="pricing-input" onChange={handleCreditInputChange} type="text" placeholder="Enter credits" />
+            </div>
+            <button className="select-plan flexible-button" onClick={() => {
+              if (customCreditAmount > 3) {
                 router.push('stripe/' + customCreditAmount);
-              } else {
-                // Show toast when customCreditAmount is zero
-                toast.error('Please enter a valid credit amount greater than zero.');
+              } else if (customCreditAmount<3){
+                toast.error('Minimum purchasing price is $3.');
+
               }
             }}
-          >
-            Start now
-          </Button>
-        </CardActions>
-      </Card>
-    </Box>
+            >Get Started</button>
+            <div className="plan-details">
+              <p>
+                <span className="tick-icon">✔</span> Choose the amount to recharge with.
+              </p>
+              <p>
+                <span className="tick-icon">✔</span> Automatically billed when credits expire.
+              </p>
+              <p>
+                <span className="tick-icon">✔</span> Complete control over your spending.
+              </p>
+              <p>
+                <span className="tick-icon">✔</span> Seamless credit renewal to avoid interruptions.
+              </p>
+              <p>
+                <span className="tick-icon">✔</span> Cancel Anytime.
+              </p>
+            </div>
+          </div>
+          <div className="pricing-card">
+            <div className="pricing-card-header">
+              <h2 className="plan-title">Custom Payment</h2>
+              <p className='plan-tagline'>Full flexibility with a one-time payment option.</p>
+            </div>
+            <div className="plan-price">
+              <p>Your choice</p>
+            </div>
+            <button className="select-plan">Get Started</button>
+            <div className="plan-details">
+              <p>
+                <span className="tick-icon">✔</span> Pay only for what you need.
+              </p>
+              <p>
+                <span className="tick-icon">✔</span> Add credits as a one-time custom payment.
+              </p>
+              <p>
+                <span className="tick-icon">✔</span> No automatic charges - you're in full control.
+              </p>
+              <p>
+                <span className="tick-icon">✔</span> Best for teams with specific usage patterns.
+              </p>
+            </div>
+          </div>
+        </div>
+        <ToastContainer />
+      </div>
+
+
   );
 }

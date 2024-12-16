@@ -26,7 +26,7 @@ export default function Sidebar({ redirectToSettings }) {
             <ul className="bottom">
                 <li className="settings-icon">
                     {/* Using the passed redirectToSettings function */}
-                    <a href="#" title="Settings" onClick={redirectToSettings}>
+                    <a  title="Settings" onClick={redirectToSettings}>
                         <FontAwesomeIcon icon={faCog} className="fa-icon" />
                     </a>
                 </li>
