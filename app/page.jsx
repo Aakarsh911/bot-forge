@@ -125,7 +125,7 @@ const Page = () => {
           <IntegrationCode />
           <svg viewBox="0 0 1440 58" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" class="absolute bottom-0 bg-transparent"><path transform="rotate(180) translate(-1440, -60)" d="M-100 58C-100 58 218.416 36.3297 693.5 36.3297C1168.58 36.3297 1487 58 1487 58V-3.8147e-06H-100V58Z" fill="#000000"></path></svg>
           <div className="pricing-section">
-            <h1 className="pricing-heading"><span className="highlight">Simple Pricing</span>, Powerful Features</h1>
+            <h1 className="pricing-heading"><span className="highlight-pricing">Simple Pricing</span>, Powerful Features</h1>
             <h3 className="pricing-subheading">Choose the plan that fits your needs and start building your chatbot today.</h3>
             <div className="pricing-cards">
               <div className="pricing-card">
