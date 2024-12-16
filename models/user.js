@@ -23,6 +23,9 @@ const UserSchema = new Schema({
     required: [true, 'Credits is required!'],
     default: 10,
   },
+  paymentMethodId: { type: String, required: false }, // Stores Stripe PaymentMethod ID
+  recurringPrice: { type: Number, required: false },
+  stripeCustomerId: { type: String, default: null }
 });
 
 const User = models.User || model("User", UserSchema);
