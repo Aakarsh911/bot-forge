@@ -335,6 +335,8 @@ body {
     height: 34em;
     border: 3px solid transparent;
     overflow: scroll;
+    -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
+    scrollbar-width: none;
   }
 
   .plan-title {
