@@ -1,6 +1,5 @@
 'use client';
 
-import ScrollMagic from 'scrollmagic';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Provider from '../components/Provider';
 import { useRouter } from 'next/navigation';
@@ -20,22 +19,22 @@ const Page = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    if (typeof window !== 'undefined' && ScrollMagic) {
-      const controller = new ScrollMagic.Controller();
+  // useEffect(() => {
+  //   if (typeof window !== 'undefined' && ScrollMagic) {
+  //     const controller = new ScrollMagic.Controller();
 
-      new ScrollMagic.Scene({
-        triggerElement: '#features-container',
-        triggerHook: 0.8,
-        reverse: false,
-      })
-        .setTween('#features-container', {
-          opacity: 1,
-          transform: 'translateY(0)',
-        })
-        .addTo(controller);
-    }
-  }, []);
+  //     new ScrollMagic.Scene({
+  //       triggerElement: '#features-container',
+  //       triggerHook: 0.8,
+  //       reverse: false,
+  //     })
+  //       .setTween('#features-container', {
+  //         opacity: 1,
+  //         transform: 'translateY(0)',
+  //       })
+  //       .addTo(controller);
+  //   }
+  // }, []);
 
   // Logout functionality
   const handleLogout = () => {
