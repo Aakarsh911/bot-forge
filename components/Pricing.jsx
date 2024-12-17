@@ -85,7 +85,7 @@ export default function PricingCards() {
             </div>
             <button className="select-plan flexible-button" onClick={() => {
               if (customCreditAmount > 3) {
-                router.push('stripe/' + customCreditAmount);
+                router.push('save-payment-method?price=' + customCreditAmount*100);
               } else if (customCreditAmount<3){
                 toast.error('Minimum purchasing price is $3.');
 

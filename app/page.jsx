@@ -45,17 +45,13 @@ const Page = () => {
     router.push('/');
   };
 
+  // if logged in, redirect to dashboard, else login
   const redirectToDashboardOrLogin = () => {
-    const { data: session } = useSession();
-    const router = useRouter();
-  
-    useEffect(() => {
-      if (session) {
-        router.push('/dashboard');  // Redirect to dashboard if logged in
-      } else {
-        signIn('google', { prompt: 'select_account',callbackUrl: '/dashboard' }); // Redirect to login page if not logged in
-      }
-    }, [session, router]);
+    if (session) {
+      router.push('/dashboard');
+    } else {
+      signIn('google', { prompt: 'select_account', callbackUrl: '/dashboard' });
+    }
   };
 
   return (
