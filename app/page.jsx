@@ -45,6 +45,19 @@ const Page = () => {
     router.push('/');
   };
 
+  const redirectToDashboardOrLogin = () => {
+    const { data: session } = useSession();
+    const router = useRouter();
+  
+    useEffect(() => {
+      if (session) {
+        router.push('/dashboard');  // Redirect to dashboard if logged in
+      } else {
+        signIn('google', { prompt: 'select_account',callbackUrl: '/dashboard' }); // Redirect to login page if not logged in
+      }
+    }, [session, router]);
+  };
+
   return (
     <Provider>
       {/* Navbar */}
@@ -136,7 +149,7 @@ const Page = () => {
                 <div className="plan-price">
                   <p>$3</p>
                 </div>
-                <button className="select-plan">Get Started</button>
+                <button className="select-plan" onClick={redirectToDashboardOrLogin}>Get Started</button>
                 <div className="plan-details">
                   <p>
                     <span className="tick-icon">✔</span> 100 credits included ($0.03 per credit).
@@ -160,7 +173,7 @@ const Page = () => {
                 <div className="plan-price">
                   <p>Flexible pricing</p>
                 </div>
-                <button className="select-plan">Get Started</button>
+                <button className="select-plan" onClick={redirectToDashboardOrLogin}>Get Started</button>
                 <div className="plan-details">
                   <p>
                     <span className="tick-icon">✔</span> Choose the amount to recharge with.
@@ -187,7 +200,7 @@ const Page = () => {
                 <div className="plan-price">
                   <p>Your choice</p>
                 </div>
-                <button className="select-plan">Get Started</button>
+                <button className="select-plan" onClick={redirectToDashboardOrLogin}>Get Started</button>
                 <div className="plan-details">
                   <p>
                     <span className="tick-icon">✔</span> Pay only for what you need.
