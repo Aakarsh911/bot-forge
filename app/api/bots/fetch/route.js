@@ -3,8 +3,7 @@ import { connectToDB } from '../../../../utils/database';
 import User from '../../../../models/user';
 import Bot from '../../../../models/bot';
 
-export const dynamic = 'force-dynamic'; // Ensure route is dynamic
-export const runtime = 'nodejs'; // Explicit runtime declaration
+export const runtime = 'nodejs';
 
 export async function GET(req) {
 
