@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { useSession, signIn } from 'next-auth/react';
@@ -9,11 +9,19 @@ import { useSearchParams } from 'next/navigation';
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 const SavePaymentMethodPage = () => {
+    return (
+        <Suspense fallback={<div>Loading payment details...</div>}>
+            <SavePaymentMethodContent />
+        </Suspense>
+    );
+};
+
+const SavePaymentMethodContent = () => {
     const [clientSecret, setClientSecret] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
     const { data: session, status } = useSession();
     const searchParams = useSearchParams();
-    const price = searchParams.get('price'); // Get price from query parameters
+    const price = searchParams.get('price'); // Safely fetch price parameter
 
     useEffect(() => {
         // Redirect to login if unauthenticated
@@ -68,31 +76,30 @@ const SavePaymentMethodForm = ({ price }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);
-    
+
         if (!stripe || !elements) {
             setErrorMessage('Stripe has not loaded properly. Please try again.');
             setLoading(false);
             return;
         }
-    
+
         const { setupIntent, error } = await stripe.confirmSetup({
             elements,
             confirmParams: {},
             redirect: 'if_required',
         });
-    
+
         if (error) {
             setErrorMessage(error.message);
             console.error('Error saving payment method:', error);
             setLoading(false);
             return;
         }
-    
+
         if (setupIntent.status === 'succeeded') {
-            // Log the PaymentMethod ID
             const paymentMethodId = setupIntent.payment_method;
             console.log('Retrieved PaymentMethod ID:', paymentMethodId);
-    
+
             try {
                 const response = await fetch('/api/save-payment-method', {
                     method: 'POST',
@@ -105,28 +112,16 @@ const SavePaymentMethodForm = ({ price }) => {
                         recurringPrice: price,
                     }),
                 });
-    
+
                 const data = await response.json();
-    
+
                 console.log('Backend response:', data);
-    
+
                 if (data.success) {
-                    if (data.user.paymentMethodId) {
-                        console.log('Payment Method Saved:', data.user.paymentMethodId);
-                    } else {
-                        console.error('Missing paymentMethodId in response.');
-                        setErrorMessage('Payment method ID not returned from backend.');
-                    }
-    
-                    if (data.user.recurringPrice) {
-                        console.log('Recurring Price Saved:', data.user.recurringPrice);
-                    } else {
-                        console.error('Missing recurringPrice in response.');
-                    }
+                    console.log('Payment Method Saved:', data.user.paymentMethodId);
+                    console.log('Recurring Price Saved:', data.user.recurringPrice);
                 } else {
-                    const error = data.error || 'Failed to save payment details.';
-                    console.error('Backend error:', error);
-                    setErrorMessage(error);
+                    setErrorMessage(data.error || 'Failed to save payment details.');
                 }
             } catch (err) {
                 console.error('Error saving payment method to backend:', err);
@@ -135,10 +130,9 @@ const SavePaymentMethodForm = ({ price }) => {
         } else {
             setErrorMessage('Payment setup was not successful.');
         }
-    
+
         setLoading(false);
     };
-    
 
     return (
         <form onSubmit={handleSubmit} className="payment-method-form">

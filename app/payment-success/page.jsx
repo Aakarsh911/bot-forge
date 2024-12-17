@@ -2,34 +2,34 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
 
-export default function PaymentSuccess() {
+function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [hasProcessed, setHasProcessed] = useState(false); // Track if payment success has been handled
+  const [hasProcessed, setHasProcessed] = useState(false);
 
   useEffect(() => {
     const handlePaymentSuccess = async () => {
-      if (hasProcessed || status !== 'authenticated') return; // Prevent multiple executions or if not authenticated
+      if (hasProcessed || status !== 'authenticated') return;
 
       try {
         console.log(session);
         const amount = searchParams.get('amount');
-        const userId = searchParams.get('userId'); // Get userId from query params
+        const userId = searchParams.get('userId');
 
         if (amount && userId) {
           console.log('Updating credits...');
           await axios.post('/api/users/update-credits', { amount, userId });
 
           console.log('Credits updated successfully');
-          setHasProcessed(true); // Mark as processed
-          router.push('/dashboard'); // Redirect after success
+          setHasProcessed(true);
+          router.push('/dashboard');
         } else {
           console.error('Missing amount or userId');
-          router.push('/error'); // Redirect to an error page
+          router.push('/error');
         }
       } catch (error) {
         console.error('Error updating credits:', error);
@@ -51,4 +51,12 @@ export default function PaymentSuccess() {
   }
 
   return <p>Processing payment success...</p>;
+}
+
+export default function PaymentSuccess() {
+  return (
+    <Suspense fallback={<p>Loading payment details...</p>}>
+      <PaymentSuccessContent />
+    </Suspense>
+  );
 }
