@@ -21,19 +21,20 @@ const Page = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const controller = new ScrollMagic.Controller();
+    if (typeof window !== 'undefined' && ScrollMagic) {
+      const controller = new ScrollMagic.Controller();
 
-    // Scroll animation for the features section
-    new ScrollMagic.Scene({
-      triggerElement: '#features-container',
-      triggerHook: 0.8, // Trigger animation when 80% of the container is visible
-      reverse: false, // Animate only once
-    })
-      .setTween('#features-container', {
-        opacity: 1,
-        transform: 'translateY(0)',
+      new ScrollMagic.Scene({
+        triggerElement: '#features-container',
+        triggerHook: 0.8,
+        reverse: false,
       })
-      .addTo(controller);
+        .setTween('#features-container', {
+          opacity: 1,
+          transform: 'translateY(0)',
+        })
+        .addTo(controller);
+    }
   }, []);
 
   // Logout functionality
