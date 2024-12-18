@@ -72,7 +72,7 @@ export default function SamplePage() {
           }}
         >
           <iframe
-            src={`http://localhost:3000/view-bot/${botId}`}
+            src={`https://bot-forge.vercel.app/view-bot/${botId}`}
             style={{ width: '100%', height: '100%', border: 'none' }}
           ></iframe>
         </div>
