@@ -5,7 +5,9 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRobot, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faRobot, faUser, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './create.css';
 
 export default function CreateBot() {
@@ -13,25 +15,27 @@ export default function CreateBot() {
     const [userInput, setUserInput] = useState("");
     const [currentStep, setCurrentStep] = useState(1);
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [showCheckmark, setShowCheckmark] = useState(false); // For checkmark animation
-    const [showBotCreated, setShowBotCreated] = useState(false); // To show "Bot Created" text
+    const [showCheckmark, setShowCheckmark] = useState(false);
+    const [showBotCreated, setShowBotCreated] = useState(false);
     const [userImage, setUserImage] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [isBeingCreated , setIsBeingCreated] = useState(false);// Loading state for bot creation
+    const [isBeingCreated, setIsBeingCreated] = useState(false);
+    const [fileContent, setFileContent] = useState("");
+    const [isFileUploaded, setIsFileUploaded] = useState(false);
 
     // Typing effect states
     const [botMessage, setBotMessage] = useState("");
-    const [fullMessage, setFullMessage] = useState(chatLog[0].message); // Message to be typed
+    const [fullMessage, setFullMessage] = useState(chatLog[0].message);
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const fadeInDuration = 500; // Time in milliseconds for the fade-in animation to complete
+    const fadeInDuration = 500;
 
-    // Default values for the bot schema
     const [botData, setBotData] = useState({
         name: "",
         widgetColor: "#0157f9",
         widgetLogo: "default-logo.png",
         visiblePrompt: "",
+        context: "",
         botBubbleColor: "#ffffff",
         botTextColor: "#000000",
         userBubbleColor: "#ffffff",
@@ -53,10 +57,7 @@ export default function CreateBot() {
 
     useEffect(() => {
         if (session && session.user) {
-            console.log(session.user);
-            console.log(session.user.image);
             setUserImage(session.user.image);
-            console.log("User Image: " + userImage);
         }
     }, [session]);
 
@@ -65,19 +66,19 @@ export default function CreateBot() {
             const timeout = setTimeout(() => {
                 setBotMessage((prev) => prev + fullMessage[currentIndex]);
                 setCurrentIndex(currentIndex + 1);
-            }, 50); // Typing speed, adjust as necessary
+            }, 50);
 
             return () => clearTimeout(timeout);
         }
     }, [currentIndex, fullMessage]);
 
     useEffect(() => {
-        if (currentStep === 3) {
+        if (currentStep === 4) {
             const userInputField = document.querySelector('.user-input-field');
             userInputField.style.display = 'none';
         }
 
-        if (currentStep === 4) {
+        if (currentStep === 5) {
             const userInputField = document.querySelector('.user-input-field');
             const chatMessages = document.querySelectorAll('.chat-message');
             const ocean = document.querySelector('.ocean');
@@ -96,14 +97,12 @@ export default function CreateBot() {
         }
     }, [currentStep]);
 
-    // Delay typing effect until fade-in animation is complete
     useEffect(() => {
         if (chatLog[chatLog.length - 1].bot) {
-            // Start typing effect after the fade-in animation duration
             setTimeout(() => {
                 setFullMessage(chatLog[chatLog.length - 1].message);
-                setBotMessage(""); // Clear the current bot message
-                setCurrentIndex(0); // Reset the typing effect index
+                setBotMessage("");
+                setCurrentIndex(0);
             }, fadeInDuration);
         }
     }, [chatLog]);
@@ -120,6 +119,64 @@ export default function CreateBot() {
         router.push('/');
         return null;
     }
+
+    const handleFileUpload = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const validTypes = [
+            'text/plain',
+            'text/markdown',
+            'application/json',
+            'text/csv',
+            'application/pdf'
+        ];
+
+        if (!validTypes.includes(file.type)) {
+            toast.error("Please upload a text document (txt, md, json, csv, pdf)", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+            });
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            const text = e.target.result;
+            setFileContent(text);
+            setIsFileUploaded(true);
+            toast.success("File uploaded successfully!", {
+                position: "top-right",
+                autoClose: 3000
+            });
+        };
+        reader.readAsText(file);
+    };
+
+    const handleUploadSubmit = () => {
+        if (!isFileUploaded) {
+            toast.error("Please upload a file before proceeding", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+            });
+            return;
+        }
+
+        setBotData(prev => ({
+            ...prev,
+            visiblePrompt: `${prev.visiblePrompt}\nThe context: ${fileContent}`
+        }));
+
+        handleNextStep();
+    };
 
     const handleNextStep = () => {
         const nextQuestion = getNextQuestion(currentStep + 1);
@@ -165,6 +222,8 @@ export default function CreateBot() {
             case 2:
                 return "What is the purpose of your chatbot?";
             case 3:
+                return "Please upload a text document to provide context for your bot.";
+            case 4:
                 return "Which model type should the bot use?";
             default:
                 return "Thank you! You've completed setting up your bot.";
@@ -178,6 +237,8 @@ export default function CreateBot() {
             case 2:
                 return "visiblePrompt";
             case 3:
+                return "context";
+            case 4:
                 return "modelType";
             default:
                 return null;
@@ -188,7 +249,7 @@ export default function CreateBot() {
         setLoading(true);
         setIsBeingCreated(true);
         try {
-            const response = await fetch(`/api/bots/create`, {
+            const response = await fetch('/api/bots/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -208,13 +269,13 @@ export default function CreateBot() {
                 setTimeout(() => {
                     router.push(`/config/${data.bot._id}`);
                 }, 3500);
-                // route to the bot's config page
                 console.log('Bot created successfully:', data.bot);
             } else {
+                toast.error("Error creating bot: " + data.message);
                 console.error('Error creating bot:', data.message);
             }
-
         } catch (error) {
+            toast.error("Error creating bot: " + error.message);
             console.error('Error creating bot:', error);
         } finally {
             setLoading(false);
@@ -224,42 +285,73 @@ export default function CreateBot() {
 
     return (
         <div className="dashboard">
+            <ToastContainer />
             <Sidebar />
             <div className="create-box">
                 <div className="chat-window">
-                    {chatLog.map((entry, index) => (
-                        <div key={index} className={`chat-message ${entry.bot ? 'bot' : 'user'}`}>
-                            {entry.bot ? (
-                                <div className="bot-message-container">
-                                    <span className="bot-message-text">
-                                        <FontAwesomeIcon icon={faRobot} className="bot-icon"/> <span
-                                        className="bot-message">{index === chatLog.length - 1 ? botMessage : entry.message}</span>
-                                    </span>
-                                </div>
-                            ) : (
-                                <div className="user-message-wrapper">
-                                    <FontAwesomeIcon icon={faUser} className="user-icon"/>
-                                    <span className='user-message-text'>{entry.message}</span>
-                                </div>
-                            )}
-                            {currentStep === 3 && entry.bot && (
-                                <div className="dropdown-container">
-                                    <div
-                                        className="dropdown-trigger"
-                                        onClick={() => setDropdownOpen(!dropdownOpen)}
-                                    >
-                                        Select Model Type
+                    {chatLog.map((entry, index) => {
+                        const isCurrentMessage = index === chatLog.length - 1;
+                        const showFileUpload = currentStep === 3 && entry.bot && isCurrentMessage;
+                        const showModelSelect = currentStep === 4 && entry.bot && isCurrentMessage;
+
+                        return (
+                            <div key={index} className={`chat-message ${entry.bot ? 'bot' : 'user'}`}>
+                                {entry.bot ? (
+                                    <div className="bot-message-container">
+                                        <span className="bot-message-text">
+                                            <FontAwesomeIcon icon={faRobot} className="bot-icon"/>
+                                            <span className="bot-message">
+                                                {isCurrentMessage ? botMessage : entry.message}
+                                            </span>
+                                        </span>
+                                        {showFileUpload && (
+                                            <div className="file-upload-container">
+                                                <label className="file-upload-label">
+                                                    <FontAwesomeIcon icon={faCloudUploadAlt} className="upload-icon" />
+                                                    <span>Upload Text Document</span>
+                                                    <input
+                                                        type="file"
+                                                        onChange={handleFileUpload}
+                                                        className="hidden"
+                                                        accept=".txt,.md,.json,.csv,.pdf"
+                                                    />
+                                                </label>
+                                                {isFileUploaded && (
+                                                    <button
+                                                        className="submit-button"
+                                                        onClick={handleUploadSubmit}
+                                                    >
+                                                        Continue
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+                                        {showModelSelect && (
+                                            <div className="dropdown-container">
+                                                <div
+                                                    className="dropdown-trigger"
+                                                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                                                >
+                                                    Select Model Type
+                                                </div>
+                                                {dropdownOpen && (
+                                                    <div className="dropdown-options">
+                                                        <div onClick={() => handleDropdownSelect('text')}>Text</div>
+                                                        <div onClick={() => handleDropdownSelect('image')}>Image</div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
-                                    {dropdownOpen && (
-                                        <div className="dropdown-options">
-                                            <div onClick={() => handleDropdownSelect('text')}>Text</div>
-                                            <div onClick={() => handleDropdownSelect('image')}>Image</div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    ))}
+                                ) : (
+                                    <div className="user-message-wrapper">
+                                        <FontAwesomeIcon icon={faUser} className="user-icon"/>
+                                        <span className='user-message-text'>{entry.message}</span>
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
                     <div ref={chatEndRef}/>
 
                     <div className="user-input">
@@ -273,6 +365,7 @@ export default function CreateBot() {
                         />
                     </div>
                 </div>
+                
                 <div className="ocean">
                     <div className="wave"></div>
                     <div className="wave"></div>
