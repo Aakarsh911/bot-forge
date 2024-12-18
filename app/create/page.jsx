@@ -163,7 +163,7 @@ export default function CreateBot() {
             case 1:
                 return "What would you like to name your bot?";
             case 2:
-                return "What prompt should be visible?";
+                return "What is the purpose of your chatbot?";
             case 3:
                 return "Which model type should the bot use?";
             default:

@@ -54,6 +54,7 @@ export default function BotConfigPage() {
       setBotConfig(response.data.bot);
       console.log(response.data.bot);
       setUserId(response.data.bot.userId); // Update userId here
+      setIsImageModel(response.data.bot.modelType === 'image');
     } catch (error) {
       console.error('Error fetching bot config:', error);
     }
