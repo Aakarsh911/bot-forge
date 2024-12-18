@@ -332,7 +332,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
     width: 20%;
-    height: 65vh;
+    height: 64vh;
     border: 3px solid transparent;
     overflow: scroll;
     -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
