@@ -18,7 +18,7 @@ export default function Sidebar({ redirectToSettings }) {
                     </a>
                 </li>
                 <li>
-                    <a href="#" title="Guide">
+                    <a href="https://bot-forge-guide.vercel.app/" title="Guide">
                         <FontAwesomeIcon icon={faFileAlt} className="fa-icon" />
                     </a>
                 </li>
