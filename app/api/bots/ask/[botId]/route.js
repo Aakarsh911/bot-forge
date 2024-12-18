@@ -12,10 +12,18 @@ export const api = {
   bodyParser: false, // Disable Next.js body parser for handling file uploads
 };
 
-// Utility to save uploaded files
+// // Utility to save uploaded files
+// const saveFile = async (file) => {
+//   const data = Buffer.from(await file.arrayBuffer());
+//   const filePath = path.join(process.cwd(), 'uploads', `${Date.now()}-${file.name}`);
+//   await fsPromises.writeFile(filePath, data);
+//   return filePath;
+// };
+
 const saveFile = async (file) => {
   const data = Buffer.from(await file.arrayBuffer());
-  const filePath = path.join(process.cwd(), 'uploads', `${Date.now()}-${file.name}`);
+  const tempDir = '/tmp'; // Use the writable /tmp directory
+  const filePath = path.join(tempDir, `${Date.now()}-${file.name}`);
   await fsPromises.writeFile(filePath, data);
   return filePath;
 };
