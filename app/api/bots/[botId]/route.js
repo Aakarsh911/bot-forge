@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 export const GET = async (req, { params }) => {
   // Add CORS headers using NextResponse
   const headers = new Headers();
-  headers.set("Access-Control-Allow-Origin", "http://localhost:3001"); // Allow requests from the front-end
+  headers.set("Access-Control-Allow-Origin", "*"); // Allow requests from the front-end
   headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   headers.set("Access-Control-Allow-Headers", "Content-Type");
 
