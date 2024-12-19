@@ -5,6 +5,7 @@ import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-
 import { loadStripe } from '@stripe/stripe-js';
 import { useSession, signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
@@ -72,6 +73,7 @@ const SavePaymentMethodForm = ({ price }) => {
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
     const { data: session } = useSession();
+    const router = useRouter();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -120,6 +122,7 @@ const SavePaymentMethodForm = ({ price }) => {
                 if (data.success) {
                     console.log('Payment Method Saved:', data.user.paymentMethodId);
                     console.log('Recurring Price Saved:', data.user.recurringPrice);
+                    router.push('/dashboard');
                 } else {
                     setErrorMessage(data.error || 'Failed to save payment details.');
                 }
