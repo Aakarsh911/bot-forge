@@ -18,6 +18,8 @@ export default function Dashboard() {
   const [bots, setBots] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [credits, setCredits] = useState(0);
+  const userId = session?.user?.id;
 
   useEffect(() => {
     console.log('Session:', session);
@@ -54,6 +56,31 @@ export default function Dashboard() {
       fetchBots();
     }
   }, [status, session, router]);
+
+  //get the credits of the user
+  useEffect(() => {
+    const fetchCredits = async () => {
+      try {
+        const response = await fetch(`/api/users/${userId}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setCredits(data.credits);
+      } catch (error) {
+        console.error('Error fetching credits:', error);
+      }
+    };
+
+    if (status === 'authenticated') {
+      fetchCredits();
+    }
+  }, [status]);
 
   useEffect(() => {
     const body = document.querySelector('body');

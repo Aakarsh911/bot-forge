@@ -1,27 +1,37 @@
 import * as React from 'react';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Card from '@mui/joy/Card';
-import CardActions from '@mui/joy/CardActions';
-import Chip from '@mui/joy/Chip';
-import Divider from '@mui/joy/Divider';
-import List from '@mui/joy/List';
-import ListItem from '@mui/joy/ListItem';
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import Typography from '@mui/joy/Typography';
-import Check from '@mui/icons-material/Check';
-import Close from '@mui/icons-material/Close';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../css/main.css';
+import { useSession } from 'next-auth/react';
 
 export default function PricingCards() {
   const router = useRouter();
 
   const [customCreditAmount, setCustomCreditAmount] = useState(0);
+  const [userCredits, setUserCredits] = useState(0);
+  const [customCreditPlan, setCustomCreditPlan] = useState(0);
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+
+  useEffect(() => {
+    const fetchCredits = async () => {
+      try {
+        const response = await fetch(`/api/users/${userId}`);
+        const data = await response.json();
+        setUserCredits(data.credits);
+      } catch (error) {
+        console.error('Error fetching user credits:', error);
+      }
+    };
+
+    if (userId) {
+      fetchCredits();
+    }
+  }, [userId]);
+
 
   function handleCreditInputChange(e) {
     const inputValue = e.target.value;
@@ -38,6 +48,21 @@ export default function PricingCards() {
     }
   }
 
+  // handle custom credit plan
+  function handleCustomCreditPlan(e) {
+    const inputValue = e.target.value;
+    if (e.target.value === '') {
+        setCustomCreditPlan(0);
+        return;
+    }
+    if (validatePositiveInteger(inputValue)) {
+      // Calculate and round to 2 decimal places
+      const roundedValue = (inputValue * 0.03).toFixed(2);
+      setCustomCreditPlan(Number(roundedValue)); // Ensure it's stored as a number
+    }
+  }
+
+
 
   function validatePositiveInteger(value) {
     // Regular expression to check if the value is a positive integer and disallow 'e'
@@ -47,6 +72,7 @@ export default function PricingCards() {
 
   return (
       <div className="pricing-section2">
+        <h1 className="credits">Credits: {userCredits}</h1>
         <div className="pricing-cards2">
           <div className="pricing-card">
             <div className="pricing-card-header">
@@ -115,10 +141,13 @@ export default function PricingCards() {
               <h2 className="plan-title">Custom Payment</h2>
               <p className='plan-tagline'>Full flexibility with a one-time payment option.</p>
             </div>
-            <div className="plan-price">
-              <p>Your choice</p>
+            <div className="plan-price input-flex">
+              <h3 className="custom-input">${customCreditPlan}</h3>
+              <input className="pricing-input" onChange={handleCustomCreditPlan} type="text" placeholder="Enter credits" />
             </div>
-            <button className="select-plan">Get Started</button>
+            <button className="select-plan flexible-button" onClick={() => {
+              router.push('stripe/' + customCreditPlan);
+            }}>Get Started</button>
             <div className="plan-details">
               <p>
                 <span className="tick-icon">✔</span> Pay only for what you need.
