@@ -9,6 +9,8 @@ import { Upload, Button } from 'antd'; // Import Ant Design Upload and Button co
 import { PaperClipOutlined, SendOutlined } from '@ant-design/icons'; // Import icons
 import { marked } from 'marked';
 import './botConfig.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function BotConfigPage() {
   const router = useRouter();
@@ -167,64 +169,87 @@ export default function BotConfigPage() {
   };
 
   return (
-      <div className="chat-container" style={chatStyles}>
-        {botConfig && (
+    <>
+      {credits === 0 ? (
+        <div className="no-credits">
+          <h1>Bot has 0 credits.</h1>
+          <p>Reach out to the creator of the bot.</p>
+        </div>
+      ) : (
+        <div className="chat-container" style={chatStyles}>
+          {botConfig && (
             <div className="chat-window">
-              <p>{credits}</p>
-              <header>
-                <h1>
-                  <FontAwesomeIcon icon={faRobot} className="header-bot-icon" />
-                  {botConfig.name}
-                </h1>
-              </header>
-              <div className="messages">
-                {messages.map((message, index) => (
-                    <div key={index} className={`message ${message.role}`}>
-                      {/* Render HTML if it's a bot's message with Markdown formatting */}
-                      {message.isHTML ? (
-                          <div dangerouslySetInnerHTML={{ __html: message.content }} />
-                      ) : (
-                          <span dangerouslySetInnerHTML={{ __html: message.content }} /> // Render normal text and uploaded content for user messages
-                      )}
-                    </div>
-                ))}
-                {isLoading && (
-                    <div className="message assistant typing">
-                      <span className="typing-text">Bot is typing</span>
-                      <div className="dot-container">
-                        <span className="dot"></span>
-                        <span className="dot"></span>
-                        <span className="dot"></span>
-                      </div>
-                    </div>
-                )}
-              </div>
-
-              <div className="input-container">
-                <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Type your message here..."
-                />
-                {isImageModel && (
-                    <Upload
-                        fileList={fileList}
-                        onChange={handleFileChange}
-                        multiple
-                        beforeUpload={() => false} // Prevent auto-upload
-                        showUploadList={false} // Do not show default upload list
-                    >
-                      <Button icon={<PaperClipOutlined />} />
-                    </Upload>
-                )}
-                <button className="send-button" onClick={sendMessage}>
-                  <SendOutlined className="send-icon" />
-                </button>
-              </div>
+            <header>
+              <h1>
+                <FontAwesomeIcon icon={faRobot} className="header-bot-icon" />
+                {botConfig.name}
+              </h1>
+            </header>
+            <div className="messages">
+              {messages.map((message, index) => (
+                <div key={index} className={`message ${message.role}`}>
+                  {/* Render HTML if it's a bot's message with Markdown formatting */}
+                  {message.isHTML ? (
+                    <div dangerouslySetInnerHTML={{ __html: message.content }} />
+                  ) : (
+                    <span dangerouslySetInnerHTML={{ __html: message.content }} /> // Render normal text and uploaded content for user messages
+                  )}
+                </div>
+              ))}
+              {isLoading && (
+                <div className="message assistant typing">
+                  <span className="typing-text">Bot is typing</span>
+                  <div className="dot-container">
+                    <span className="dot"></span>
+                    <span className="dot"></span>
+                    <span className="dot"></span>
+                  </div>
+                </div>
+              )}
             </div>
-        )}
-      </div>
-  );
+          
+            {/* Render uploaded images */}
+            <div className="uploaded-images">
+              {previewFiles.map((file, index) => (
+                file.type.startsWith('image/') && (
+                  <img
+                    key={index}
+                    src={file.base64}
+                    alt={`Uploaded ${index + 1}`}
+                    className="uploaded-image"
+                    style={{ maxWidth: '100px', maxHeight: '100px', margin: '5px' }}
+                  />
+                )
+              ))}
+            </div>
+          
+            <div className="input-container">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Type your message here..."
+              />
+              {isImageModel && (
+                <Upload
+                  fileList={fileList}
+                  onChange={handleFileChange}
+                  multiple
+                  beforeUpload={() => false} // Prevent auto-upload
+                  showUploadList={false} // Do not show default upload list
+                >
+                  <Button icon={<PaperClipOutlined />} />
+                </Upload>
+              )}
+              <button className="send-button" onClick={sendMessage}>
+                <SendOutlined className="send-icon" />
+              </button>
+            </div>
+          </div>          
+          )}
+        </div>
+      )}
+    </>
+  );  
 }

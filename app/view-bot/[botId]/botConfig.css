@@ -226,3 +226,16 @@ li {
   justify-content: center;
   border: 1px solid #dcdcdc;
 }
+
+.uploaded-images {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
+.uploaded-image {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  background: #f9f9f9;
+}
