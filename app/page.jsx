@@ -13,6 +13,7 @@ import appearnce from '/images/appearance.png';
 import '/css/main.css';
 import Timeline from '@/components/Timeline';
 import IntegrationCode from '@/components/IntegrationCode';
+import MobileNotSupported from "@/components/MobileNotSupported";
 import Pricing from '@/components/Pricing';
 
 const Page = () => {
@@ -56,6 +57,7 @@ const Page = () => {
 
   return (
     <Provider>
+
       {/* Navbar */}
       <nav className="navbar">
         <h1 className="logo">BotForge</h1>

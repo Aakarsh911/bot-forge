@@ -14,6 +14,8 @@ body {
     align-items: center;
     width: 90%;
     margin-left: 5%;
+    max-width: 100vw;
+    overflow: hidden;
 }
 
 .left-side {
@@ -75,6 +77,8 @@ body {
     width: 90%;
     z-index: 100;
     height: 5em;
+    max-width: 100vw;
+    overflow: hidden;
 }
 
 .nav-links {
@@ -444,7 +448,8 @@ body {
       width: 90%;
       margin-left: 5%;
       margin-bottom: 5em;
-      margin-top: 30vh;
+      position: absolute;
+      top: 20vh;
       animation: pricing-cardsFade 2s ease-in;
   }
  
@@ -485,3 +490,12 @@ body {
   .flexible-button {
     margin-top: -0.7em;
   }
+
+  @media screen and (max-width: 1024px) {
+    .app {
+        height: 100vh; /* Full viewport height */
+        overflow: hidden;
+        width: 100vw/* Prevent scrolling */
+    }
+  }
+

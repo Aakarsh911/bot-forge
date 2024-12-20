@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import Provider from "../components/Provider";
 import './global.css';
+import MobileNotSupported from '../components/MobileNotSupported';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,7 +13,9 @@ export const metadata = {
 const RootLayout = ({ children }) => (
   <html lang='en'>
     <body>
+
       <Provider>
+          <MobileNotSupported />
         <div className='main'>
           <div className='gradient' />
         </div>
