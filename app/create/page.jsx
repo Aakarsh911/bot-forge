@@ -73,7 +73,7 @@ export default function CreateBot() {
     }, [currentIndex, fullMessage]);
 
     useEffect(() => {
-        if (currentStep === 4) {
+        if (currentStep === 3 || currentStep === 4) {
             const userInputField = document.querySelector('.user-input-field');
             userInputField.style.display = 'none';
         }
@@ -295,65 +295,68 @@ export default function CreateBot() {
                         const showModelSelect = currentStep === 4 && entry.bot && isCurrentMessage;
 
                         return (
-                            <div key={index} className={`chat-message ${entry.bot ? 'bot' : 'user'}`}>
-                                {entry.bot ? (
-                                    <div className="bot-message-container">
-                                        <span className="bot-message-text">
-                                            <FontAwesomeIcon icon={faRobot} className="bot-icon"/>
-                                            <span className="bot-message">
-                                                {isCurrentMessage ? botMessage : entry.message}
-                                            </span>
-                                        </span>
-                                        {showFileUpload && (
-                                            <div className="file-upload-container">
-                                                <label className="file-upload-label">
-                                                    <FontAwesomeIcon icon={faCloudUploadAlt} className="upload-icon" />
-                                                    <span>Upload Text Document</span>
-                                                    <input
-                                                        type="file"
-                                                        onChange={handleFileUpload}
-                                                        className="hidden"
-                                                        accept=".txt,.md,.json,.csv,.pdf"
-                                                    />
-                                                </label>
-                                                {isFileUploaded && (
-                                                    <button
-                                                        className="submit-button"
-                                                        onClick={handleUploadSubmit}
-                                                    >
-                                                        Continue
-                                                    </button>
-                                                )}
-                                            </div>
-                                        )}
-                                        {showModelSelect && (
-                                            <div className="dropdown-container">
-                                                <div
-                                                    className="dropdown-trigger"
-                                                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                                                >
-                                                    Select Model Type
-                                                </div>
-                                                {dropdownOpen && (
-                                                    <div className="dropdown-options">
-                                                        <div onClick={() => handleDropdownSelect('text')}>Text</div>
-                                                        <div onClick={() => handleDropdownSelect('image')}>Image</div>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
+                        <div key={index} className={`chat-message ${entry.bot ? 'bot' : 'user'}`}>
+                            {entry.bot ? (
+                            <div className="bot-message-container">
+                                <span className="bot-message-text">
+                                <FontAwesomeIcon icon={faRobot} className="bot-icon" />
+                                <span className="bot-message">
+                                    {isCurrentMessage ? botMessage : entry.message}
+                                </span>
+                                </span>
+                                {showFileUpload && (
+                                <div className="file-upload-container">
+                                    <label className="file-upload-label">
+                                    <FontAwesomeIcon icon={faCloudUploadAlt} className="upload-icon" />
+                                    <span>Upload Text Document</span>
+                                    <input
+                                        type="file"
+                                        onChange={handleFileUpload}
+                                        className="hidden"
+                                        accept=".txt,.md,.json,.csv,.pdf"
+                                    />
+                                    </label>
+                                    {isFileUploaded && (
+                                    <button className="submit-button" onClick={handleUploadSubmit}>
+                                        Continue
+                                    </button>
+                                    )}
+                                    {!isFileUploaded && (
+                                    <button className="skip-button" onClick={handleNextStep}>
+                                        Skip
+                                    </button>
+                                    )}
+                                </div>
+                                )}
+                                {showModelSelect && (
+                                <div className="dropdown-container">
+                                    <div
+                                    className="dropdown-trigger"
+                                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                                    >
+                                    Select Model Type
                                     </div>
-                                ) : (
-                                    <div className="user-message-wrapper">
-                                        <FontAwesomeIcon icon={faUser} className="user-icon"/>
-                                        <span className='user-message-text'>{entry.message}</span>
+                                    {dropdownOpen && (
+                                    <div className="dropdown-options">
+                                        <div onClick={() => handleDropdownSelect('text')}>Text</div>
+                                        <div onClick={() => handleDropdownSelect('image')}>Image</div>
                                     </div>
+                                    )}
+                                </div>
                                 )}
                             </div>
+                            ) : (
+                            <div className="user-message-wrapper">
+                                <FontAwesomeIcon icon={faUser} className="user-icon" />
+                                <span className="user-message-text">{entry.message}</span>
+                            </div>
+                            )}
+                        </div>
                         );
                     })}
-                    <div ref={chatEndRef}/>
+                    <div ref={chatEndRef} />
 
+                    {/* Hide input container for steps 3 and 4 */}
                     <div className="user-input">
                         <input
                             type="text"
@@ -361,11 +364,10 @@ export default function CreateBot() {
                             onChange={(e) => setUserInput(e.target.value)}
                             onKeyDown={handleTextSubmit}
                             placeholder="Type your response..."
-                            className='user-input-field'
+                            className="user-input-field"
                         />
+                        </div>
                     </div>
-                </div>
-                
                 <div className="ocean">
                     <div className="wave"></div>
                     <div className="wave"></div>

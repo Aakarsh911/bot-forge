@@ -453,3 +453,19 @@ body {
 .submit-button:hover {
     background-color: #0046c7;
 }
+
+.skip-button {
+    margin-top: 10px;
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .skip-button:hover {
+    background-color: #e0e0e0;
+  }
+  
