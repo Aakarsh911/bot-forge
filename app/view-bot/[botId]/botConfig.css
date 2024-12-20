@@ -243,3 +243,7 @@ li {
 .zero-credits {
   color: red;
 }
+
+.loading-screen {
+  color: black;
+}

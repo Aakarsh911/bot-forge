@@ -13,7 +13,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRobot, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { UilMessage } from '@iconscout/react-unicons';
 import CodeSnippetBox from '@/components/CodeSnippetBox';
-
+import {toast, ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const { TabPane } = Tabs;
 
 export default function ConfigBot() {
@@ -38,15 +39,15 @@ export default function ConfigBot() {
   // State for managing color settings
   const [botAppearance, setBotAppearance] = useState({
     widgetColor: '#0157f9',
-    botBubbleColor: '#ffffff',
-    botTextColor: '#000000',
-    userBubbleColor: '#ffffff',
-    userTextColor: '#000000',
-    chatBackgroundColor: '#f0f0f0',
-    botTypingColor: '#0157f9',
-    botHeaderBackgroundColor: '#0157f9',
+    botBubbleColor: '#d93b36',
+    botTextColor: '#ffffff',
+    userBubbleColor: '#4a8b3b',
+    userTextColor: '#ffffff',
+    chatBackgroundColor: '#ffffff',
+    botTypingColor: '#f9d801',
+    botHeaderBackgroundColor: '#000000',
     botHeaderTextColor: '#ffffff',
-    botTypingTextColor: '#ffffff',
+    botTypingTextColor: '#000000',
     widgetLogo: null, // State to store the selected widget icon
   });
 
@@ -210,6 +211,9 @@ export default function ConfigBot() {
         throw new Error(`Error: ${response.status}`);
       } else {
         console.log('Bot configuration saved successfully.');
+        toast.success('Bot configuration saved successfully!', {
+          position: "top-right",
+        });
       }
     } catch (error) {
       console.error('Error saving bot configuration:', error);
@@ -744,6 +748,7 @@ export default function ConfigBot() {
             </div>
           </div>
         </div>
+      <ToastContainer />
       </div>
   );
 }
