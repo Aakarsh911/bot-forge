@@ -239,3 +239,7 @@ li {
   padding: 5px;
   background: #f9f9f9;
 }
+
+.zero-credits {
+  color: red;
+}

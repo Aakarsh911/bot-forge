@@ -172,7 +172,7 @@ export default function BotConfigPage() {
     <>
       {credits === 0 ? (
         <div className="no-credits">
-          <h1>Bot has 0 credits.</h1>
+          <h1 className="zero-credits">Bot has 0 credits.</h1>
           <p>Reach out to the creator of the bot.</p>
         </div>
       ) : (
