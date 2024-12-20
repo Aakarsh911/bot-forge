@@ -362,4 +362,24 @@ input[type="number"] {
     color: white;
     margin-left: 2.6em;
     margin-top: 3em;
+    animation: fadeIn 5s ease-in-out forwards;
+    position: absolute;
+    top: -1.5vh;
+    display: flex;
+}
+
+.cancel-plan {
+    background-color: #ff4d4f; /* Red color for cancellation */
+    color: #ffffff; /* White text */
+    border: none; /* No border */
+    padding: 10px 20px; /* Padding for size */
+    font-size: 16px; /* Font size for better readability */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.cancel-plan:hover {
+    background-color: #d9363e; /* Darker red on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
 }

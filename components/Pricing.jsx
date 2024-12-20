@@ -13,6 +13,7 @@ export default function PricingCards() {
   const [customCreditAmount, setCustomCreditAmount] = useState(0);
   const [userCredits, setUserCredits] = useState(0);
   const [customCreditPlan, setCustomCreditPlan] = useState(0);
+  const [recurringPrice, setRecurringPrice] = useState(0);
   const { data: session } = useSession();
   const userId = session?.user?.id;
 
@@ -31,6 +32,28 @@ export default function PricingCards() {
       fetchCredits();
     }
   }, [userId]);
+
+  useEffect(() => {
+    // Fetch the recurring price from the API
+    const fetchRecurringPrice = async () => {
+        try {
+            const response = await fetch(`/api/sub-price/${userId}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch recurring price');
+            }
+
+            const data = await response.json();
+            setRecurringPrice(data.recurringPrice);
+        } catch (err) {
+            console.error('Error fetching recurring price:', err);
+            setError(err.message); // Set error state
+        }
+    };
+
+    if (userId) {
+        fetchRecurringPrice();
+    }
+}, [userId]);
 
 
   function handleCreditInputChange(e) {
@@ -62,6 +85,26 @@ export default function PricingCards() {
     }
   }
 
+  const handleCancelPlan = async () => {
+    try {
+        // Assume `userId` and `setRecurringPrice` are available in the component's scope
+        const response = await fetch(`/api/sub-price/cancel/${userId}`, {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            setRecurringPrice(0); // Update the recurring price to 0 in the UI
+            toast.success(data.message || 'Subscription cancelled successfully!');
+        } else {
+            const errorData = await response.json();
+            toast.error(errorData.error || 'Failed to cancel the subscription.');
+        }
+    } catch (error) {
+        console.error('Error cancelling subscription:', error);
+        toast.error('An unexpected error occurred. Please try again later.');
+    }
+};
 
 
   function validatePositiveInteger(value) {
@@ -72,7 +115,11 @@ export default function PricingCards() {
 
   return (
       <div className="pricing-section2">
-        <h1 className="credits">Credits: {userCredits}</h1>
+        <h1 className="credits">
+          Credits: {userCredits}
+          {recurringPrice !== 0 && " (Current Plan: Smart Plan)"}
+          {recurringPrice !== 0 && <button className="cancel-plan" onClick={handleCancelPlan}>Cancel Plan</button>}
+        </h1>
         <div className="pricing-cards2">
           <div className="pricing-card">
             <div className="pricing-card-header">

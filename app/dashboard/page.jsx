@@ -138,7 +138,7 @@ export default function Dashboard() {
     dashboardHeading.appendChild(cursorSpan);
 
     let currentText = "Dashboard";
-    let newText = "Settings";
+    let newText = "Billing";
     let currentLength = currentText.length;
     let index = 0;
 

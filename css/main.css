@@ -444,6 +444,7 @@ body {
       width: 90%;
       margin-left: 5%;
       margin-bottom: 5em;
+      margin-top: 30vh;
       animation: pricing-cardsFade 2s ease-in;
   }
  
