@@ -31,6 +31,7 @@
     "mongoose": "^8.5.3",
     "next": "14.2.5",
     "next-auth": "^4.24.7",
+    "nodemailer": "^6.9.16",
     "openai": "^4.56.0",
     "Prism": "^2.0.0",
     "prismjs": "^1.29.0",
