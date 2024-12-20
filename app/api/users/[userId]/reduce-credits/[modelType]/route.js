@@ -40,7 +40,7 @@ export async function POST(request, { params }) {
         user.credits -= creditsToReduce;
 
         // Check if credits have dropped below zero
-        if (user.credits < 0) {
+        if (user.credits <= 1) {
             console.log('User credits below zero, initiating recharge process...');
             const rechargeAmount = user.recurringPrice; // The price to charge in cents
             const creditsToAdd = Math.round(rechargeAmount / 3);
